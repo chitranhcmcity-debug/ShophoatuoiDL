@@ -10,6 +10,7 @@ import { CheckoutService } from '../../services/checkout';
 import { CustomerService } from '../../services/customer';
 import { EmployeeService } from '../../services/employee';
 import { PaymentService } from '../../services/payment';
+import { SettingsService } from '../../services/settings';
 
 type Tab = 'info' | 'password' | 'orders' | 'notifications';
 const TABS: Tab[] = ['info', 'password', 'orders', 'notifications'];
@@ -28,6 +29,7 @@ export class Account implements OnInit {
   private checkoutService = inject(CheckoutService);
   orders = this.checkoutService.userOrders;
   private paymentService = inject(PaymentService);
+  private settings = inject(SettingsService).settings;
   paymentBadge = paymentBadge;
   isPaid = isPaid;
   payingId = signal('');
@@ -49,7 +51,10 @@ export class Account implements OnInit {
   canCancel = (o: Order) => this.checkoutService.canCustomerCancel(o);
 
   async cancelOrder(o: Order) {
-    const reason = prompt('Bạn muốn hủy đơn ' + o.id + '? Nhập lý do hủy:', 'Đổi ý, không muốn mua nữa');
+    const refundNotice = isPaid(o)
+      ? `Đơn đã thanh toán ${o.total.toLocaleString('vi-VN')}đ. Nếu hủy, shop sẽ hoàn tiền cho bạn trong ${this.settings().refundDays}.\n`
+      : '';
+    const reason = prompt(`${refundNotice}Bạn muốn hủy đơn ${o.id}? Nhập lý do hủy:`, 'Đổi ý, không muốn mua nữa');
     if (reason === null) return;
     if (await this.checkoutService.cancelByCustomer(o.id, reason.trim())) {
       this.trackingId.set(o.id); // mở luôn phần theo dõi để khách thấy đơn đã hủy

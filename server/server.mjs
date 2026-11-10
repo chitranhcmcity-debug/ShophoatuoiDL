@@ -28,6 +28,8 @@ createServer(async (req, res) => {
         return await payos.handleCreate(req, res);
       case 'GET /api/payos/verify':
         return await payos.handleVerify(req, res, url);
+      case 'POST /api/payos/cancel':
+        return await payos.handleCancel(req, res);
       case 'POST /api/payos/webhook':
         return await payos.handleWebhook(req, res);
     }

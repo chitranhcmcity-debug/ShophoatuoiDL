@@ -113,6 +113,11 @@
           @if (o.paymentMethod) {
           <small class="d-block text-muted"><i class="bi bi-wallet2"></i> {{ paymentLabel(o.paymentMethod) }} · <b>{{ isPaid(o) ? 'Đã thanh toán' : 'Chưa thanh toán' }}</b></small>
           }
+          @if (o.refundStatus === 'pending') {
+          <small class="d-block text-danger"><i class="bi bi-arrow-counterclockwise"></i> Shop đang hoàn {{ o.total.toLocaleString('vi-VN') }}đ cho bạn</small>
+          } @else if (o.refundStatus === 'done') {
+          <small class="d-block text-success"><i class="bi bi-arrow-counterclockwise"></i> Đã hoàn tiền ngày {{ o.refundedAt | date : 'dd/MM/yyyy' }}@if (o.refundNote) { · Mã giao dịch: {{ o.refundNote }} }</small>
+          }
           <ul class="list-unstyled mt-2 mb-2">
             @for (i of o.items; track i.id) {
             <li class="d-flex align-items-center gap-2 mb-1">

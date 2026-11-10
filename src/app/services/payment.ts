@@ -24,6 +24,14 @@ export class PaymentService {
     return firstValueFrom(this.http.get<{ paymentStatus: string; payosStatus?: string; order: Order }>(`${this.url}/verify`, { params: { orderId } }));
   }
 
+  /**
+   * Đơn payOS vừa bị hủy: backend hỏi payOS, nếu khách chưa trả thì hủy link (khách không trả nhầm được),
+   * nếu khách đã kịp trả thì ghi nhận đã thanh toán + chờ hoàn tiền.
+   */
+  cancelLink(orderId: string): Promise<unknown> {
+    return firstValueFrom(this.http.post(`${this.url}/cancel`, { orderId }));
+  }
+
   /** Lấy câu báo lỗi dễ hiểu từ lỗi HTTP */
   errorMessage(err: unknown): string {
     const e = err as HttpErrorResponse;

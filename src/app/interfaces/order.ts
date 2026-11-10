@@ -42,6 +42,10 @@ export interface Order {
   paymentStatus?: string; // payOS: do backend (server/payos.mjs) ghi sau khi hỏi lại payOS
   payosOrderCode?: number;
   payosLinkId?: string;
+  refundStatus?: 'pending' | 'done'; // đơn đã trả tiền rồi bị hủy: chờ hoàn / đã hoàn
+  refundedBy?: string;
+  refundedAt?: string; // ISO
+  refundNote?: string; // mã giao dịch hoàn tiền, ghi chú
   paidBy?: string;
   paidAt?: string; // ISO
   assignedFlorist?: string | null; // id nhân viên cắm hoa được phân công
@@ -64,8 +68,12 @@ export const PAYMENT = { UNPAID: 'Chưa thanh toán', PAID: 'Đã thanh toán', 
 /** Đã trả tiền chưa, dù trả theo cách nào */
 export const isPaid = (o: Order) => !!o.paid || o.paymentStatus === PAYMENT.PAID;
 
+export const REFUND = { PENDING: 'pending', DONE: 'done' } as const;
+
 /** Nhãn + màu trạng thái thanh toán của một đơn */
 export function paymentBadge(o: Order): { text: string; cls: string } {
+  if (o.refundStatus === REFUND.PENDING) return { text: 'Chờ hoàn tiền', cls: 'bg-warning text-dark' };
+  if (o.refundStatus === REFUND.DONE) return { text: 'Đã hoàn tiền', cls: 'bg-info text-dark' };
   if (isPaid(o)) return { text: 'Đã thanh toán', cls: 'bg-success' };
   if (o.paymentMethod === 'payos' && o.paymentStatus === PAYMENT.CANCELLED) return { text: 'Hủy thanh toán', cls: 'bg-danger' };
   if (!o.paymentMethod || o.paymentMethod === 'cod') return { text: 'COD', cls: 'bg-secondary' };

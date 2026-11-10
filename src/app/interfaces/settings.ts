@@ -10,6 +10,7 @@ export interface SystemSettings {
   bankName: string; // tài khoản nhận chuyển khoản, hiện ở trang thanh toán
   bankAccount: string;
   bankOwner: string;
+  refundDays: string; // thời gian hoàn tiền báo cho khách khi hủy đơn đã thanh toán
 }
 
 export const DEFAULT_SETTINGS: SystemSettings = {
@@ -24,4 +25,5 @@ export const DEFAULT_SETTINGS: SystemSettings = {
   bankName: '',
   bankAccount: '',
   bankOwner: '',
+  refundDays: '1–3 ngày làm việc',
 };

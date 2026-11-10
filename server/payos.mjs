@@ -88,6 +88,25 @@ async function patchOrder(id, data) {
   return res.json();
 }
 
+/** Báo cho nhân viên có quyền xử lý thanh toán (ghi thẳng vào bảng thông báo của json-server) */
+async function notifyStaff(order, title, message) {
+  await fetch(`${DB_URL}/notifications`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      id: 'n' + Date.now() + Math.random().toString(36).slice(2, 6),
+      target: 'staff',
+      perm: 'order.payment',
+      orderId: order.id,
+      tone: 'danger',
+      title,
+      message,
+      time: new Date().toISOString(),
+      read: false,
+    }),
+  }).catch(() => {});
+}
+
 /** Ghi trạng thái thanh toán vào đơn (chỉ ghi khi có thay đổi) */
 async function setPaymentStatus(order, paymentStatus, note) {
   if (order.paymentStatus === paymentStatus) return order;
@@ -95,7 +114,12 @@ async function setPaymentStatus(order, paymentStatus, note) {
   const history = [...(order.history || []), { status: order.status, time, by: 'payOS', note }];
   const data = { paymentStatus, history };
   if (paymentStatus === PAYMENT.PAID) data.paidAt = time;
-  return patchOrder(order.id, data);
+  // Khách trả tiền cho đơn đã bị hủy (link còn hạn): ghi nhận để shop hoàn tiền
+  const needRefund = paymentStatus === PAYMENT.PAID && order.status === 'Đã hủy' && !order.refundStatus;
+  if (needRefund) data.refundStatus = 'pending';
+  const updated = await patchOrder(order.id, data);
+  if (needRefund) await notifyStaff(order, `Đơn #${order.id} cần hoàn tiền`, `Khách đã trả ${Number(order.total).toLocaleString('vi-VN')}đ qua payOS cho đơn đã hủy`);
+  return updated;
 }
 
 /** Map trạng thái của payOS sang trạng thái thanh toán của shop */
@@ -174,6 +198,36 @@ export async function handleVerify(req, res, url) {
   } catch (err) {
     console.error('[payOS] kiểm tra:', err.message);
     return send(res, 502, { error: `Không kiểm tra được thanh toán: ${err.message}` });
+  }
+}
+
+/**
+ * POST /api/payos/cancel { orderId } -> gọi khi đơn bị hủy.
+ * Hỏi payOS trước: khách đã kịp trả thì ghi nhận (kèm chờ hoàn tiền), chưa trả thì hủy link để khách không trả nhầm.
+ */
+export async function handleCancel(req, res) {
+  if (!info().configured) return send(res, 200, { skipped: true });
+  const { orderId } = await readBody(req);
+  const order = orderId && (await getOrder(orderId));
+  if (!order) return send(res, 404, { error: 'Không tìm thấy đơn hàng' });
+  if (!order.payosOrderCode || order.paymentStatus === PAYMENT.PAID) return send(res, 200, { paymentStatus: order.paymentStatus });
+  try {
+    const data = await payosFetch(`/v2/payment-requests/${order.payosOrderCode}`);
+    if (data.status === 'PAID') {
+      const updated = await setPaymentStatus(order, PAYMENT.PAID, `Đã nhận ${Number(data.amountPaid || data.amount).toLocaleString('vi-VN')}đ qua payOS`);
+      return send(res, 200, { paymentStatus: updated.paymentStatus, refundStatus: updated.refundStatus });
+    }
+    if (data.status === 'PENDING' || data.status === 'PROCESSING') {
+      await payosFetch(`/v2/payment-requests/${order.payosOrderCode}/cancel`, {
+        method: 'POST',
+        body: JSON.stringify({ cancellationReason: 'Đơn hàng đã hủy' }),
+      });
+    }
+    const updated = await setPaymentStatus(order, PAYMENT.CANCELLED, 'Hủy link thanh toán vì đơn đã hủy');
+    return send(res, 200, { paymentStatus: updated.paymentStatus });
+  } catch (err) {
+    console.error('[payOS] hủy link:', err.message);
+    return send(res, 502, { error: `Không hủy được link thanh toán: ${err.message}` });
   }
 }
 

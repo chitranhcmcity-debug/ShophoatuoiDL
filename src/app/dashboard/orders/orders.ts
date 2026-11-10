@@ -4,7 +4,7 @@ import { RouterLink } from '@angular/router';
 import { Pagination } from '../../components/pagination/pagination';
 import { OrderTracking } from '../../components/order-tracking/order-tracking';
 import { LOCKED_ROLES } from '../../interfaces/permissions';
-import { ORDER_CANCELLED, ORDER_STATUSES, Order, assigneeOf, isPaid, nextStepOf, paymentBadge, paymentLabel, toneOfStatus } from '../../interfaces/order';
+import { ORDER_CANCELLED, ORDER_STATUSES, Order, REFUND, assigneeOf, isPaid, nextStepOf, paymentBadge, paymentLabel, toneOfStatus } from '../../interfaces/order';
 import { Auth } from '../../services/auth';
 import { CheckoutService } from '../../services/checkout';
 import { EmployeeService } from '../../services/employee';
@@ -12,6 +12,7 @@ import { PermissionService } from '../../services/permission';
 import { OrderAssignment } from './order-assignment/order-assignment';
 
 const MY_WORK = 'mine';
+const REFUNDS = 'refund';
 const STEP_PERMISSIONS = ['order.confirm', 'order.prepare', 'order.ship', 'order.deliver', 'order.pickup'];
 
 @Component({
@@ -38,12 +39,17 @@ export class Orders {
   showMyWork = computed(() => !this.isSupervisor() && STEP_PERMISSIONS.some((p) => this.authService.hasPermission(p)));
   myWork = computed(() => this.orders().filter((o) => this.canAdvance(o)));
 
+  /** Đơn đã trả tiền rồi bị hủy, chờ shop chuyển trả */
+  showRefunds = computed(() => this.authService.hasPermission('order.payment'));
+  pendingRefunds = computed(() => this.orders().filter((o) => o.refundStatus === REFUND.PENDING));
+
   filter = signal<string>('all');
   expanded = signal<string | null>(null);
 
   filtered = computed(() => {
     const f = this.filter();
     if (f === MY_WORK) return [...this.myWork()].reverse();
+    if (f === REFUNDS) return [...this.pendingRefunds()].reverse();
     const list = [...this.orders()].reverse(); // đơn mới nhất lên đầu
     return f === 'all' ? list : list.filter((o) => o.status === f);
   });
@@ -106,6 +112,17 @@ export class Orders {
     const reason = prompt('Nhập lý do hủy đơn hàng:', 'Khách yêu cầu hủy');
     if (reason === null) return;
     this.checkoutService.updateStatus(o.id, ORDER_CANCELLED.status, reason.trim() || 'Hủy đơn');
+  }
+
+  canRefund(o: Order): boolean {
+    return o.refundStatus === REFUND.PENDING && this.authService.hasPermission('order.payment');
+  }
+
+  refund(o: Order) {
+    if (!this.canRefund(o)) return;
+    const note = prompt(`Xác nhận đã chuyển trả ${o.total.toLocaleString('vi-VN')}đ cho ${o.fullname}?\nNhập mã giao dịch hoặc ghi chú (có thể để trống):`, '');
+    if (note === null) return;
+    this.checkoutService.markRefunded(o.id, note.trim());
   }
 
   canInvoice(o: Order): boolean {

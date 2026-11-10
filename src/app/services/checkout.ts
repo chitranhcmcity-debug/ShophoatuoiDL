@@ -2,13 +2,14 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, computed, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { STAFF_TARGET } from '../interfaces/notification';
-import { AssigneeField, CartItem, Order, PAYMENT, assigneeOf, flowOf, nextStepOf } from '../interfaces/order';
+import { AssigneeField, CartItem, Order, PAYMENT, REFUND, assigneeOf, flowOf, isPaid, nextStepOf } from '../interfaces/order';
 import { NotificationService } from './notification';
 import { SettingsService } from './settings';
 import { Auth } from './auth';
 import { CartService } from './cart';
 import { CustomerService } from './customer';
 import { EmployeeService } from './employee';
+import { PaymentService } from './payment';
 import { ProductService } from './product';
 import { API_URL } from './storage';
 
@@ -57,7 +58,8 @@ export class CheckoutService {
     private employeeService: EmployeeService,
     private notificationService: NotificationService,
     private settingsService: SettingsService,
-    private productService: ProductService
+    private productService: ProductService,
+    private paymentService: PaymentService
   ) {
     this.loaded = this.loadOrders();
     // Trang quản trị / máy khác đổi trạng thái đơn thì khách thấy ngay, không cần tải lại trang
@@ -196,8 +198,13 @@ export class CheckoutService {
       const history = [...(fresh.history ?? []), { status, time, by, note }];
       // COD: giao xong xem như đã thu tiền
       const payment = status === 'Đã giao' && fresh.paymentMethod === 'cod' ? { paid: true, paidBy: by, paidAt: time } : {};
-      const updated = await firstValueFrom(this.http.patch<Order>(`${this.apiUrl}/${id}`, { status, history, ...payment }));
+      // Hủy đơn khách đã trả tiền: chờ shop hoàn tiền
+      const refund = status === 'Đã hủy' && isPaid(fresh) ? { refundStatus: REFUND.PENDING } : {};
+      const updated = await firstValueFrom(this.http.patch<Order>(`${this.apiUrl}/${id}`, { status, history, ...payment, ...refund }));
       this.orders.update((l) => l.map((o) => (o.id === id ? updated : o)));
+      if (status === 'Đã hủy' && updated.payosOrderCode && !isPaid(updated)) {
+        this.paymentService.cancelLink(id).then(() => this.loadOrders()).catch(() => {});
+      }
       await this.applyStock(updated);
       this.notifyStatusChange(updated, note, byOwner);
       return true;
@@ -222,6 +229,24 @@ export class CheckoutService {
   private notifyStatusChange(o: Order, note: string, byOwner: boolean) {
     const code = '#' + o.id;
     const status = o.status;
+    if (o.refundStatus === REFUND.PENDING) {
+      const amount = o.total.toLocaleString('vi-VN') + 'đ';
+      this.notificationService.push({
+        target: STAFF_TARGET,
+        perm: 'order.payment',
+        orderId: o.id,
+        tone: 'danger',
+        title: `Đơn ${code} cần hoàn tiền`,
+        message: `Hoàn ${amount} cho ${o.fullname} · ${o.phone}`,
+      });
+      this.notificationService.push({
+        target: o.userId,
+        orderId: o.id,
+        tone: 'info',
+        title: `Đơn ${code} sẽ được hoàn tiền`,
+        message: `Shop sẽ hoàn ${amount} cho bạn trong ${this.settingsService.settings().refundDays}.`,
+      });
+    }
     if (byOwner) {
       this.notificationService.push({
         target: STAFF_TARGET,
@@ -295,6 +320,33 @@ export class CheckoutService {
       alert('Không cập nhật được thanh toán, vui lòng thử lại.');
     }
   }
+  /** Nhân viên xác nhận đã chuyển trả tiền cho khách của một đơn bị hủy */
+  async markRefunded(id: string, note: string): Promise<void> {
+    try {
+      const fresh = await firstValueFrom(this.http.get<Order>(`${this.apiUrl}/${id}`));
+      if (fresh.refundStatus !== REFUND.PENDING) {
+        this.orders.update((l) => l.map((o) => (o.id === id ? fresh : o)));
+        return;
+      }
+      const by = this.authService.user()?.username ?? '';
+      const time = new Date().toISOString();
+      const history = [...(fresh.history ?? []), { status: fresh.status, time, by, note: `Đã hoàn tiền${note ? ' · ' + note : ''}` }];
+      const updated = await firstValueFrom(
+        this.http.patch<Order>(`${this.apiUrl}/${id}`, { refundStatus: REFUND.DONE, refundedBy: by, refundedAt: time, refundNote: note, history })
+      );
+      this.orders.update((l) => l.map((o) => (o.id === id ? updated : o)));
+      this.notificationService.push({
+        target: updated.userId,
+        orderId: id,
+        tone: 'success',
+        title: `Đơn #${id} đã được hoàn tiền`,
+        message: `Shop đã hoàn ${updated.total.toLocaleString('vi-VN')}đ cho đơn #${id}.${note ? ' Mã giao dịch: ' + note : ''}`,
+      });
+    } catch {
+      alert('Không cập nhật được hoàn tiền, vui lòng thử lại.');
+    }
+  }
+
   /** Khách chỉ được hủy đơn của chính mình khi shop chưa bắt đầu chuẩn bị hoa */
   canCustomerCancel(o: Order): boolean {
     return this.settingsService.settings().allowCustomerCancel && o.userId === this.currentUser()?.id && (o.status === 'Chờ xác nhận' || o.status === 'Đã xác nhận');

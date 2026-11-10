@@ -71,6 +71,11 @@
       Thanh toán: {{ paymentLabel(o.paymentMethod) }} · <b>{{ isPaid(o) ? 'Đã thanh toán' : 'Chưa thanh toán' }}</b>
     </p>
     }
+    @if (o.refundStatus === 'pending') {
+    <p class="payment">Hoàn tiền: <b>đang chờ hoàn {{ money(o.total) }}</b></p>
+    } @else if (o.refundStatus === 'done') {
+    <p class="payment">Hoàn tiền: <b>đã hoàn {{ money(o.total) }}</b> ngày {{ o.refundedAt | date : 'dd/MM/yyyy' }}@if (o.refundNote) { · {{ o.refundNote }} }</p>
+    }
     @if (o.note) {
     <p class="payment">Lời nhắn: {{ o.note }}</p>
     }

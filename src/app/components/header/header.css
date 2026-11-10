@@ -11,7 +11,9 @@
   font-size: 26px;
 }
 .logo-icon {
-  font-size: 34px;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
 }
 .logo-text b {
   color: var(--hoa-green);

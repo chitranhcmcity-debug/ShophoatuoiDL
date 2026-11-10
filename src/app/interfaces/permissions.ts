@@ -82,7 +82,7 @@ export const PERMISSION_GROUPS: { title: string; items: { key: string; label: st
       { key: 'order.pickup', label: 'Xác nhận khách nhận tại cửa hàng' },
       { key: 'order.cancel', label: 'Hủy đơn hàng' },
       { key: 'order.assign', label: 'Phân công nhân viên' },
-      { key: 'order.payment', label: 'Xác nhận đã chuyển khoản' },
+      { key: 'order.payment', label: 'Xác nhận chuyển khoản, hoàn tiền' },
       { key: 'order.invoice', label: 'Xem, in hóa đơn' },
     ],
   },

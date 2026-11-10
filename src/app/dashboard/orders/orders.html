@@ -10,6 +10,11 @@
     <i class="bi bi-person-check-fill"></i> Việc của tôi <b>{{ myWork().length }}</b>
   </button>
   }
+  @if (showRefunds()) {
+  <button type="button" class="filter tone-red" [class.active]="filter() === 'refund'" (click)="setFilter('refund')">
+    <i class="bi bi-arrow-counterclockwise"></i> Cần hoàn tiền <b>{{ pendingRefunds().length }}</b>
+  </button>
+  }
   @for (s of statuses; track s.status) {
   <button type="button" [class]="'filter tone-' + s.tone" [class.active]="filter() === s.status" (click)="setFilter(s.status)">
     <i class="bi" [class]="s.icon"></i> {{ s.status }} <b>{{ countOf(s.status) }}</b>
@@ -72,6 +77,11 @@
             <b>{{ isPaid(o) ? 'Đã thanh toán' : 'Chưa thanh toán' }}</b>
           </div>
           }
+          @if (o.refundStatus === 'pending') {
+          <div class="text-danger"><i class="bi bi-arrow-counterclockwise"></i> <b>Chờ hoàn {{ o.total.toLocaleString('vi-VN') }}đ cho khách</b></div>
+          } @else if (o.refundStatus === 'done') {
+          <div><i class="bi bi-arrow-counterclockwise"></i> Đã hoàn tiền · {{ o.refundedBy }} · {{ o.refundedAt | date : 'dd/MM/yyyy HH:mm' }}@if (o.refundNote) { · {{ o.refundNote }} }</div>
+          }
           @if (o.note) {
           <div><i class="bi bi-chat-heart"></i> <em>Lời nhắn: {{ o.note }}</em></div>
           }
@@ -101,6 +111,9 @@
         <div class="actions mt-3">
           @if (canInvoice(o)) {
           <a class="btn btn-outline-secondary" [routerLink]="['/invoice', o.id]"><i class="bi bi-receipt"></i> Hóa đơn</a>
+          }
+          @if (canRefund(o)) {
+          <button class="btn btn-warning" type="button" (click)="refund(o)"><i class="bi bi-arrow-counterclockwise"></i> Đã hoàn tiền</button>
           }
           @if (canMarkPaid(o)) {
           <button class="btn btn-success" type="button" (click)="markPaid(o)"><i class="bi bi-cash-coin"></i> Xác nhận đã chuyển khoản</button>
