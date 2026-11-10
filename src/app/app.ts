@@ -2,12 +2,13 @@ import { Component, computed, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { filter, map } from 'rxjs';
+import { AiChat } from './components/ai-chat/ai-chat';
 import { Footer } from './components/footer/footer';
 import { Header } from './components/header/header';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Header, Footer],
+  imports: [RouterOutlet, Header, Footer, AiChat],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
