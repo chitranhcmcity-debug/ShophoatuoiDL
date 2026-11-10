@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { authGuard, invoiceGuard, permissionGuard, shopperGuard } from './guards/auth.guard';
 import { Invoice } from './pages/invoice/invoice';
 import { Reports } from './dashboard/reports/reports';
+import { NotificationHistory } from './components/notification-history/notification-history';
 import { Cart } from './pages/cart/cart';
 import { Checkout } from './pages/checkout/checkout';
 import { Home } from './pages/home/home';
@@ -43,6 +44,7 @@ export const routes: Routes = [
       { path: 'employees', component: Employees, title: 'Quản lý nhân viên', canActivate: [permissionGuard('employee.view')] },
       { path: 'customers', component: Customers, title: 'Quản lý khách hàng', canActivate: [permissionGuard('customer.view')] },
       { path: 'consults', component: Consults, title: 'Yêu cầu tư vấn', canActivate: [permissionGuard('consult.view')] },
+      { path: 'notifications', component: NotificationHistory, title: 'Lịch sử thông báo' },
       { path: 'reports', component: Reports, title: 'Báo cáo doanh thu', canActivate: [permissionGuard('report.view')] },
       { path: 'permissions', component: Permissions, title: 'Phân quyền', canActivate: [permissionGuard('permission.view')] },
       { path: 'settings', component: Settings, title: 'Cấu hình hệ thống', canActivate: [permissionGuard('system.manage')] },

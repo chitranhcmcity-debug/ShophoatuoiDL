@@ -2,6 +2,7 @@ import { DatePipe } from '@angular/common';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { NotificationHistory } from '../../components/notification-history/notification-history';
 import { OrderTracking } from '../../components/order-tracking/order-tracking';
 import { Order, paymentLabel, toneOfStatus } from '../../interfaces/order';
 import { Auth } from '../../services/auth';
@@ -9,11 +10,12 @@ import { CheckoutService } from '../../services/checkout';
 import { CustomerService } from '../../services/customer';
 import { EmployeeService } from '../../services/employee';
 
-type Tab = 'info' | 'password' | 'orders';
+type Tab = 'info' | 'password' | 'orders' | 'notifications';
+const TABS: Tab[] = ['info', 'password', 'orders', 'notifications'];
 
 @Component({
   selector: 'app-account',
-  imports: [ReactiveFormsModule, RouterLink, DatePipe, OrderTracking],
+  imports: [ReactiveFormsModule, RouterLink, DatePipe, OrderTracking, NotificationHistory],
   templateUrl: './account.html',
   styleUrl: './account.css',
 })
@@ -65,7 +67,7 @@ export class Account implements OnInit {
   ngOnInit(): void {
     this.route.queryParamMap.subscribe((p) => {
       const t = p.get('tab');
-      this.tab.set(t === 'password' || t === 'orders' ? t : 'info');
+      this.tab.set(TABS.includes(t as Tab) ? (t as Tab) : 'info');
       this.message.set('');
     });
     this.loadProfile();

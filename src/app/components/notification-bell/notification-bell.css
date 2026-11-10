@@ -72,8 +72,17 @@
 .bell-item:hover {
   background: var(--hoa-soft, #fff5f7);
 }
-.bell-item.unread {
-  background: #fff8e6;
+.bell-foot {
+  display: block;
+  padding: 10px 14px;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--hoa-primary);
+}
+.bell-foot:hover {
+  background: var(--hoa-soft, #fff5f7);
 }
 .bell-item p {
   margin: 2px 0;

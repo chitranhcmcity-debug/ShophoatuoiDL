@@ -1,0 +1,33 @@
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+  <h4 class="h4 mb-0">Lịch sử thông báo</h4>
+  <div class="d-flex flex-wrap gap-2">
+    <button type="button" class="btn btn-sm" [class.btn-primary]="!onlyUnread()" [class.btn-outline-secondary]="onlyUnread()" (click)="showUnread(false)">
+      Tất cả ({{ notificationService.mine().length }})
+    </button>
+    <button type="button" class="btn btn-sm" [class.btn-primary]="onlyUnread()" [class.btn-outline-secondary]="!onlyUnread()" (click)="showUnread(true)">
+      Chưa đọc ({{ notificationService.unreadCount() }})
+    </button>
+    @if (notificationService.unreadCount() > 0) {
+    <button type="button" class="btn btn-sm btn-outline-secondary" (click)="notificationService.markAllRead()">Đánh dấu tất cả đã đọc</button>
+    }
+  </div>
+</div>
+
+<div class="history">
+  @for (n of paged(); track n.id) {
+  <button type="button" class="item" [class.unread]="!n.read" (click)="open(n)">
+    <i class="bi" [class]="'ico ' + n.tone + ' ' + icons[n.tone]"></i>
+    <span class="body">
+      <b>{{ n.title }}</b>
+      <span class="msg">{{ n.message }}</span>
+      <small>{{ n.time | date : 'HH:mm dd/MM/yyyy' }}@if (!n.read) { · Chưa đọc }</small>
+    </span>
+  </button>
+  } @empty {
+  <p class="empty">Chưa có thông báo nào.</p>
+  }
+</div>
+
+@if (list().length > 0) {
+<app-pagination [total]="list().length" [(page)]="page" [(pageSize)]="pageSize"></app-pagination>
+}

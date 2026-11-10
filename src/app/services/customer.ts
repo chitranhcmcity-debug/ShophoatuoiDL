@@ -30,7 +30,7 @@ export class CustomerService {
     return this.customers().find((c) => c.id == id);
   }
   addCustomer(customer: Customer): void {
-    this.http.post<Customer>(this.apiUrl, customer).subscribe((created) => {
+    this.http.post<Customer>(this.apiUrl, { ...customer, createdAt: customer.createdAt ?? new Date().toISOString() }).subscribe((created) => {
       this.customers.update((list) => [...list, created]);
     });
   }

@@ -28,6 +28,7 @@ export interface Customer {
   birthday?: string;
   role: string;
   islocked: boolean;
+  createdAt?: string; // ISO, thời điểm tạo tài khoản
 }
 
 /** Thông tin người đăng nhập hiện tại (lưu ở localStorage) */

@@ -87,6 +87,22 @@
   background: var(--tone-soft);
   transition: all 0.25s ease;
 }
+/* Số mục phát sinh mới cạnh tên menu */
+.menu-badge {
+  margin-left: auto;
+  min-width: 22px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: #e03131;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 18px;
+  text-align: center;
+}
+.chip .menu-badge {
+  margin-left: 6px;
+}
 .menu-item:hover {
   background: var(--tone-soft);
   transform: translateX(3px);

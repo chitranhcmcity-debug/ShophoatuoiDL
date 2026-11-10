@@ -1,0 +1,54 @@
+.history {
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+.item {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+  padding: 12px 16px;
+  border: 0;
+  border-bottom: 1px solid #f1f1f1;
+  background: #fff;
+  text-align: left;
+  color: inherit;
+}
+.item:hover {
+  background: var(--hoa-soft, #fff5f7);
+}
+.item.unread {
+  background: #fff8e6;
+}
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.msg {
+  color: #555;
+}
+small {
+  color: #999;
+}
+.ico {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+.ico.success {
+  color: #2f9e44;
+}
+.ico.danger {
+  color: #e03131;
+}
+.ico.info {
+  color: #1c7ed6;
+}
+.empty {
+  margin: 0;
+  padding: 24px;
+  text-align: center;
+  color: #999;
+}

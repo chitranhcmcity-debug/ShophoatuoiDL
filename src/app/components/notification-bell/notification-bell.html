@@ -1,8 +1,8 @@
 <div class="bell-wrap">
   <button class="bell-btn" type="button" title="Thông báo" (click)="toggle()">
     <i class="bi bi-bell-fill fs-5"></i>
-    @if (notificationService.unreadCount() > 0) {
-    <span class="bell-badge">{{ notificationService.unreadCount() > 99 ? '99+' : notificationService.unreadCount() }}</span>
+    @if (notificationService.inbox().length > 0) {
+    <span class="bell-badge">{{ notificationService.inbox().length > 99 ? '99+' : notificationService.inbox().length }}</span>
     }
   </button>
 
@@ -10,14 +10,14 @@
   <div class="bell-backdrop" (click)="close()"></div>
   <div class="bell-panel">
     <div class="bell-head">
-      <b>Thông báo</b>
-      @if (notificationService.unreadCount() > 0) {
+      <b>Thông báo hôm nay</b>
+      @if (notificationService.inbox().length > 0) {
       <a href="javascript:void(0)" (click)="notificationService.markAllRead()">Đánh dấu đã đọc</a>
       }
     </div>
     <div class="bell-list">
-      @for (n of notificationService.mine(); track n.id) {
-      <a href="javascript:void(0)" class="bell-item" [class.unread]="!n.read" (click)="view(n)">
+      @for (n of notificationService.inbox(); track n.id) {
+      <a href="javascript:void(0)" class="bell-item" (click)="view(n)">
         <i class="bi" [class]="'ico ' + n.tone + ' ' + icons[n.tone]"></i>
         <div>
           <b>{{ n.title }}</b>
@@ -26,9 +26,12 @@
         </div>
       </a>
       } @empty {
-      <div class="bell-empty">Chưa có thông báo nào</div>
+      <div class="bell-empty">Không có thông báo mới</div>
       }
     </div>
+    <a href="javascript:void(0)" class="bell-foot" (click)="openHistory()">
+      <i class="bi bi-clock-history"></i> Xem lịch sử thông báo
+    </a>
   </div>
   }
 </div>

@@ -11,6 +11,7 @@
         <a routerLink="/account" class="side-item" [class.active]="tab() === 'info'"><i class="bi bi-person"></i> Thông tin tài khoản</a>
         <a routerLink="/account" [queryParams]="{ tab: 'password' }" class="side-item" [class.active]="tab() === 'password'"><i class="bi bi-unlock"></i> Đổi mật khẩu</a>
         <a routerLink="/account" [queryParams]="{ tab: 'orders' }" class="side-item" [class.active]="tab() === 'orders'"><i class="bi bi-cart3"></i> Đơn hàng</a>
+        <a routerLink="/account" [queryParams]="{ tab: 'notifications' }" class="side-item" [class.active]="tab() === 'notifications'"><i class="bi bi-bell"></i> Thông báo</a>
         <a href="javascript:void(0)" class="side-item" (click)="authService.logout()"><i class="bi bi-box-arrow-right"></i> Đăng xuất</a>
       </div>
     </div>
@@ -82,6 +83,10 @@
           }
           <button class="btn btn-hoa px-4" type="submit">ĐỔI MẬT KHẨU</button>
         </form>
+        }
+
+        @case ('notifications') {
+        <app-notification-history></app-notification-history>
         }
 
         @case ('orders') {

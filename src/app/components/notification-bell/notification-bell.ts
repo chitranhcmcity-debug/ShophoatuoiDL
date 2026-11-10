@@ -1,8 +1,10 @@
 import { DatePipe } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { AppNotification, STAFF_TARGET } from '../../interfaces/notification';
+import { AppNotification } from '../../interfaces/notification';
 import { NotificationService } from '../../services/notification';
+
+export const NOTIFICATION_ICONS = { success: 'bi-check-circle-fill', danger: 'bi-x-octagon-fill', info: 'bi-info-circle-fill' };
 
 @Component({
   selector: 'app-notification-bell',
@@ -14,8 +16,7 @@ export class NotificationBell {
   notificationService = inject(NotificationService);
   private router = inject(Router);
   open = signal(false);
-
-  icons = { success: 'bi-check-circle-fill', danger: 'bi-x-octagon-fill', info: 'bi-info-circle-fill' };
+  icons = NOTIFICATION_ICONS;
 
   toggle() {
     this.open.update((v) => !v);
@@ -24,9 +25,15 @@ export class NotificationBell {
     this.open.set(false);
   }
 
+  /** Đã xem thì đánh dấu đọc, thông báo biến khỏi chuông */
   view(n: AppNotification) {
     this.notificationService.markRead(n.id);
     this.close();
-    this.router.navigate([n.link ?? (n.target === STAFF_TARGET ? '/dashboard/orders' : '/account')]);
+    this.router.navigateByUrl(this.notificationService.linkOf(n));
+  }
+
+  openHistory() {
+    this.close();
+    this.router.navigateByUrl(this.notificationService.historyLink());
   }
 }

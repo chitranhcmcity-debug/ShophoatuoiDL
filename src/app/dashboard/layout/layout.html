@@ -15,6 +15,9 @@
       <a [class]="'menu-item tone-' + m.tone" [routerLink]="m.path" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: m.exact }">
         <span class="ico"><i class="bi" [class]="m.icon"></i></span>
         <span>{{ m.label }}</span>
+        @if (badges()[m.path]; as count) {
+        <span class="menu-badge" [attr.aria-label]="count + ' mục mới'">{{ count > 99 ? '99+' : count }}</span>
+        }
       </a>
       }
       <span class="menu-label mt-3">Khác</span>
@@ -64,6 +67,9 @@
       @for (m of visibleMenus(); track m.path) {
       <a [class]="'chip tone-' + m.tone" [routerLink]="m.path" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: m.exact }">
         <i class="bi" [class]="m.icon"></i> {{ m.label }}
+        @if (badges()[m.path]; as count) {
+        <span class="menu-badge" [attr.aria-label]="count + ' mục mới'">{{ count > 99 ? '99+' : count }}</span>
+        }
       </a>
       }
       <a class="chip tone-gold" routerLink="/"><i class="bi bi-shop"></i> Shop</a>

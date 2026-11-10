@@ -1,9 +1,12 @@
 import { Injectable, computed, signal } from '@angular/core';
 import { AppNotification, STAFF_TARGET } from '../interfaces/notification';
+import { localDate } from '../utils/date';
 import { Auth } from './auth';
 import { StorageService } from './storage';
 
-const MAX_KEEP = 100;
+/** Số thông báo giữ lại trên server (trang lịch sử đọc từ đây) */
+const MAX_KEEP = 500;
+const DAY_CHECK_MS = 60_000;
 
 @Injectable({ providedIn: 'root' })
 export class NotificationService {
@@ -21,7 +24,15 @@ export class NotificationService {
   });
   unreadCount = computed(() => this.mine().filter((n) => !n.read).length);
 
+  /** Chuông chỉ hiện thông báo chưa đọc của hôm nay; qua ngày mới thì tự trống, lịch sử vẫn giữ */
+  private today = signal(localDate());
+  inbox = computed(() => this.mine().filter((n) => !n.read && localDate(new Date(n.time)) === this.today()));
+
+  /** Trang lịch sử: khách xem trong trang Tài khoản, nhân viên xem trong Dashboard */
+  historyLink = computed(() => (this.authService.user()?.role === 'customer' ? '/account?tab=notifications' : '/dashboard/notifications'));
+
   constructor(private authService: Auth, private storageService: StorageService) {
+    setInterval(() => this.today.set(localDate()), DAY_CHECK_MS);
     this.all.set(storageService.getOrCreate<AppNotification[]>(this.key, []));
 
     // Máy / tab khác (vd: khách vừa hủy đơn) thêm thông báo thì chuông ở đây cập nhật theo
@@ -43,6 +54,11 @@ export class NotificationService {
     };
     this.all.set([...current, item].slice(-MAX_KEEP));
     this.save();
+  }
+
+  /** Trang mở ra khi bấm vào thông báo */
+  linkOf(n: AppNotification): string {
+    return n.link ?? (n.target === STAFF_TARGET ? '/dashboard/orders' : '/account?tab=orders');
   }
 
   markRead(id: string) {
