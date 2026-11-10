@@ -1,0 +1,30 @@
+.result {
+  max-width: 560px;
+}
+.icon {
+  font-size: 4rem;
+  line-height: 1;
+  margin-bottom: 12px;
+}
+.icon.ok {
+  color: var(--hoa-green);
+}
+.icon.fail {
+  color: #e03131;
+}
+.icon.wait {
+  color: #f59f00;
+}
+.summary {
+  background: var(--hoa-soft);
+  border-radius: 10px;
+  padding: 12px 16px;
+}
+.summary div {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 0;
+}
+.summary span {
+  color: #6c757d;
+}

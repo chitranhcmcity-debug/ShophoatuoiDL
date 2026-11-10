@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, computed, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { STAFF_TARGET } from '../interfaces/notification';
-import { AssigneeField, CartItem, Order, assigneeOf, flowOf, nextStepOf } from '../interfaces/order';
+import { AssigneeField, CartItem, Order, PAYMENT, assigneeOf, flowOf, nextStepOf } from '../interfaces/order';
 import { NotificationService } from './notification';
 import { SettingsService } from './settings';
 import { Auth } from './auth';
@@ -64,7 +64,7 @@ export class CheckoutService {
     setInterval(() => this.loadOrders().catch(() => {}), 3000);
   }
 
-  private loadOrders(): Promise<void> {
+  loadOrders(): Promise<void> {
     return firstValueFrom(this.http.get<Order[]>(this.apiUrl)).then((data) => {
       if (JSON.stringify(data) !== JSON.stringify(this.orders())) this.orders.set(data);
     });
@@ -118,25 +118,26 @@ export class CheckoutService {
     return problems.length === 0;
   }
 
-  async checkout(info: CheckoutInfo, shipping: ShippingChoice): Promise<boolean> {
-    if (this.placing()) return false;
+  /** Tạo đơn hàng; trả về đơn vừa tạo (để thanh toán payOS ngay sau đó) hoặc null nếu không đặt được */
+  async checkout(info: CheckoutInfo, shipping: ShippingChoice): Promise<Order | null> {
+    if (this.placing()) return null;
     const user = this.currentUser();
     if (!user) {
       alert('Vui lòng đăng nhập để thanh toán!');
-      return false;
+      return null;
     }
     if (!this.authService.canShop()) {
       alert('Tài khoản quản trị không thể đặt hàng.');
-      return false;
+      return null;
     }
     const items = this.getActiveUserCarts();
     if (items.length === 0) {
       alert('Chưa có sản phẩm nào được chọn để thanh toán!');
-      return false;
+      return null;
     }
     this.placing.set(true);
     try {
-      if (!(await this.validateCart(items))) return false;
+      if (!(await this.validateCart(items))) return null;
       // lấy danh sách đơn mới nhất từ server để mã đơn không trùng với máy khác vừa đặt
       await this.loadOrders();
       const order: Order = {
@@ -152,6 +153,7 @@ export class CheckoutService {
         shippingLabel: shipping.label,
         shippingFee: shipping.fee,
         stockDeducted: true,
+        ...(info.paymentMethod === 'payos' ? { paymentStatus: PAYMENT.UNPAID } : {}),
       };
       const created = await firstValueFrom(this.http.post<Order>(this.apiUrl, order));
       this.orders.update((l) => [...l, created]);
@@ -165,10 +167,10 @@ export class CheckoutService {
         title: `Đơn mới #${created.id}`,
         message: `${created.fullname} vừa đặt đơn hàng, cần xác nhận.`,
       });
-      return true;
+      return created;
     } catch {
       alert('Không đặt được hàng, vui lòng thử lại.');
-      return false;
+      return null;
     } finally {
       this.placing.set(false);
     }

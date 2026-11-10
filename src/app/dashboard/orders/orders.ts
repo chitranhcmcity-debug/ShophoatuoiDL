@@ -4,7 +4,7 @@ import { RouterLink } from '@angular/router';
 import { Pagination } from '../../components/pagination/pagination';
 import { OrderTracking } from '../../components/order-tracking/order-tracking';
 import { LOCKED_ROLES } from '../../interfaces/permissions';
-import { ORDER_CANCELLED, ORDER_STATUSES, Order, assigneeOf, nextStepOf, paymentLabel, toneOfStatus } from '../../interfaces/order';
+import { ORDER_CANCELLED, ORDER_STATUSES, Order, assigneeOf, isPaid, nextStepOf, paymentBadge, paymentLabel, toneOfStatus } from '../../interfaces/order';
 import { Auth } from '../../services/auth';
 import { CheckoutService } from '../../services/checkout';
 import { EmployeeService } from '../../services/employee';
@@ -30,6 +30,8 @@ export class Orders {
   statuses = ORDER_STATUSES;
   toneOf = toneOfStatus;
   paymentLabel = paymentLabel;
+  paymentBadge = paymentBadge;
+  isPaid = isPaid;
 
   /** Quản lí, Quản trị web xem toàn bộ; nhân viên xử lý đơn có thêm bộ lọc việc của mình */
   private isSupervisor = computed(() => LOCKED_ROLES.includes(this.authService.user()?.role ?? ''));
@@ -111,7 +113,7 @@ export class Orders {
   }
 
   canMarkPaid(o: Order): boolean {
-    return o.paymentMethod === 'bank' && !o.paid && o.status !== ORDER_CANCELLED.status && this.authService.hasPermission('order.payment');
+    return o.paymentMethod === 'bank' && !isPaid(o) && o.status !== ORDER_CANCELLED.status && this.authService.hasPermission('order.payment');
   }
 
   markPaid(o: Order) {

@@ -1,0 +1,53 @@
+<div class="container py-5">
+  <div class="result frame mx-auto text-center p-4 p-md-5">
+    @switch (state()) {
+    @case ('checking') {
+    <div class="spinner-border text-danger mb-3" role="status"></div>
+    <h4>Đang kiểm tra thanh toán...</h4>
+    <p class="text-muted mb-0">Vui lòng không đóng trang.</p>
+    }
+    @case ('paid') {
+    <div class="icon ok"><i class="bi bi-check-circle-fill"></i></div>
+    <h3>Thanh toán thành công!</h3>
+    <p class="text-muted">Cảm ơn bạn đã mua hoa tại Hoa Tươi DL. Shop sẽ xác nhận và chuẩn bị hoa ngay.</p>
+    }
+    @case ('cancelled') {
+    <div class="icon fail"><i class="bi bi-x-circle-fill"></i></div>
+    <h3>Thanh toán chưa hoàn tất</h3>
+    <p class="text-muted">Bạn đã hủy thanh toán hoặc mã QR đã hết hạn. Đơn hàng vẫn được giữ, bạn có thể thanh toán lại.</p>
+    }
+    @case ('pending') {
+    <div class="icon wait"><i class="bi bi-hourglass-split"></i></div>
+    <h3>Chưa nhận được tiền</h3>
+    <p class="text-muted">Nếu bạn vừa chuyển khoản, đợi vài giây rồi bấm "Kiểm tra lại".</p>
+    }
+    @case ('error') {
+    <div class="icon fail"><i class="bi bi-exclamation-triangle-fill"></i></div>
+    <h3>Không kiểm tra được thanh toán</h3>
+    <p class="text-muted">{{ error() }}</p>
+    }
+    }
+
+    @if (order(); as o) {
+    <div class="summary my-4 text-start">
+      <div><span>Mã đơn</span><b>{{ o.id }}</b></div>
+      <div><span>Người nhận</span><b>{{ o.fullname }}</b></div>
+      <div><span>Số tiền</span><b class="text-danger">{{ o.total.toLocaleString('vi-VN') }}đ</b></div>
+      <div><span>Trạng thái thanh toán</span><b>{{ o.paymentStatus }}</b></div>
+    </div>
+    }
+
+    <div class="d-flex flex-wrap gap-2 justify-content-center">
+      @if (state() === 'cancelled' || state() === 'pending') {
+      <button class="btn btn-hoa" type="button" (click)="retry()" [disabled]="retrying()">
+        <i class="bi bi-qr-code-scan"></i> Thanh toán lại
+      </button>
+      }
+      @if (state() === 'pending' || state() === 'error') {
+      <button class="btn btn-outline-hoa" type="button" (click)="check()"><i class="bi bi-arrow-clockwise"></i> Kiểm tra lại</button>
+      }
+      <a class="btn btn-outline-secondary" routerLink="/account" [queryParams]="{ tab: 'orders' }">Xem đơn hàng</a>
+      <a class="btn btn-outline-secondary" routerLink="/">Về trang chủ</a>
+    </div>
+  </div>
+</div>

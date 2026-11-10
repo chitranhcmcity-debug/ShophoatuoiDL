@@ -117,8 +117,14 @@
           @for (m of paymentMethods; track m.key) {
           <div class="form-check">
             <input class="form-check-input" type="radio" formControlName="paymentMethod" [id]="'pay-' + m.key" [value]="m.key" />
-            <label class="form-check-label" [for]="'pay-' + m.key">{{ m.label }}</label>
+            <label class="form-check-label" [for]="'pay-' + m.key">
+              {{ m.label }}
+              @if (m.key === 'payos') { <i class="bi bi-qr-code-scan text-primary"></i> }
+            </label>
           </div>
+          }
+          @if (formData.value.paymentMethod === 'payos') {
+          <small class="text-muted d-block mt-1">Sau khi đặt hàng, bạn sẽ được chuyển sang trang payOS để quét mã QR bằng app ngân hàng. Đơn được xác nhận thanh toán tự động.</small>
           }
           @if (formData.value.paymentMethod === 'bank') {
           <div class="alert alert-info py-2 mt-2 mb-0">
@@ -131,7 +137,9 @@
           </div>
           }
         </div>
-        <button type="submit" class="btn btn-hoa w-100 py-3 mt-3 text-uppercase" [disabled]="placing()">{{ placing() ? 'Đang đặt hàng...' : 'Đặt hàng' }}</button>
+        <button type="submit" class="btn btn-hoa w-100 py-3 mt-3 text-uppercase" [disabled]="placing() || redirecting()">
+          {{ placing() || redirecting() ? 'Đang xử lý...' : formData.value.paymentMethod === 'payos' ? 'Đặt hàng và thanh toán' : 'Đặt hàng' }}
+        </button>
       </div>
     </div>
   </form>

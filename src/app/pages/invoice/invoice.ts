@@ -1,7 +1,7 @@
 import { DatePipe, Location } from '@angular/common';
 import { Component, computed, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ORDER_CANCELLED, paymentLabel } from '../../interfaces/order';
+import { ORDER_CANCELLED, isPaid, paymentLabel } from '../../interfaces/order';
 import { CheckoutService } from '../../services/checkout';
 import { SettingsService } from '../../services/settings';
 
@@ -18,6 +18,7 @@ export class Invoice {
 
   shop = inject(SettingsService).settings;
   paymentLabel = paymentLabel;
+  isPaid = isPaid;
 
   order = computed(() => this.checkoutService.orders().find((o) => o.id === this.orderId));
   buyer = computed(() => {

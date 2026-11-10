@@ -37,8 +37,11 @@ export interface Order {
   stockDeducted?: boolean; // đơn đã trừ tồn kho, khi hủy thì cộng lại
   deliveryDate?: string; // YYYY-MM-DD
   deliverySlot?: string;
-  paymentMethod?: string; // cod | bank
-  paid?: boolean;
+  paymentMethod?: string; // cod | payos | bank
+  paid?: boolean; // COD đã thu tiền, chuyển khoản thủ công đã được nhân viên xác nhận
+  paymentStatus?: string; // payOS: do backend (server/payos.mjs) ghi sau khi hỏi lại payOS
+  payosOrderCode?: number;
+  payosLinkId?: string;
   paidBy?: string;
   paidAt?: string; // ISO
   assignedFlorist?: string | null; // id nhân viên cắm hoa được phân công
@@ -49,10 +52,25 @@ export type AssigneeField = 'assignedFlorist' | 'assignedShipper';
 
 export const PAYMENT_METHODS = [
   { key: 'cod', label: 'Thanh toán khi nhận hàng (COD)' },
-  { key: 'bank', label: 'Chuyển khoản ngân hàng' },
+  { key: 'payos', label: 'Chuyển khoản QR (payOS)' },
+  { key: 'bank', label: 'Chuyển khoản thủ công (shop xác nhận)' },
 ];
 
 export const paymentLabel = (key?: string) => PAYMENT_METHODS.find((m) => m.key === key)?.label ?? '';
+
+/** Trạng thái thanh toán payOS (khớp với server/payos.mjs) */
+export const PAYMENT = { UNPAID: 'Chưa thanh toán', PAID: 'Đã thanh toán', CANCELLED: 'Hủy thanh toán' } as const;
+
+/** Đã trả tiền chưa, dù trả theo cách nào */
+export const isPaid = (o: Order) => !!o.paid || o.paymentStatus === PAYMENT.PAID;
+
+/** Nhãn + màu trạng thái thanh toán của một đơn */
+export function paymentBadge(o: Order): { text: string; cls: string } {
+  if (isPaid(o)) return { text: 'Đã thanh toán', cls: 'bg-success' };
+  if (o.paymentMethod === 'payos' && o.paymentStatus === PAYMENT.CANCELLED) return { text: 'Hủy thanh toán', cls: 'bg-danger' };
+  if (!o.paymentMethod || o.paymentMethod === 'cod') return { text: 'COD', cls: 'bg-secondary' };
+  return { text: 'Chờ thanh toán', cls: 'bg-warning text-dark' };
+}
 
 export const DELIVERY_SLOTS = [
   { label: '08:00 - 12:00', endHour: 12 },

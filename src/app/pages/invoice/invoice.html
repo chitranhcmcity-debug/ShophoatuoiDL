@@ -68,7 +68,7 @@
 
     @if (o.paymentMethod) {
     <p class="payment">
-      Thanh toán: {{ paymentLabel(o.paymentMethod) }} · <b>{{ o.paid ? 'Đã thanh toán' : 'Chưa thanh toán' }}</b>
+      Thanh toán: {{ paymentLabel(o.paymentMethod) }} · <b>{{ isPaid(o) ? 'Đã thanh toán' : 'Chưa thanh toán' }}</b>
     </p>
     }
     @if (o.note) {

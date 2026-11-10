@@ -39,6 +39,7 @@
     <div class="cell">
       <small>Tổng tiền</small>
       <b class="money">{{ o.total.toLocaleString('vi-VN') }}đ</b>
+      <span class="badge mt-1" [class]="paymentBadge(o).cls">{{ paymentBadge(o).text }}</span>
     </div>
     <div class="cell">
       <span class="st">{{ o.status }}</span>
@@ -68,7 +69,7 @@
           @if (o.paymentMethod) {
           <div>
             <i class="bi bi-wallet2"></i> {{ paymentLabel(o.paymentMethod) }} ·
-            <b>{{ o.paid ? 'Đã thanh toán' : 'Chưa thanh toán' }}</b>
+            <b>{{ isPaid(o) ? 'Đã thanh toán' : 'Chưa thanh toán' }}</b>
           </div>
           }
           @if (o.note) {

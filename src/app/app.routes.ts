@@ -11,6 +11,7 @@ import { ProductDetail } from './pages/product-detail/product-detail';
 import { ProductList } from './pages/product-list/product-list';
 import { Signin } from './pages/signin/signin';
 import { Signup } from './pages/signup/signup';
+import { PaymentResult } from './pages/payment-result/payment-result';
 import { Layout } from './dashboard/layout/layout';
 import { Overview } from './dashboard/overview/overview';
 import { Products } from './dashboard/products/products';
@@ -29,6 +30,7 @@ export const routes: Routes = [
   { path: 'cart', component: Cart, title: 'Giỏ hàng', canActivate: [shopperGuard] },
   { path: 'checkout', component: Checkout, title: 'Thanh toán', canActivate: [shopperGuard] },
   { path: 'account', component: Account, title: 'Tài khoản', canActivate: [shopperGuard] },
+  { path: 'payment-result', component: PaymentResult, title: 'Kết quả thanh toán', canActivate: [shopperGuard] },
   { path: 'invoice/:id', component: Invoice, title: 'Hóa đơn', canActivate: [invoiceGuard] },
   { path: 'signin', component: Signin, title: 'Đăng nhập' },
   { path: 'signup', component: Signup, title: 'Đăng ký' },

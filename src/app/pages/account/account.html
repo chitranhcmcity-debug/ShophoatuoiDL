@@ -101,14 +101,17 @@
         <div class="frame p-3 mb-3">
           <div class="d-flex justify-content-between flex-wrap">
             <b>Mã đơn: {{ o.id }}</b>
-            <span [class]="'st tone-' + toneOf(o.status)">{{ o.status }}</span>
+            <span class="d-flex gap-2 align-items-center">
+              <span class="badge" [class]="paymentBadge(o).cls">{{ paymentBadge(o).text }}</span>
+              <span [class]="'st tone-' + toneOf(o.status)">{{ o.status }}</span>
+            </span>
           </div>
           <small class="text-muted">{{ o.createdAt | date : 'dd/MM/yyyy HH:mm' }} · Giao đến: {{ o.address }}@if (o.shippingLabel) { · {{ o.shippingLabel }} }</small>
           @if (o.deliveryDate) {
           <small class="d-block text-muted"><i class="bi bi-calendar-event"></i> Nhận hoa: {{ o.deliveryDate | date : 'dd/MM/yyyy' }} · {{ o.deliverySlot }}</small>
           }
           @if (o.paymentMethod) {
-          <small class="d-block text-muted"><i class="bi bi-wallet2"></i> {{ paymentLabel(o.paymentMethod) }} · <b>{{ o.paid ? 'Đã thanh toán' : 'Chưa thanh toán' }}</b></small>
+          <small class="d-block text-muted"><i class="bi bi-wallet2"></i> {{ paymentLabel(o.paymentMethod) }} · <b>{{ isPaid(o) ? 'Đã thanh toán' : 'Chưa thanh toán' }}</b></small>
           }
           <ul class="list-unstyled mt-2 mb-2">
             @for (i of o.items; track i.id) {
@@ -124,6 +127,11 @@
               <button class="btn btn-outline-hoa btn-sm" type="button" (click)="toggleTracking(o.id)">
               <i class="bi bi-geo-alt-fill"></i> {{ trackingId() === o.id ? 'Ẩn theo dõi' : 'Theo dõi đơn hàng' }}
             </button>
+              @if (canPay(o)) {
+              <button class="btn btn-hoa btn-sm" type="button" (click)="payAgain(o)" [disabled]="payingId() === o.id">
+                <i class="bi bi-qr-code-scan"></i> Thanh toán
+              </button>
+              }
               @if (canCancel(o)) {
               <button class="btn btn-outline-danger btn-sm" type="button" (click)="cancelOrder(o)"><i class="bi bi-x-octagon"></i> Hủy đơn</button>
               }
