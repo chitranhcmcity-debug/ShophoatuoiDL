@@ -27,6 +27,6 @@ export class NotificationBell {
   view(n: AppNotification) {
     this.notificationService.markRead(n.id);
     this.close();
-    this.router.navigate([n.target === STAFF_TARGET ? '/dashboard/orders' : '/account']);
+    this.router.navigate([n.link ?? (n.target === STAFF_TARGET ? '/dashboard/orders' : '/account')]);
   }
 }

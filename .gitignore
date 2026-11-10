@@ -45,3 +45,6 @@ Thumbs.db
 
 # API key cho AI tư vấn
 .env
+
+# Dữ liệu thật (mật khẩu, thông tin liên hệ); dữ liệu mẫu nằm ở public/data/db.seed.json
+/db.json

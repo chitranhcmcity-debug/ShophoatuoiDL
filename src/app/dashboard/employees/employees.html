@@ -12,7 +12,7 @@
 <div class="table-responsive-md">
   <table class="table table-striped table-hover table-bordered align-middle">
     <thead>
-      <tr><th>Mã</th><th>Ảnh</th><th>Tên đăng nhập</th><th>Vai trò</th><th>Họ và tên</th><th>Email</th><th>Điện thoại</th><th>Địa chỉ</th><th style="width: 150px">Thao tác</th></tr>
+      <tr><th>Mã</th><th>Ảnh</th><th>Tên đăng nhập</th>@if (canSeePassword()) {<th>Mật khẩu</th>}<th>Vai trò</th><th>Họ và tên</th><th>Email</th><th>Điện thoại</th><th>Địa chỉ</th><th style="width: 150px">Thao tác</th></tr>
     </thead>
     <tbody>
       @if (newUser(); as nu) {
@@ -23,6 +23,9 @@
           <img [src]="newEmployee()!.image" alt="Ảnh xem trước" width="40" style="cursor: pointer" (click)="fileNew.click()" />
         </td>
         <td><input type="text" name="n-username" [(ngModel)]="nu.username" class="form-control" /></td>
+        @if (canSeePassword()) {
+        <td class="text-nowrap">{{ nu.password }}</td>
+        }
         <td>
           <select name="n-role" [(ngModel)]="nu.role" class="form-select">
             @for (r of roleOptions(); track r) {
@@ -49,6 +52,12 @@
           <img [src]="draftEmployee()!.image" alt="Ảnh đại diện" width="40" (click)="fileEdit.click()" style="cursor: pointer" />
         </td>
         <td><input type="text" name="e-username" [(ngModel)]="draftUser()!.username" class="form-control" /></td>
+        @if (canSeePassword()) {
+        <td class="text-nowrap">
+          {{ showPasswords()[user.id!] ? user.password : '••••••' }}
+          <span (click)="togglePassword(user.id!)" style="cursor: pointer"><i [class]="showPasswords()[user.id!] ? 'bi bi-eye-slash' : 'bi bi-eye'"></i></span>
+        </td>
+        }
         <td>
           <select name="e-role" [(ngModel)]="draftUser()!.role" class="form-select" [disabled]="user.id === authService.user()?.id">
             @for (r of roleOptions(); track r) {
@@ -67,6 +76,12 @@
         } @else {
         <td><img [src]="getEmployee(user.id!)?.image || '/image/avatar.svg'" alt="Ảnh đại diện" width="40" /></td>
         <td>{{ user.username }}</td>
+        @if (canSeePassword()) {
+        <td class="text-nowrap">
+          {{ showPasswords()[user.id!] ? user.password : '••••••' }}
+          <span (click)="togglePassword(user.id!)" style="cursor: pointer"><i [class]="showPasswords()[user.id!] ? 'bi bi-eye-slash' : 'bi bi-eye'"></i></span>
+        </td>
+        }
         <td><span class="badge" [class]="roleBadge(user.role)">{{ roleLabels[user.role] }}</span></td>
         <td>{{ getEmployee(user.id!)?.fullname }}</td>
         <td>{{ getEmployee(user.id!)?.email }}</td>

@@ -15,6 +15,8 @@ import { Orders } from './dashboard/orders/orders';
 import { Employees } from './dashboard/employees/employees';
 import { Customers } from './dashboard/customers/customers';
 import { Settings } from './dashboard/settings/settings';
+import { Consults } from './dashboard/consults/consults';
+import { Permissions } from './dashboard/permissions/permissions';
 
 export const routes: Routes = [
   { path: '', component: Home, title: 'Hoa Tươi DL - Hoa tươi giá rẻ 24h' },
@@ -37,6 +39,8 @@ export const routes: Routes = [
       { path: 'orders', component: Orders, title: 'Quản lý đơn hàng', canActivate: [permissionGuard('order.view')] },
       { path: 'employees', component: Employees, title: 'Quản lý nhân viên', canActivate: [permissionGuard('employee.view')] },
       { path: 'customers', component: Customers, title: 'Quản lý khách hàng', canActivate: [permissionGuard('customer.view')] },
+      { path: 'consults', component: Consults, title: 'Yêu cầu tư vấn', canActivate: [permissionGuard('consult.view')] },
+      { path: 'permissions', component: Permissions, title: 'Phân quyền', canActivate: [permissionGuard('permission.view')] },
       { path: 'settings', component: Settings, title: 'Cấu hình hệ thống', canActivate: [permissionGuard('system.manage')] },
     ],
   },

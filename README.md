@@ -5,9 +5,12 @@ Website bán hoa viết bằng Angular thuần (không back end). Môn: Lập tr
 ## Chạy
 
 ```
+copy public\data\db.seed.json db.json
 npm install
-npm start        # http://localhost:4200
+npm run dev      # http://localhost:4200
 ```
+
+`db.json` chứa dữ liệu thật nên không đưa lên git, lần đầu chạy cần chép từ dữ liệu mẫu như trên.
 
 ## Tài khoản demo
 | Vai trò | Username | Password | Quyền |

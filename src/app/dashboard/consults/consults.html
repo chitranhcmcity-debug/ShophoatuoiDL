@@ -1,0 +1,57 @@
+<h2 class="h4 mb-3">Yêu cầu tư vấn ({{ consults().length }})</h2>
+
+@if (!authService.hasPermission('consult.update')) {
+<div class="alert alert-info py-2 mb-3"><i class="bi bi-info-circle"></i> Bạn chỉ có quyền xem yêu cầu tư vấn.</div>
+}
+
+<div class="d-flex flex-wrap gap-2 mb-3">
+  @for (f of filters(); track f.key) {
+  <button type="button" class="btn btn-sm" [class.btn-primary]="filter() === f.key" [class.btn-outline-secondary]="filter() !== f.key" (click)="setFilter(f.key)">
+    {{ f.label }} ({{ f.count }})
+  </button>
+  }
+</div>
+
+<div class="table-responsive">
+  <table class="table table-striped table-hover table-bordered align-middle">
+    <thead>
+      <tr><th>Thời gian</th><th>Họ và tên</th><th>Điện thoại</th><th>Nội dung</th><th>Trạng thái</th><th style="width: 210px">Thao tác</th></tr>
+    </thead>
+    <tbody>
+      @for (c of paged(); track c.id) {
+      <tr>
+        <td class="text-nowrap">{{ c.createdAt | date : 'dd/MM/yyyy HH:mm' }}</td>
+        <td>{{ c.fullname }}</td>
+        <td class="text-nowrap">{{ c.phone }}</td>
+        <td>{{ c.note || '(Không có nội dung)' }}</td>
+        <td>
+          @if (c.contacted) {
+          <span class="badge text-bg-success">Đã liên hệ</span>
+          <small class="d-block text-muted">{{ c.contactedBy }} · {{ c.contactedAt | date : 'dd/MM HH:mm' }}</small>
+          } @else {
+          <span class="badge text-bg-warning">Chưa liên hệ</span>
+          }
+        </td>
+        <td>
+          @if (authService.hasPermission('consult.update')) {
+          @if (c.contacted) {
+          <button type="button" class="btn btn-sm btn-secondary" (click)="toggleContacted(c.id, false)">Bỏ đánh dấu</button>
+          } @else {
+          <button type="button" class="btn btn-sm btn-primary" (click)="toggleContacted(c.id, true)">Đã liên hệ</button>
+          }
+          }
+          @if (authService.hasPermission('consult.delete')) {
+          <button type="button" class="btn btn-sm btn-danger ms-1" (click)="delete(c.id)">Xóa</button>
+          }
+        </td>
+      </tr>
+      } @empty {
+      <tr><td colspan="6" class="text-center text-muted py-4">Chưa có yêu cầu tư vấn nào.</td></tr>
+      }
+    </tbody>
+  </table>
+</div>
+
+@if (filtered().length > 0) {
+<app-pagination [total]="filtered().length" [(page)]="page" [(pageSize)]="pageSize"></app-pagination>
+}

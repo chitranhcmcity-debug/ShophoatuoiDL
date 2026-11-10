@@ -22,7 +22,7 @@
       "id": "c4",
       "name": "Lan Hồ Điệp",
       "slug": "lan-ho-diep",
-      "icon": "🪻"
+      "icon": "🌺"
     },
     {
       "id": "c5",
@@ -1876,6 +1876,7 @@
   "notifications": [],
   "favorites": [],
   "consults": [],
+  "rolePermissions": {},
   "settings": {
     "shopName": "Hoa Tươi DL",
     "hotline": "0909 123 456",

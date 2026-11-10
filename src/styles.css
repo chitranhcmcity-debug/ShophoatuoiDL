@@ -81,6 +81,24 @@ a {
   border-radius: 0.375rem;
 }
 
+/* Hiệu ứng rơi từ từ khi cuộn trang (directive appReveal) */
+.scroll-reveal:not(.is-visible) {
+  opacity: 0;
+}
+.scroll-reveal.is-visible {
+  animation: reveal-drop 1.3s cubic-bezier(0.22, 0.61, 0.36, 1) var(--reveal-delay, 0ms) backwards;
+}
+@keyframes reveal-drop {
+  from {
+    opacity: 0;
+    transform: translateY(-90px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scroll-reveal:not(.is-visible) { opacity: 1; }
+  .scroll-reveal.is-visible { animation: none; }
+}
+
 /* =====================================================================
    DASHBOARD THEME  (áp dụng cho mọi trang trong .dash)
    Quy tắc phối màu 60-30-10:

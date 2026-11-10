@@ -31,6 +31,7 @@ export class ProductService {
     this.likes.set(storageService.getOrCreate<{ id: string; productIds: string[] }[]>(this.favoritesKey, []));
     storageService.watch(this.favoritesKey, () => this.likes.set(storageService.get<{ id: string; productIds: string[] }[]>(this.favoritesKey) ?? []));
     this.categories = storageService.getOrCreate<Category[]>('categories', []);
+    storageService.watch('categories', () => (this.categories = storageService.get<Category[]>('categories') ?? []));
     this.loaded = firstValueFrom(this.http.get<Product[]>(this.apiUrl)).then((data) => this.products.set(data));
   }
 

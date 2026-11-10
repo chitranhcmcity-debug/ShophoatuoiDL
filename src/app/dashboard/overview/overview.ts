@@ -1,6 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { Component, computed, inject } from '@angular/core';
 import { ORDER_STATUSES, toneOfStatus } from '../../interfaces/order';
+import { Auth } from '../../services/auth';
 import { CheckoutService } from '../../services/checkout';
 import { CustomerService } from '../../services/customer';
 import { SettingsService } from '../../services/settings';
@@ -16,6 +17,7 @@ export class Overview {
   private productService = inject(ProductService);
   private checkoutService = inject(CheckoutService);
   private customerService = inject(CustomerService);
+  authService = inject(Auth);
   settings = inject(SettingsService).settings;
 
   products = this.productService.products;

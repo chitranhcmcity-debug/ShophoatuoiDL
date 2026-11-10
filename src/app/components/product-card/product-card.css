@@ -3,8 +3,8 @@
 }
 :host(.reveal) {
   opacity: 0;
-  transform: translateY(40px);
-  transition: opacity 0.7s ease, transform 0.7s ease;
+  transform: translateY(-90px);
+  transition: opacity 1.3s ease, transform 1.3s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 :host(.reveal.visible) {
   opacity: 1;

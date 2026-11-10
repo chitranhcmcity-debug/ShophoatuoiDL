@@ -7,12 +7,18 @@
  *  - admin    (Quản trị web) : quản trị web (nhân viên, khách hàng, đơn hàng, dữ liệu),
  *                              chỉ XEM sản phẩm, không được sửa sản phẩm / giá.
  *  - staff    (Nhân viên)    : chỉ được XEM, không thêm / sửa / xóa.
+ *  - receiver / florist / shipper: mỗi vai trò xử lý một giai đoạn của đơn hàng.
  *  - customer (Khách hàng)   : không vào được trang quản trị.
+ *
+ * Quyền của các vai trò trong EDITABLE_ROLES chỉnh được ở trang Phân quyền (xem PermissionService).
  */
 export const ROLE_LABELS: Record<string, string> = {
   manager: 'Quản lí',
   admin: 'Quản trị web',
   staff: 'Nhân viên',
+  receiver: 'Nhân viên nhận hàng',
+  florist: 'Nhân viên cắm hoa',
+  shipper: 'Nhân viên giao hoa',
   customer: 'Khách hàng',
 };
 
@@ -23,15 +29,77 @@ export const ALL_PERMISSIONS: string[] = [
   'dashboard.view',
   'system.manage', // xuất file JSON, khôi phục dữ liệu gốc
   'customer.password', // xem mật khẩu khách hàng: chỉ quản trị web và chủ shop
-  ...MODULES.flatMap((m) => ACTIONS.map((a) => `${m}.${a}`)),
+  'employee.password', // xem mật khẩu nhân viên: chỉ quản trị web
+  'consult.view', // yêu cầu tư vấn từ form ở trang chủ
+  'consult.update',
+  'consult.delete',
+  'report.view', // doanh thu ở trang tổng quan
+  'permission.view', // xem ma trận phân quyền
+  'permission.manage', // chỉnh ma trận phân quyền
+  'order.confirm', // Chờ xác nhận -> Đã xác nhận
+  'order.prepare', // Đã xác nhận -> Đang chuẩn bị hoa
+  'order.ship', // Đang chuẩn bị hoa -> Đang giao
+  'order.deliver', // Đang giao -> Đã giao
+  'order.cancel',
+  ...MODULES.flatMap((m) => ACTIONS.map((a) => `${m}.${a}`)).filter((p) => p !== 'order.update'),
 ];
 
 export const ROLE_PERMISSIONS: Record<string, string[]> = {
-  manager: ALL_PERMISSIONS.filter((p) => !['employee.create', 'employee.update', 'employee.delete'].includes(p)),
+  manager: ALL_PERMISSIONS.filter((p) => !['employee.create', 'employee.update', 'employee.delete', 'employee.password', 'permission.manage'].includes(p)),
   admin: ALL_PERMISSIONS.filter((p) => !p.startsWith('product.') || p === 'product.view'),
-  staff: ALL_PERMISSIONS.filter((p) => p.endsWith('.view')), // không có customer.password
+  staff: ALL_PERMISSIONS.filter((p) => p.endsWith('.view') && p !== 'permission.view'), // không có customer.password
+  receiver: ['dashboard.view', 'order.view', 'order.confirm', 'order.cancel', 'customer.view', 'consult.view', 'consult.update'],
+  florist: ['dashboard.view', 'order.view', 'order.prepare', 'product.view'],
+  shipper: ['dashboard.view', 'order.view', 'order.ship', 'order.deliver'],
   customer: [],
 };
 
 /** Các vai trò thuộc về nội bộ (được vào trang quản trị) */
-export const STAFF_ROLES = ['manager', 'admin', 'staff'];
+export const STAFF_ROLES = ['manager', 'admin', 'staff', 'receiver', 'florist', 'shipper'];
+
+/** Các vai trò được giao việc qua ma trận phân quyền; Quản lí và Quản trị web cố định để không tự nâng quyền */
+export const EDITABLE_ROLES = ['staff', 'receiver', 'florist', 'shipper'];
+export const LOCKED_ROLES = ['manager', 'admin'];
+
+/** Các quyền hiện trong ma trận. Quyền nhạy cảm (mật khẩu, tài khoản, dữ liệu hệ thống) không giao qua đây */
+export const PERMISSION_GROUPS: { title: string; items: { key: string; label: string }[] }[] = [
+  {
+    title: 'Xử lý đơn hàng',
+    items: [
+      { key: 'order.view', label: 'Xem đơn hàng' },
+      { key: 'order.confirm', label: 'Xác nhận đơn hàng' },
+      { key: 'order.prepare', label: 'Chuẩn bị hoa' },
+      { key: 'order.ship', label: 'Bắt đầu giao hàng' },
+      { key: 'order.deliver', label: 'Xác nhận đã giao' },
+      { key: 'order.cancel', label: 'Hủy đơn hàng' },
+    ],
+  },
+  {
+    title: 'Xem dữ liệu',
+    items: [
+      { key: 'product.view', label: 'Xem sản phẩm' },
+      { key: 'customer.view', label: 'Xem khách hàng' },
+      { key: 'employee.view', label: 'Xem nhân viên' },
+      { key: 'report.view', label: 'Xem doanh thu' },
+    ],
+  },
+  {
+    title: 'Tư vấn khách hàng',
+    items: [
+      { key: 'consult.view', label: 'Xem yêu cầu tư vấn' },
+      { key: 'consult.update', label: 'Đánh dấu đã liên hệ' },
+    ],
+  },
+];
+
+export const ASSIGNABLE_PERMISSIONS = PERMISSION_GROUPS.flatMap((g) => g.items.map((i) => i.key));
+
+/** Bật quyền bên trái thì phải có quyền bên phải mới dùng được */
+export const PERMISSION_REQUIRES: Record<string, string> = {
+  'order.confirm': 'order.view',
+  'order.prepare': 'order.view',
+  'order.ship': 'order.view',
+  'order.deliver': 'order.view',
+  'order.cancel': 'order.view',
+  'consult.update': 'consult.view',
+};

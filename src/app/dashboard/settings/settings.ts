@@ -27,6 +27,10 @@ export class Settings {
       alert('Phí giao nhanh và mức cảnh báo tồn kho phải là số không âm');
       return;
     }
+    if (!/^([01]\d|2[0-3]):[0-5]\d$/.test(f.flashSaleEnd)) {
+      alert('Vui lòng nhập giờ kết thúc giá sốc');
+      return;
+    }
     this.settingsService.save({ ...f, fastShippingFee: Number(f.fastShippingFee), lowStockThreshold: Number(f.lowStockThreshold) });
     this.message.set('Đã lưu cấu hình hệ thống.');
   }

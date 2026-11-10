@@ -29,7 +29,8 @@ export class ProductCard implements OnInit, OnDestroy {
       return;
     }
     // Trễ nhẹ theo vị trí trong hàng để các card hiện lần lượt
-    const index = el.parentElement ? Array.from(el.parentElement.children).indexOf(el) : 0;
+    const col = el.parentElement;
+    const index = col?.parentElement ? Array.from(col.parentElement.children).indexOf(col) : 0;
     el.style.transitionDelay = `${(index % 4) * 100}ms`;
     this.observer = new IntersectionObserver(
       ([entry]) => {
@@ -38,7 +39,7 @@ export class ProductCard implements OnInit, OnDestroy {
           this.observer?.disconnect();
         }
       },
-      { threshold: 0.1 }
+      { threshold: 0.1, rootMargin: '0px 0px -10% 0px' }
     );
     this.observer.observe(el);
   }

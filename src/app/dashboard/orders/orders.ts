@@ -5,6 +5,7 @@ import { OrderTracking } from '../../components/order-tracking/order-tracking';
 import { ORDER_CANCELLED, ORDER_FLOW, ORDER_STATUSES, Order, toneOfStatus } from '../../interfaces/order';
 import { Auth } from '../../services/auth';
 import { CheckoutService } from '../../services/checkout';
+import { PermissionService } from '../../services/permission';
 
 @Component({
   selector: 'app-orders',
@@ -14,6 +15,7 @@ import { CheckoutService } from '../../services/checkout';
 })
 export class Orders {
   private checkoutService = inject(CheckoutService);
+  private permissionService = inject(PermissionService);
   authService = inject(Auth);
 
   orders = this.checkoutService.orders;
@@ -57,22 +59,37 @@ export class Orders {
     return i >= 0 && i < ORDER_FLOW.length - 1 ? ORDER_FLOW[i + 1] : null;
   }
 
+  /** Người đang đăng nhập có được xác nhận bước kế tiếp không */
+  canAdvance(o: Order): boolean {
+    const perm = this.nextStep(o)?.perm;
+    return !!perm && this.authService.hasPermission(perm);
+  }
+
+  /** Bước kế tiếp do ai phụ trách */
+  waitingFor(o: Order): string {
+    const perm = this.nextStep(o)?.perm;
+    const roles = perm ? this.permissionService.rolesWith(perm) : [];
+    return roles.length ? roles.join(', ') : 'Quản lí hoặc Quản trị web';
+  }
+
   canCancel(o: Order): boolean {
-    return o.status !== ORDER_CANCELLED.status && o.status !== 'Đã giao';
+    return this.authService.hasPermission('order.cancel') && o.status !== ORDER_CANCELLED.status && o.status !== 'Đã giao';
   }
 
   advance(o: Order) {
     const next = this.nextStep(o);
-    if (next) this.checkoutService.updateStatus(o.id, next.status);
+    if (next && this.canAdvance(o)) this.checkoutService.updateStatus(o.id, next.status);
   }
 
   cancel(o: Order) {
+    if (!this.canCancel(o)) return;
     const reason = prompt('Nhập lý do hủy đơn hàng:', 'Khách yêu cầu hủy');
     if (reason === null) return;
     this.checkoutService.updateStatus(o.id, ORDER_CANCELLED.status, reason.trim() || 'Hủy đơn');
   }
 
   delete(id: string) {
+    if (!this.authService.hasPermission('order.delete')) return;
     if (confirm('Xóa đơn hàng này?')) this.checkoutService.deleteOrder(id);
   }
 }

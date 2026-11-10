@@ -1,6 +1,6 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ROLE_LABELS, ROLE_PERMISSIONS } from '../../interfaces/permissions';
+import { EDITABLE_ROLES, ROLE_LABELS, ROLE_PERMISSIONS } from '../../interfaces/permissions';
 import { Employee, User } from '../../interfaces/user';
 import { Auth } from '../../services/auth';
 import { CustomerService } from '../../services/customer';
@@ -26,9 +26,16 @@ export class Employees {
   draftUser = signal<User | null>(null);
   draftEmployee = signal<Employee | null>(null);
 
+  canSeePassword = computed(() => this.authService.hasPermission('employee.password'));
+  showPasswords = signal<{ [key: string]: boolean }>({});
+  togglePassword(id: string) {
+    if (!this.canSeePassword()) return;
+    this.showPasswords.update((map) => ({ ...map, [id]: !map[id] }));
+  }
+
   roleLabels = ROLE_LABELS;
   // quản trị web giao vai trò cho nhân viên; quản lí không có quyền sửa nhân viên
-  roleOptions = computed(() => ['manager', 'admin', 'staff']);
+  roleOptions = computed(() => ['manager', 'admin', ...EDITABLE_ROLES]);
 
   roleBadge(role: string): string {
     return role === 'manager' ? 'text-bg-danger' : role === 'admin' ? 'text-bg-primary' : 'text-bg-secondary';

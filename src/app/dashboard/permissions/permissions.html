@@ -1,0 +1,49 @@
+<h2 class="h4 mb-3">Ma trận phân quyền</h2>
+
+@if (message()) {
+<div class="alert alert-info py-2"><i class="bi bi-check-circle"></i> {{ message() }}</div>
+}
+<div class="alert alert-info py-2 mb-3">
+  <i class="bi bi-info-circle"></i>
+  @if (canEdit()) {
+  Đánh dấu việc giao cho từng vai trò rồi bấm Lưu. Quyền của Quản lí và Quản trị web được cố định.
+  } @else {
+  Bạn chỉ có quyền xem. Quản trị web là người chỉnh ma trận này.
+  }
+</div>
+
+<div class="table-responsive">
+  <table class="table table-bordered align-middle text-center">
+    <thead>
+      <tr>
+        <th class="text-start">Công việc</th>
+        @for (r of roles; track r) {
+        <th>{{ labels[r] }} @if (isLocked(r)) {<i class="bi bi-lock-fill" title="Cố định"></i>}</th>
+        }
+      </tr>
+    </thead>
+    <tbody>
+      @for (g of groups; track g.title) {
+      <tr>
+        <td class="text-start fw-bold" [attr.colspan]="roles.length + 1">{{ g.title }}</td>
+      </tr>
+      @for (p of g.items; track p.key) {
+      <tr>
+        <td class="text-start">{{ p.label }}</td>
+        @for (r of roles; track r) {
+        <td>
+          <input class="form-check-input" type="checkbox" [attr.aria-label]="p.label + ' - ' + labels[r]" [attr.data-role]="r" [attr.data-perm]="p.key"
+            [checked]="isOn(r, p.key)" [disabled]="!canEdit() || isLocked(r)" (change)="toggle(r, p.key, $any($event.target).checked)" />
+        </td>
+        }
+      </tr>
+      }
+      }
+    </tbody>
+  </table>
+</div>
+
+@if (canEdit()) {
+<button type="button" class="btn btn-primary" (click)="save()"><i class="bi bi-save"></i> Lưu phân quyền</button>
+<button type="button" class="btn btn-secondary ms-2" (click)="reset()"><i class="bi bi-arrow-counterclockwise"></i> Về mặc định</button>
+}

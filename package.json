@@ -7,7 +7,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "server": "json-server --watch db.json --port 3000 --host 0.0.0.0",
+    "server": "json-server --watch db.json --port 3000 --host 0.0.0.0 --fks _noRelation",
     "dev": "concurrently -k -n api,ai,web -c yellow,magenta,cyan \"npm:server\" \"npm:ai\" \"npm:start\"",
     "ai": "node server/ai-server.mjs"
   },

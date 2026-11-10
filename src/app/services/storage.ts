@@ -12,6 +12,7 @@ export const REMOTE_KEYS = [
   'favorites',
   'consults',
   'settings',
+  'rolePermissions',
 ];
 
 const POLL_MS = 3000;

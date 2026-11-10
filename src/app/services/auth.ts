@@ -4,6 +4,7 @@ import { ROLE_PERMISSIONS } from '../interfaces/permissions';
 import { CurrentUser } from '../interfaces/user';
 import { CustomerService } from './customer';
 import { EmployeeService } from './employee';
+import { PermissionService } from './permission';
 import { StorageService } from './storage';
 
 @Injectable({ providedIn: 'root' })
@@ -14,6 +15,7 @@ export class Auth {
     private storageService: StorageService,
     private employeeService: EmployeeService,
     private customerService: CustomerService,
+    private permissionService: PermissionService,
     private router: Router
   ) {
     const saved = storageService.get<CurrentUser>('currentUser');
@@ -63,6 +65,6 @@ export class Auth {
   hasPermission(permission: string): boolean {
     // quyền tính từ vai trò, không tin danh sách permissions lưu trong localStorage
     const role = this.user()?.role;
-    return !!role && (ROLE_PERMISSIONS[role]?.includes(permission) ?? false);
+    return !!role && this.permissionService.has(role, permission);
   }
 }

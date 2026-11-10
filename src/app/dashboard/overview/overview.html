@@ -2,6 +2,7 @@
 
 <!-- Thẻ thống kê: mỗi thẻ 1 tông màu, viền dày + dải màu phía trên -->
 <div class="row g-4 mb-4">
+  @if (authService.hasPermission('report.view')) {
   <div class="col-sm-6 col-xl-3">
     <div class="stat tone-emerald">
       <span class="stat-ico"><i class="bi bi-cash-coin"></i></span>
@@ -12,6 +13,7 @@
       </div>
     </div>
   </div>
+  }
   <div class="col-sm-6 col-xl-3">
     <div class="stat tone-sapphire">
       <span class="stat-ico"><i class="bi bi-receipt-cutoff"></i></span>

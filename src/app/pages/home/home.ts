@@ -1,19 +1,23 @@
-import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
+import { Component, DestroyRef, ElementRef, afterNextRender, computed, inject, signal, viewChild } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { ProductCard } from '../../components/product-card/product-card';
+import { CountUp } from '../../directives/count-up';
+import { Reveal } from '../../directives/reveal';
 import { ProductService } from '../../services/product';
-import { StorageService } from '../../services/storage';
+import { ConsultService } from '../../services/consult';
+import { SettingsService } from '../../services/settings';
 
 @Component({
   selector: 'app-home',
-  imports: [RouterLink, ReactiveFormsModule, ProductCard],
+  imports: [RouterLink, ReactiveFormsModule, ProductCard, Reveal, CountUp],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
 export class Home {
   private productService = inject(ProductService);
-  private storageService = inject(StorageService);
+  private consultService = inject(ConsultService);
+  private settings = inject(SettingsService).settings;
 
   // ===== Slider =====
   banners = [
@@ -26,13 +30,16 @@ export class Home {
 
   // ===== Danh mục + sản phẩm theo từng danh mục =====
   categories = this.productService.getCategories();
-  rowSlugs = ['hoa-sinh-nhat', 'hoa-khai-truong', 'hoa-chia-buon', 'hoa-14-2', 'hoa-8-3', 'hoa-20-10'];
   rows = computed(() =>
-    this.rowSlugs.map((slug) => ({
-      category: this.productService.getCategory(slug)!,
-      items: this.productService.products().filter((p) => p.category === slug).slice(0, 4),
+    this.categories.map((category) => ({
+      category,
+      items: this.productService.products().filter((p) => p.category === category.slug).slice(0, 4),
     }))
   );
+
+  // ===== Bán chạy nhất + Hoa mới về =====
+  bestSellers = computed(() => [...this.productService.products()].sort((a, b) => b.sold - a.sold).slice(0, 8));
+  newest = computed(() => [...this.productService.products()].sort((a, b) => b.createdAt.localeCompare(a.createdAt)).slice(0, 4));
 
   // ===== Giá sốc hôm nay (sản phẩm có giảm giá) =====
   flashSale = computed(() =>
@@ -56,6 +63,20 @@ export class Home {
     { city: 'Cần Thơ', addresses: ['30 Nguyễn Văn Cừ, Ninh Kiều'] },
   ];
 
+  stats = computed(() => [
+    { icon: 'bi-flower1', value: this.productService.products().length, suffix: '+', label: 'Mẫu hoa đang bán' },
+    { icon: 'bi-grid-fill', value: this.categories.length, suffix: '', label: 'Chủ đề hoa' },
+    { icon: 'bi-shop', value: this.branches.reduce((n, b) => n + b.addresses.length, 0), suffix: '', label: 'Chi nhánh toàn quốc' },
+    { icon: 'bi-lightning-charge-fill', value: 60, suffix: ' phút', label: 'Giao nhanh nội thành' },
+  ]);
+
+  steps = [
+    { icon: 'bi-search-heart', title: 'Chọn mẫu hoa', text: 'Xem theo chủ đề hoặc tìm nhanh mẫu bạn thích.' },
+    { icon: 'bi-cart-check', title: 'Đặt hàng', text: 'Nhập địa chỉ, lời nhắn và cách giao hàng.' },
+    { icon: 'bi-flower2', title: 'Cắm hoa', text: 'Hoa tươi trong ngày được nghệ nhân cắm theo mẫu.' },
+    { icon: 'bi-truck', title: 'Giao tận nơi', text: 'Giao nhanh trong 60 phút khu vực nội thành.' },
+  ];
+
   blogs = [
     { day: '12', month: '03', title: 'Ý nghĩa các loài hoa tặng ngày 8/3', excerpt: 'Mỗi loài hoa mang một thông điệp riêng, cùng tìm hiểu để chọn đúng món quà cho người phụ nữ của bạn.' },
     { day: '20', month: '10', title: 'Cách cắm hoa sinh nhật đẹp tại nhà', excerpt: 'Chỉ với vài bước đơn giản bạn có thể tự tay cắm một bình hoa tươi lâu và rực rỡ.' },
@@ -76,15 +97,63 @@ export class Home {
   });
   consultSent = signal(false);
 
+  // ===== Hiệu ứng khi cuộn trang =====
+  private slider = viewChild<ElementRef<HTMLElement>>('slider');
+  private progress = viewChild<ElementRef<HTMLElement>>('progress');
+  private quoteImg = viewChild<ElementRef<HTMLElement>>('quoteImg');
+  private reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  private ticking = false;
+  showTop = signal(false);
+
   constructor() {
     const destroyRef = inject(DestroyRef);
     const slide = setInterval(() => this.nextBanner(), 4000);
     const tick = setInterval(() => this.updateCountdown(), 1000);
     this.updateCountdown();
+    const onScroll = () => {
+      if (this.ticking) return;
+      this.ticking = true;
+      requestAnimationFrame(() => {
+        this.ticking = false;
+        this.updateScroll();
+      });
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    afterNextRender(() => this.updateScroll());
     destroyRef.onDestroy(() => {
       clearInterval(slide);
       clearInterval(tick);
+      window.removeEventListener('scroll', onScroll);
     });
+  }
+
+  private updateScroll() {
+    const y = window.scrollY;
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    const bar = this.progress()?.nativeElement;
+    if (bar) bar.style.transform = `scaleX(${max > 0 ? Math.min(y / max, 1) : 0})`;
+    this.showTop.set(y > 600);
+    if (this.reduceMotion) return;
+
+    // Ảnh banner trôi chậm hơn nội dung, chữ mờ dần khi cuộn qua
+    const slider = this.slider()?.nativeElement;
+    if (slider) {
+      const height = slider.offsetHeight;
+      slider.style.setProperty('--hero-shift', `${Math.min(y * 0.12, height * 0.08)}px`);
+      slider.style.setProperty('--hero-fade', String(Math.max(1 - y / height, 0)));
+    }
+
+    const img = this.quoteImg()?.nativeElement;
+    const box = img?.parentElement?.getBoundingClientRect();
+    if (img && box && box.bottom > 0 && box.top < window.innerHeight) {
+      const limit = box.height * 0.1;
+      const offset = (box.top + box.height / 2 - window.innerHeight / 2) * -0.1;
+      img.style.transform = `translateY(${Math.max(-limit, Math.min(limit, offset))}px) scale(1.2)`;
+    }
+  }
+
+  scrollTop() {
+    window.scrollTo({ top: 0, behavior: this.reduceMotion ? 'auto' : 'smooth' });
   }
 
   nextBanner() {
@@ -100,7 +169,9 @@ export class Home {
   private updateCountdown() {
     const now = new Date();
     const end = new Date(now);
-    end.setHours(23, 59, 59, 999);
+    const [hour, minute] = this.settings().flashSaleEnd.split(':').map(Number);
+    end.setHours(hour, minute, 0, 0);
+    if (end <= now) end.setDate(end.getDate() + 1); // đã qua giờ kết thúc thì đếm tới ngày mai
     const s = Math.floor((end.getTime() - now.getTime()) / 1000);
     const pad = (n: number) => String(n).padStart(2, '0');
     this.countdown.set(`${pad(Math.floor(s / 3600))}:${pad(Math.floor((s % 3600) / 60))}:${pad(s % 60)}`);
@@ -120,9 +191,8 @@ export class Home {
       this.consultForm.markAllAsTouched();
       return;
     }
-    const list = this.storageService.getOrCreate<any[]>('consults', []);
-    list.push({ id: 'k' + Date.now(), ...this.consultForm.value, createdAt: new Date().toISOString() });
-    this.storageService.set('consults', list);
+    const v = this.consultForm.getRawValue();
+    this.consultService.add({ fullname: v.fullname!, phone: v.phone!, note: v.note ?? '' });
     this.consultForm.reset();
     this.consultSent.set(true);
   }
