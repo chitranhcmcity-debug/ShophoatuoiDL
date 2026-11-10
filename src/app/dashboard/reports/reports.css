@@ -1,0 +1,94 @@
+.stat-value {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--d-ink);
+}
+.readout {
+  min-height: 20px;
+}
+
+/* Biểu đồ cột: một chuỗi, cột mảnh, trục gọn */
+.chart-scroll {
+  overflow-x: auto;
+  padding-top: 18px;
+}
+.plot {
+  position: relative;
+  height: 220px;
+  margin-bottom: 24px;
+}
+.grid {
+  position: absolute;
+  left: 44px;
+  right: 0;
+  border-top: 1px solid #eee;
+}
+.grid span {
+  position: absolute;
+  left: -44px;
+  top: -8px;
+  width: 38px;
+  color: var(--d-muted);
+  font-size: 11px;
+  text-align: right;
+}
+.bars {
+  position: absolute;
+  inset: 0 0 0 44px;
+  display: flex;
+}
+.slot {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  min-width: 14px;
+  height: 100%;
+  outline-offset: -2px;
+}
+.slot:hover,
+.slot:focus {
+  background: var(--d-plum-soft);
+}
+.bar {
+  position: relative;
+  width: calc(100% - 2px);
+  max-width: 24px;
+  min-height: 3px;
+  background: var(--d-plum);
+  border-radius: 4px 4px 0 0;
+}
+.peak {
+  position: absolute;
+  left: 50%;
+  bottom: 100%;
+  transform: translateX(-50%);
+  color: var(--d-ink);
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.date {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-top: 4px;
+  transform: translateX(-50%);
+  color: var(--d-muted);
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.meter {
+  height: 8px;
+  margin-top: 3px;
+  background: var(--d-plum-soft);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.meter div {
+  height: 100%;
+  background: var(--d-plum);
+  border-radius: 4px;
+}

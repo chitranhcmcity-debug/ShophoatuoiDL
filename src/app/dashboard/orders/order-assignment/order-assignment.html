@@ -1,0 +1,21 @@
+@if (rows().length > 0) {
+<h6 class="mt-4"><i class="bi bi-people-fill"></i> Phân công</h6>
+@for (row of rows(); track row.field) {
+<div class="mb-2">
+  <label class="form-label small mb-1">{{ row.label }}</label>
+  @if (canAssign()) {
+  <select class="form-select form-select-sm" [attr.data-field]="row.field" (change)="assign(row.field, $event)">
+    <option value="" [selected]="!row.current">Chưa phân công</option>
+    @for (s of row.options; track s.id) {
+    <option [value]="s.id" [selected]="s.id === row.current">{{ s.name }}</option>
+    }
+  </select>
+  @if (row.options.length === 0) {
+  <small class="text-muted">Chưa có nhân viên phù hợp, hãy chọn vai trò ở trang Nhân viên.</small>
+  }
+  } @else {
+  <div>{{ nameOf(row.current) }}</div>
+  }
+</div>
+}
+}

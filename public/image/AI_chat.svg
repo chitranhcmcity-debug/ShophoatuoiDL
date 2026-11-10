@@ -1,0 +1,185 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+<defs>
+<filter id="bvPetal" x="-25%" y="-25%" width="150%" height="150%" filterUnits="objectBoundingBox" primitiveUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+  <feGaussianBlur in="SourceAlpha" stdDeviation="9" result="b"/>
+  <feDiffuseLighting in="b" surfaceScale="7" diffuseConstant="1" lighting-color="#fff" result="d"><feDistantLight azimuth="225" elevation="55"/></feDiffuseLighting>
+  <feComposite in="SourceGraphic" in2="d" operator="arithmetic" k1="1.45" result="shade"/>
+  <feSpecularLighting in="b" surfaceScale="7" specularConstant="0.5" specularExponent="18" lighting-color="#fff" result="s"><fePointLight x="150" y="40" z="260"/></feSpecularLighting>
+  <feComposite in="s" in2="SourceAlpha" operator="in" result="s2"/>
+  <feComposite in="shade" in2="SourceAlpha" operator="in" result="shade2"/>
+  <feComposite in="shade2" in2="s2" operator="arithmetic" k2="1" k3="1"/>
+</filter>
+<filter id="bvBack" x="-25%" y="-25%" width="150%" height="150%" filterUnits="objectBoundingBox" primitiveUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+  <feGaussianBlur in="SourceAlpha" stdDeviation="9" result="b"/>
+  <feDiffuseLighting in="b" surfaceScale="7" diffuseConstant="1" lighting-color="#fff" result="d"><feDistantLight azimuth="225" elevation="55"/></feDiffuseLighting>
+  <feComposite in="SourceGraphic" in2="d" operator="arithmetic" k1="1.35" result="shade"/>
+  <feSpecularLighting in="b" surfaceScale="7" specularConstant="0.3" specularExponent="18" lighting-color="#fff" result="s"><fePointLight x="150" y="40" z="260"/></feSpecularLighting>
+  <feComposite in="s" in2="SourceAlpha" operator="in" result="s2"/>
+  <feComposite in="shade" in2="SourceAlpha" operator="in" result="shade2"/>
+  <feComposite in="shade2" in2="s2" operator="arithmetic" k2="1" k3="1"/>
+</filter>
+<filter id="bvFace" x="-25%" y="-25%" width="150%" height="150%" filterUnits="objectBoundingBox" primitiveUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+  <feGaussianBlur in="SourceAlpha" stdDeviation="22" result="b"/>
+  <feDiffuseLighting in="b" surfaceScale="14" diffuseConstant="1" lighting-color="#fff" result="d"><feDistantLight azimuth="225" elevation="55"/></feDiffuseLighting>
+  <feComposite in="SourceGraphic" in2="d" operator="arithmetic" k1="1.2" result="shade"/>
+  <feSpecularLighting in="b" surfaceScale="14" specularConstant="1.0" specularExponent="30" lighting-color="#fff" result="s"><fePointLight x="190" y="90" z="230"/></feSpecularLighting>
+  <feComposite in="s" in2="SourceAlpha" operator="in" result="s2"/>
+  <feComposite in="shade" in2="SourceAlpha" operator="in" result="shade2"/>
+  <feComposite in="shade2" in2="s2" operator="arithmetic" k2="1" k3="1"/>
+</filter>
+<filter id="bvLeaf" x="-25%" y="-25%" width="150%" height="150%" filterUnits="objectBoundingBox" primitiveUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+  <feGaussianBlur in="SourceAlpha" stdDeviation="6" result="b"/>
+  <feDiffuseLighting in="b" surfaceScale="6" diffuseConstant="1" lighting-color="#fff" result="d"><feDistantLight azimuth="225" elevation="55"/></feDiffuseLighting>
+  <feComposite in="SourceGraphic" in2="d" operator="arithmetic" k1="1.3" result="shade"/>
+  <feSpecularLighting in="b" surfaceScale="6" specularConstant="0.6" specularExponent="20" lighting-color="#fff" result="s"><fePointLight x="150" y="40" z="260"/></feSpecularLighting>
+  <feComposite in="s" in2="SourceAlpha" operator="in" result="s2"/>
+  <feComposite in="shade" in2="SourceAlpha" operator="in" result="shade2"/>
+  <feComposite in="shade2" in2="s2" operator="arithmetic" k2="1" k3="1"/>
+</filter>
+<filter id="bvBubble" x="-25%" y="-25%" width="150%" height="150%" filterUnits="objectBoundingBox" primitiveUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+  <feGaussianBlur in="SourceAlpha" stdDeviation="7" result="b"/>
+  <feDiffuseLighting in="b" surfaceScale="8" diffuseConstant="1" lighting-color="#fff" result="d"><feDistantLight azimuth="225" elevation="55"/></feDiffuseLighting>
+  <feComposite in="SourceGraphic" in2="d" operator="arithmetic" k1="1.15" result="shade"/>
+  <feSpecularLighting in="b" surfaceScale="8" specularConstant="0.7" specularExponent="25" lighting-color="#fff" result="s"><fePointLight x="360" y="40" z="200"/></feSpecularLighting>
+  <feComposite in="s" in2="SourceAlpha" operator="in" result="s2"/>
+  <feComposite in="shade" in2="SourceAlpha" operator="in" result="shade2"/>
+  <feComposite in="shade2" in2="s2" operator="arithmetic" k2="1" k3="1"/>
+</filter>
+<filter id="bvSmall" x="-25%" y="-25%" width="150%" height="150%" filterUnits="objectBoundingBox" primitiveUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+  <feGaussianBlur in="SourceAlpha" stdDeviation="3" result="b"/>
+  <feDiffuseLighting in="b" surfaceScale="5" diffuseConstant="1" lighting-color="#fff" result="d"><feDistantLight azimuth="225" elevation="55"/></feDiffuseLighting>
+  <feComposite in="SourceGraphic" in2="d" operator="arithmetic" k1="1.2" result="shade"/>
+  <feSpecularLighting in="b" surfaceScale="5" specularConstant="0.9" specularExponent="25" lighting-color="#fff" result="s"><fePointLight x="150" y="40" z="260"/></feSpecularLighting>
+  <feComposite in="s" in2="SourceAlpha" operator="in" result="s2"/>
+  <feComposite in="shade" in2="SourceAlpha" operator="in" result="shade2"/>
+  <feComposite in="shade2" in2="s2" operator="arithmetic" k2="1" k3="1"/>
+</filter>
+  <radialGradient id="bg" cx="50%" cy="35%" r="70%">
+    <stop offset="0%" stop-color="#fff8fb"/><stop offset="65%" stop-color="#ffd3e4"/><stop offset="100%" stop-color="#f08cb3"/>
+  </radialGradient>
+  <radialGradient id="ao" cx="256" cy="220" r="175" gradientUnits="userSpaceOnUse">
+    <stop offset="0.5" stop-color="#5c0f2e" stop-opacity="0.55"/><stop offset="0.62" stop-color="#5c0f2e" stop-opacity="0.25"/><stop offset="1" stop-color="#5c0f2e" stop-opacity="0"/>
+  </radialGradient>
+  <radialGradient id="face" cx="36%" cy="28%" r="85%">
+    <stop offset="0%" stop-color="#fffbe6"/><stop offset="30%" stop-color="#ffe066"/><stop offset="75%" stop-color="#f59f00"/><stop offset="100%" stop-color="#c76a00"/>
+  </radialGradient>
+  <linearGradient id="visor" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#3b4148"/><stop offset="60%" stop-color="#15181b"/><stop offset="100%" stop-color="#000"/>
+  </linearGradient>
+  <radialGradient id="eye" cx="50%" cy="35%" r="65%">
+    <stop offset="0%" stop-color="#f0fff9"/><stop offset="40%" stop-color="#63e6be"/><stop offset="100%" stop-color="#087f5b"/>
+  </radialGradient>
+  <radialGradient id="bulb" cx="35%" cy="30%" r="70%">
+    <stop offset="0%" stop-color="#fff"/><stop offset="35%" stop-color="#74c0fc"/><stop offset="100%" stop-color="#1864ab"/>
+  </radialGradient>
+  <linearGradient id="metal" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0%" stop-color="#6c757d"/><stop offset="45%" stop-color="#f8f9fa"/><stop offset="100%" stop-color="#343a40"/>
+  </linearGradient>
+  <radialGradient id="ground" cx="50%" cy="50%" r="50%">
+    <stop offset="0%" stop-color="#7a1636" stop-opacity="0.45"/><stop offset="100%" stop-color="#7a1636" stop-opacity="0"/>
+  </radialGradient>
+  <radialGradient id="dot" cx="35%" cy="30%" r="70%">
+    <stop offset="0%" stop-color="#ffd6e5"/><stop offset="50%" stop-color="#e64980"/><stop offset="100%" stop-color="#8c1d47"/>
+  </radialGradient>
+  <filter id="glow" x="-60%" y="-60%" width="220%" height="220%">
+    <feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+  <filter id="drop" x="-30%" y="-30%" width="160%" height="170%">
+    <feDropShadow dx="6" dy="16" stdDeviation="12" flood-color="#5c0f2e" flood-opacity="0.4"/>
+  </filter>
+  <filter id="dropSm" x="-30%" y="-30%" width="160%" height="170%">
+    <feDropShadow dx="3" dy="7" stdDeviation="5" flood-color="#5c0f2e" flood-opacity="0.35"/>
+  </filter>
+  <filter id="blur4"><feGaussianBlur stdDeviation="4"/></filter>
+</defs>
+
+<circle cx="256" cy="256" r="250" fill="url(#bg)"/>
+<circle cx="256" cy="256" r="246" fill="none" stroke="#fff" stroke-opacity="0.7" stroke-width="5"/>
+<ellipse cx="262" cy="476" rx="100" ry="16" fill="url(#ground)"/>
+
+<!-- Thân -->
+<g filter="url(#dropSm)">
+  <path d="M250 318 C 244 375, 262 425, 256 470" stroke="#37b24d" stroke-width="22" fill="none" stroke-linecap="round" filter="url(#bvSmall)"/>
+</g>
+<!-- Lá -->
+<g filter="url(#dropSm)">
+  <path d="M254 410 C 196 404, 160 360, 166 322 C 220 324, 252 366, 254 410 Z" fill="#51cf66" filter="url(#bvLeaf)"/>
+  <path d="M258 446 C 316 438, 350 398, 346 360 C 294 362, 262 402, 258 446 Z" fill="#51cf66" filter="url(#bvLeaf)"/>
+  <path d="M250 404 C 222 380, 196 354, 172 330" stroke="#2b8a3e" stroke-width="3" fill="none" opacity="0.55"/>
+  <path d="M262 440 C 288 416, 314 390, 340 366" stroke="#2b8a3e" stroke-width="3" fill="none" opacity="0.55"/>
+</g>
+
+<!-- Bông hoa -->
+<g filter="url(#drop)">
+<path d="M258.8 205.1 C 217.9 150.9, 250.1 65.8, 297.7 60.2 Q 319.4 59.0, 333.8 75.1 C 363.5 112.8, 326.1 195.8, 258.8 205.1 Z" fill="#e03170" filter="url(#bvBack)"/>
+<path d="M262.9 209.2 C 272.2 141.9, 355.2 104.5, 392.9 134.2 Q 409.0 148.6, 407.8 170.3 C 402.2 217.9, 317.1 250.1, 262.9 209.2 Z" fill="#e03170" filter="url(#bvBack)"/>
+<path d="M262.9 214.8 C 317.1 173.9, 402.2 206.1, 407.8 253.7 Q 409.0 275.4, 392.9 289.8 C 355.2 319.5, 272.2 282.1, 262.9 214.8 Z" fill="#e03170" filter="url(#bvBack)"/>
+<path d="M258.8 218.9 C 326.1 228.2, 363.5 311.2, 333.8 348.9 Q 319.4 365.0, 297.7 363.8 C 250.1 358.2, 217.9 273.1, 258.8 218.9 Z" fill="#e03170" filter="url(#bvBack)"/>
+<path d="M253.2 218.9 C 294.1 273.1, 261.9 358.2, 214.3 363.8 Q 192.6 365.0, 178.2 348.9 C 148.5 311.2, 185.9 228.2, 253.2 218.9 Z" fill="#e03170" filter="url(#bvBack)"/>
+<path d="M249.1 214.8 C 239.8 282.1, 156.8 319.5, 119.1 289.8 Q 103.0 275.4, 104.2 253.7 C 109.8 206.1, 194.9 173.9, 249.1 214.8 Z" fill="#e03170" filter="url(#bvBack)"/>
+<path d="M249.1 209.2 C 194.9 250.1, 109.8 217.9, 104.2 170.3 Q 103.0 148.6, 119.1 134.2 C 156.8 104.5, 239.8 141.9, 249.1 209.2 Z" fill="#e03170" filter="url(#bvBack)"/>
+<path d="M253.2 205.1 C 185.9 195.8, 148.5 112.8, 178.2 75.1 Q 192.6 59.0, 214.3 60.2 C 261.9 65.8, 294.1 150.9, 253.2 205.1 Z" fill="#e03170" filter="url(#bvBack)"/>
+<path d="M256.0 204.0 C 193.0 167.0, 190.0 69.2, 235.0 44.0 Q 256.0 33.9, 277.0 44.0 C 322.0 69.2, 319.0 167.0, 256.0 204.0 Z" fill="#ff6b9e" filter="url(#bvPetal)"/>
+<path d="M261.7 206.3 C 243.3 135.6, 310.3 64.4, 359.9 78.4 Q 381.9 86.1, 389.6 108.1 C 403.6 157.7, 332.4 224.7, 261.7 206.3 Z" fill="#ff6b9e" filter="url(#bvPetal)"/>
+<path d="M264.0 212.0 C 301.0 149.0, 398.8 146.0, 424.0 191.0 Q 434.1 212.0, 424.0 233.0 C 398.8 278.0, 301.0 275.0, 264.0 212.0 Z" fill="#ff6b9e" filter="url(#bvPetal)"/>
+<path d="M261.7 217.7 C 332.4 199.3, 403.6 266.3, 389.6 315.9 Q 381.9 337.9, 359.9 345.6 C 310.3 359.6, 243.3 288.4, 261.7 217.7 Z" fill="#ff6b9e" filter="url(#bvPetal)"/>
+<path d="M256.0 220.0 C 319.0 257.0, 322.0 354.8, 277.0 380.0 Q 256.0 390.1, 235.0 380.0 C 190.0 354.8, 193.0 257.0, 256.0 220.0 Z" fill="#ff6b9e" filter="url(#bvPetal)"/>
+<path d="M250.3 217.7 C 268.7 288.4, 201.7 359.6, 152.1 345.6 Q 130.1 337.9, 122.4 315.9 C 108.4 266.3, 179.6 199.3, 250.3 217.7 Z" fill="#ff6b9e" filter="url(#bvPetal)"/>
+<path d="M248.0 212.0 C 211.0 275.0, 113.2 278.0, 88.0 233.0 Q 77.9 212.0, 88.0 191.0 C 113.2 146.0, 211.0 149.0, 248.0 212.0 Z" fill="#ff6b9e" filter="url(#bvPetal)"/>
+<path d="M250.3 206.3 C 179.6 224.7, 108.4 157.7, 122.4 108.1 Q 130.1 86.1, 152.1 78.4 C 201.7 64.4, 268.7 135.6, 250.3 206.3 Z" fill="#ff6b9e" filter="url(#bvPetal)"/>
+</g>
+<path d="M256.0 142.0 Q 252.0 97.0, 256.0 60.8" stroke="#d6336c" stroke-width="5" fill="none" stroke-linecap="round" opacity="0.35"/>
+<path d="M305.5 162.5 Q 334.5 127.9, 362.9 105.1" stroke="#d6336c" stroke-width="5" fill="none" stroke-linecap="round" opacity="0.35"/>
+<path d="M326.0 212.0 Q 371.0 208.0, 407.2 212.0" stroke="#d6336c" stroke-width="5" fill="none" stroke-linecap="round" opacity="0.35"/>
+<path d="M305.5 261.5 Q 340.1 290.5, 362.9 318.9" stroke="#d6336c" stroke-width="5" fill="none" stroke-linecap="round" opacity="0.35"/>
+<path d="M256.0 282.0 Q 260.0 327.0, 256.0 363.2" stroke="#d6336c" stroke-width="5" fill="none" stroke-linecap="round" opacity="0.35"/>
+<path d="M206.5 261.5 Q 177.5 296.1, 149.1 318.9" stroke="#d6336c" stroke-width="5" fill="none" stroke-linecap="round" opacity="0.35"/>
+<path d="M186.0 212.0 Q 141.0 216.0, 104.8 212.0" stroke="#d6336c" stroke-width="5" fill="none" stroke-linecap="round" opacity="0.35"/>
+<path d="M206.5 162.5 Q 171.9 133.5, 149.1 105.1" stroke="#d6336c" stroke-width="5" fill="none" stroke-linecap="round" opacity="0.35"/>
+<circle cx="256" cy="212" r="175" fill="url(#ao)"/>
+
+<!-- Ăng-ten -->
+<rect x="250" y="62" width="12" height="64" rx="6" fill="url(#metal)"/>
+<circle cx="256" cy="56" r="17" fill="url(#bulb)" filter="url(#glow)"/>
+<ellipse cx="250" cy="49" rx="6" ry="4" fill="#fff"/>
+
+<!-- Mặt -->
+<g filter="url(#drop)">
+  <circle cx="256" cy="212" r="94" fill="url(#face)" filter="url(#bvFace)"/>
+</g>
+<ellipse cx="224" cy="152" rx="36" ry="15" fill="#fff" opacity="0.6" transform="rotate(-22 224 152)" filter="url(#blur4)"/>
+
+<!-- Kính -->
+<g filter="url(#dropSm)">
+  <rect x="186" y="166" width="140" height="70" rx="35" fill="#dee2e6" filter="url(#bvSmall)"/>
+</g>
+<rect x="194" y="174" width="124" height="54" rx="27" fill="url(#visor)"/>
+<path d="M206 182 Q 248 171, 300 180 L 290 189 Q 248 182, 210 191 Z" fill="#fff" opacity="0.2"/>
+<g filter="url(#glow)">
+  <ellipse cx="228" cy="201" rx="12" ry="15" fill="url(#eye)"/>
+  <ellipse cx="284" cy="201" rx="12" ry="15" fill="url(#eye)"/>
+</g>
+<circle cx="232" cy="194" r="4" fill="#fff"/><circle cx="288" cy="194" r="4" fill="#fff"/>
+
+<ellipse cx="196" cy="246" rx="16" ry="10" fill="#ff6b9a" opacity="0.55" filter="url(#blur4)"/>
+<ellipse cx="316" cy="246" rx="16" ry="10" fill="#ff6b9a" opacity="0.55" filter="url(#blur4)"/>
+<path d="M231 252 Q 256 282, 281 252 Q 256 264, 231 252 Z" fill="#8c1d47" stroke="#8c1d47" stroke-width="6" stroke-linejoin="round"/>
+<path d="M245 268 Q 256 274, 267 268" stroke="#ff8fab" stroke-width="5" fill="none" stroke-linecap="round"/>
+
+<!-- Bong bóng chat (khối dày) -->
+<g filter="url(#drop)">
+  <path id="bub" d="M356 70 h106 a28 28 0 0 1 28 28 v44 a28 28 0 0 1 -28 28 h-60 l-28 26 l4 -26 h-22 a28 28 0 0 1 -28 -28 v-44 a28 28 0 0 1 28 -28 z" fill="#a61e4d" transform="translate(5 10)"/>
+  <path d="M356 70 h106 a28 28 0 0 1 28 28 v44 a28 28 0 0 1 -28 28 h-60 l-28 26 l4 -26 h-22 a28 28 0 0 1 -28 -28 v-44 a28 28 0 0 1 28 -28 z" fill="#d6336c" transform="translate(2.5 5)"/>
+  <path d="M356 70 h106 a28 28 0 0 1 28 28 v44 a28 28 0 0 1 -28 28 h-60 l-28 26 l4 -26 h-22 a28 28 0 0 1 -28 -28 v-44 a28 28 0 0 1 28 -28 z" fill="#fff4f8" filter="url(#bvBubble)"/>
+</g>
+<g filter="url(#dropSm)">
+  <circle cx="390" cy="120" r="11" fill="url(#dot)"/><circle cx="418" cy="120" r="11" fill="url(#dot)"/><circle cx="446" cy="120" r="11" fill="url(#dot)"/>
+</g>
+
+<!-- Lấp lánh -->
+<g filter="url(#glow)">
+  <path d="M86 118 l9 22 l22 9 l-22 9 l-9 22 l-9 -22 l-22 -9 l22 -9 z" fill="#ffd43b"/>
+  <path d="M440 330 l6 15 l15 6 l-15 6 l-6 15 l-6 -15 l-15 -6 l15 -6 z" fill="#ffd43b"/>
+  <path d="M70 362 l5 12 l12 5 l-12 5 l-5 12 l-5 -12 l-12 -5 l12 -5 z" fill="#ff8fb8"/>
+</g>
+</svg>

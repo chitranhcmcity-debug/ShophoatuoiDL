@@ -33,6 +33,7 @@
             @if (errors['email']) { <small class="text-danger">Email không hợp lệ.</small> }
             }
           </div>
+          @if (shipping !== 'pickup') {
           <div class="mb-3">
             <label class="form-label">Địa chỉ giao hoa <sup class="text-danger">*</sup></label>
             <input type="text" class="form-control" formControlName="address" />
@@ -40,6 +41,32 @@
             <small class="text-danger">Địa chỉ không được để trống.</small>
             }
           </div>
+          }
+          @if (shipping !== 'fast') {
+          <div class="row g-2 mb-3">
+            <div class="col-sm-6">
+              <label class="form-label">{{ shipping === 'pickup' ? 'Ngày đến nhận' : 'Ngày nhận hoa' }} <sup class="text-danger">*</sup></label>
+              <input type="date" class="form-control" formControlName="deliveryDate" [min]="today" />
+              @if (formData.get('deliveryDate')?.touched && formData.get('deliveryDate')?.invalid) {
+              <small class="text-danger">Vui lòng chọn ngày từ hôm nay trở đi.</small>
+              }
+            </div>
+            <div class="col-sm-6">
+              <label class="form-label">Khung giờ <sup class="text-danger">*</sup></label>
+              <select class="form-select" formControlName="deliverySlot">
+                <option value="">Chọn khung giờ</option>
+                @for (s of slots; track s.label) {
+                <option [value]="s.label">{{ s.label }}</option>
+                }
+              </select>
+              @if (slots.length === 0) {
+              <small class="text-danger">Hôm nay đã hết khung giờ, vui lòng chọn ngày khác.</small>
+              } @else if (formData.get('deliverySlot')?.touched && formData.get('deliverySlot')?.invalid) {
+              <small class="text-danger">Vui lòng chọn khung giờ.</small>
+              }
+            </div>
+          </div>
+          }
           <div>
             <label class="form-label">Lời nhắn trên thiệp</label>
             <textarea class="form-control" rows="3" formControlName="note"></textarea>
@@ -72,7 +99,7 @@
                 <td colspan="3">
                   @for (o of shippingOptions; track o.key) {
                   <div class="form-check">
-                    <input class="form-check-input" type="radio" name="shipping" [id]="'ship-' + o.key" [value]="o.key" [checked]="shipping === o.key" (change)="shipping = o.key" />
+                    <input class="form-check-input" type="radio" name="shipping" [id]="'ship-' + o.key" [value]="o.key" [checked]="shipping === o.key" (change)="setShipping(o.key)" />
                     <label class="form-check-label" [for]="'ship-' + o.key">{{ o.label }}</label>
                   </div>
                   }
@@ -85,7 +112,26 @@
             </tbody>
           </table>
         </div>
-        <button type="submit" class="btn btn-hoa w-100 py-3 mt-3 text-uppercase">Đặt hàng</button>
+        <div class="frame p-3 mt-3">
+          <h6>Phương thức thanh toán</h6>
+          @for (m of paymentMethods; track m.key) {
+          <div class="form-check">
+            <input class="form-check-input" type="radio" formControlName="paymentMethod" [id]="'pay-' + m.key" [value]="m.key" />
+            <label class="form-check-label" [for]="'pay-' + m.key">{{ m.label }}</label>
+          </div>
+          }
+          @if (formData.value.paymentMethod === 'bank') {
+          <div class="alert alert-info py-2 mt-2 mb-0">
+            @if (settings().bankAccount) {
+            {{ settings().bankName }} · <b>{{ settings().bankAccount }}</b> · {{ settings().bankOwner }}<br />
+            <small>Ghi mã đơn hàng trong nội dung chuyển khoản.</small>
+            } @else {
+            Shop sẽ liên hệ để gửi thông tin chuyển khoản.
+            }
+          </div>
+          }
+        </div>
+        <button type="submit" class="btn btn-hoa w-100 py-3 mt-3 text-uppercase" [disabled]="placing()">{{ placing() ? 'Đang đặt hàng...' : 'Đặt hàng' }}</button>
       </div>
     </div>
   </form>

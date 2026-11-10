@@ -1,10 +1,17 @@
 import { Component, OnInit, computed, inject } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { AbstractControl, FormBuilder, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { DELIVERY_SLOTS, FAST_DELIVERY_SLOT, PAYMENT_METHODS } from '../../interfaces/order';
 import { CheckoutService } from '../../services/checkout';
-import { CustomerService } from '../../services/customer';
-import { EmployeeService } from '../../services/employee';
 import { SettingsService } from '../../services/settings';
+import { localDate } from '../../utils/date';
+
+const PICKUP_ADDRESS = 'Nhận tại cửa hàng';
+
+function notPastDate(control: AbstractControl): ValidationErrors | null {
+  return control.value && control.value < localDate() ? { past: true } : null;
+}
 
 @Component({
   selector: 'app-checkout',
@@ -14,12 +21,15 @@ import { SettingsService } from '../../services/settings';
 })
 export class Checkout implements OnInit {
   private checkoutService = inject(CheckoutService);
-  private customerService = inject(CustomerService);
-  private employeeService = inject(EmployeeService);
   private router = inject(Router);
+  private fb = inject(FormBuilder);
 
   currentUser = this.checkoutService.currentUser;
-  private settings = inject(SettingsService).settings;
+  placing = this.checkoutService.placing;
+  settings = inject(SettingsService).settings;
+  paymentMethods = PAYMENT_METHODS;
+  today = localDate();
+
   get shippingOptions() {
     const fee = this.settings().fastShippingFee;
     return [
@@ -33,14 +43,21 @@ export class Checkout implements OnInit {
   userCarts = computed(() => (this.currentUser() ? this.checkoutService.getActiveUserCarts() : []));
   subtotal = computed(() => this.checkoutService.calculateSubtotal(this.userCarts()));
 
-  private fb = inject(FormBuilder);
   formData = this.fb.group({
     fullname: ['', Validators.required],
     phone: ['', [Validators.required, Validators.pattern(/^0\d{9}$/)]],
     email: ['', [Validators.required, Validators.email]],
     address: ['', Validators.required],
     note: [''],
+    deliveryDate: [this.today, [Validators.required, notPastDate]],
+    deliverySlot: ['', Validators.required],
+    paymentMethod: ['cod', Validators.required],
   });
+
+  constructor() {
+    // Đổi ngày mà khung giờ đã chọn không còn hợp lệ thì bắt chọn lại
+    this.formData.controls.deliveryDate.valueChanges.pipe(takeUntilDestroyed()).subscribe(() => this.dropUnavailableSlot());
+  }
 
   ngOnInit(): void {
     const user = this.currentUser();
@@ -56,6 +73,30 @@ export class Checkout implements OnInit {
     }
   }
 
+  /** Khung giờ còn chọn được: trong ngày hôm nay thì bỏ các khung đã qua */
+  get slots() {
+    if (this.formData.controls.deliveryDate.value !== localDate()) return DELIVERY_SLOTS;
+    const hour = new Date().getHours();
+    return DELIVERY_SLOTS.filter((s) => s.endHour > hour);
+  }
+
+  private dropUnavailableSlot(): boolean {
+    const slot = this.formData.controls.deliverySlot;
+    if (!slot.value || this.slots.some((s) => s.label === slot.value)) return false;
+    slot.setValue('');
+    return true;
+  }
+
+  /** Nhận tại cửa hàng thì không cần địa chỉ; giao nhanh thì không cần chọn ngày giờ */
+  setShipping(key: string) {
+    this.shipping = key;
+    const { address, deliveryDate, deliverySlot } = this.formData.controls;
+    address.setValidators(key === 'pickup' ? [] : [Validators.required]);
+    deliveryDate.setValidators(key === 'fast' ? [] : [Validators.required, notPastDate]);
+    deliverySlot.setValidators(key === 'fast' ? [] : [Validators.required]);
+    [address, deliveryDate, deliverySlot].forEach((c) => c.updateValueAndValidity());
+  }
+
   shippingFee(): number {
     return this.shippingOptions.find((o) => o.key === this.shipping)?.fee ?? 0;
   }
@@ -64,38 +105,35 @@ export class Checkout implements OnInit {
   }
 
   async handleSubmit(): Promise<void> {
+    const fast = this.shipping === 'fast';
+    if (!fast && this.dropUnavailableSlot()) {
+      alert('Khung giờ bạn chọn vừa qua, vui lòng chọn khung giờ khác.');
+      return;
+    }
     if (this.formData.invalid || this.userCarts().length === 0) {
       alert('Vui lòng kiểm tra lại thông tin và giỏ hàng.');
       this.formData.markAllAsTouched();
       return;
     }
-    try {
-      this.updateUserInfo();
-      const v = this.formData.value;
-      const ok = await this.checkoutService.checkout(
-        { fullname: v.fullname!, phone: v.phone!, address: v.address!, note: v.note ?? '' },
-        this.shippingFee()
-      );
-      if (ok) {
-        alert('Đặt hàng thành công! Cảm ơn bạn đã mua hoa tại Hoa Tươi DL.');
-        this.router.navigate(['/account'], { queryParams: { tab: 'orders' } });
-      }
-    } catch (error) {
-      console.error('Lỗi thanh toán:', error);
-      alert('Đã xảy ra lỗi trong quá trình thanh toán. Vui lòng thử lại.');
-    }
-  }
-
-  /** Cập nhật lại thông tin khách hàng / nhân viên theo form (vd: đổi địa chỉ giao) */
-  private updateUserInfo(): void {
-    const user = this.currentUser();
-    if (!user) return;
+    if (this.placing()) return;
     const v = this.formData.value;
-    const info = { id: user.id, fullname: v.fullname, phone: v.phone, email: v.email, address: v.address };
-    if (user.role === 'customer') {
-      this.customerService.updateCustomer(info);
-    } else {
-      this.employeeService.updateEmployee(info);
+    const option = this.shippingOptions.find((o) => o.key === this.shipping)!;
+    const ok = await this.checkoutService.checkout(
+      {
+        fullname: v.fullname!,
+        phone: v.phone!,
+        email: v.email!,
+        address: this.shipping === 'pickup' ? PICKUP_ADDRESS : v.address!,
+        note: v.note ?? '',
+        deliveryDate: fast ? localDate() : v.deliveryDate!,
+        deliverySlot: fast ? FAST_DELIVERY_SLOT : v.deliverySlot!,
+        paymentMethod: v.paymentMethod!,
+      },
+      { method: option.key, label: fast ? 'Giao nhanh 60 phút' : option.label, fee: option.fee }
+    );
+    if (ok) {
+      alert('Đặt hàng thành công! Cảm ơn bạn đã mua hoa tại Hoa Tươi DL.');
+      this.router.navigate(['/account'], { queryParams: { tab: 'orders' } });
     }
   }
 }

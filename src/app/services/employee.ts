@@ -22,9 +22,19 @@ export class EmployeeService {
     return firstValueFrom(
       forkJoin([this.http.get<User[]>(`${this.apiUrl}/users`), this.http.get<Employee[]>(`${this.apiUrl}/employees`)])
     ).then(([users, employees]) => {
-      this.users.set(users);
-      this.employees.set(employees);
+      if (JSON.stringify(users) !== JSON.stringify(this.users())) this.users.set(users);
+      if (JSON.stringify(employees) !== JSON.stringify(this.employees())) this.employees.set(employees);
     });
+  }
+
+  /** Tải lại từ server (kiểm tra tài khoản bị khóa, đổi vai trò) */
+  reload(): Promise<void> {
+    return this.loadData();
+  }
+
+  /** Họ tên nhân viên, chưa có hồ sơ thì dùng tên đăng nhập */
+  displayName(id: string): string {
+    return this.employees().find((e) => e.id === id)?.fullname || this.users().find((u) => u.id === id)?.username || id;
   }
 
   // ============ USERS ============

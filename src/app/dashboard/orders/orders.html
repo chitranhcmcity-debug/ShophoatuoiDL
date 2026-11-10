@@ -5,6 +5,11 @@
   <button type="button" class="filter tone-plum" [class.active]="filter() === 'all'" (click)="setFilter('all')">
     <i class="bi bi-list-ul"></i> Tất cả <b>{{ orders().length }}</b>
   </button>
+  @if (showMyWork()) {
+  <button type="button" class="filter tone-emerald" [class.active]="filter() === 'mine'" (click)="setFilter('mine')">
+    <i class="bi bi-person-check-fill"></i> Việc của tôi <b>{{ myWork().length }}</b>
+  </button>
+  }
   @for (s of statuses; track s.status) {
   <button type="button" [class]="'filter tone-' + s.tone" [class.active]="filter() === s.status" (click)="setFilter(s.status)">
     <i class="bi" [class]="s.icon"></i> {{ s.status }} <b>{{ countOf(s.status) }}</b>
@@ -54,6 +59,18 @@
           <div><i class="bi bi-person"></i> {{ o.fullname }}</div>
           <div><i class="bi bi-telephone"></i> {{ o.phone }}</div>
           <div><i class="bi bi-geo-alt"></i> {{ o.address }}</div>
+          @if (o.shippingLabel) {
+          <div><i class="bi bi-truck"></i> {{ o.shippingLabel }}</div>
+          }
+          @if (o.deliveryDate) {
+          <div><i class="bi bi-calendar-event"></i> Nhận hoa: {{ o.deliveryDate | date : 'dd/MM/yyyy' }} · {{ o.deliverySlot }}</div>
+          }
+          @if (o.paymentMethod) {
+          <div>
+            <i class="bi bi-wallet2"></i> {{ paymentLabel(o.paymentMethod) }} ·
+            <b>{{ o.paid ? 'Đã thanh toán' : 'Chưa thanh toán' }}</b>
+          </div>
+          }
           @if (o.note) {
           <div><i class="bi bi-chat-heart"></i> <em>Lời nhắn: {{ o.note }}</em></div>
           }
@@ -77,8 +94,16 @@
           </div>
         </div>
 
+        <app-order-assignment [order]="o"></app-order-assignment>
+
         <!-- Thao tác xử lý đơn -->
         <div class="actions mt-3">
+          @if (canInvoice(o)) {
+          <a class="btn btn-outline-secondary" [routerLink]="['/invoice', o.id]"><i class="bi bi-receipt"></i> Hóa đơn</a>
+          }
+          @if (canMarkPaid(o)) {
+          <button class="btn btn-success" type="button" (click)="markPaid(o)"><i class="bi bi-cash-coin"></i> Xác nhận đã chuyển khoản</button>
+          }
           @if (canCancel(o)) {
           <button class="btn btn-danger" type="button" (click)="cancel(o)"><i class="bi bi-x-octagon"></i> Hủy đơn</button>
           }

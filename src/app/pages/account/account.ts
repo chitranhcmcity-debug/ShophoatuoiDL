@@ -3,7 +3,7 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { OrderTracking } from '../../components/order-tracking/order-tracking';
-import { Order, toneOfStatus } from '../../interfaces/order';
+import { Order, paymentLabel, toneOfStatus } from '../../interfaces/order';
 import { Auth } from '../../services/auth';
 import { CheckoutService } from '../../services/checkout';
 import { CustomerService } from '../../services/customer';
@@ -26,10 +26,10 @@ export class Account implements OnInit {
   orders = this.checkoutService.userOrders;
   canCancel = (o: Order) => this.checkoutService.canCustomerCancel(o);
 
-  cancelOrder(o: Order) {
+  async cancelOrder(o: Order) {
     const reason = prompt('Bạn muốn hủy đơn ' + o.id + '? Nhập lý do hủy:', 'Đổi ý, không muốn mua nữa');
     if (reason === null) return;
-    if (this.checkoutService.cancelByCustomer(o.id, reason.trim())) {
+    if (await this.checkoutService.cancelByCustomer(o.id, reason.trim())) {
       this.trackingId.set(o.id); // mở luôn phần theo dõi để khách thấy đơn đã hủy
       this.message.set('Đã hủy đơn ' + o.id + '.');
     }
@@ -37,6 +37,7 @@ export class Account implements OnInit {
 
   tab = signal<Tab>('info');
   toneOf = toneOfStatus;
+  paymentLabel = paymentLabel;
   trackingId = signal<string | null>(null);
   toggleTracking(id: string) {
     this.trackingId.update((cur) => (cur === id ? null : id));

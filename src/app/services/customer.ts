@@ -13,7 +13,14 @@ export class CustomerService {
   loaded: Promise<void>;
 
   constructor(private http: HttpClient) {
-    this.loaded = firstValueFrom(this.http.get<Customer[]>(this.apiUrl)).then((data) => this.customers.set(data));
+    this.loaded = this.reload();
+  }
+
+  /** Tải lại từ server (kiểm tra tài khoản bị khóa) */
+  reload(): Promise<void> {
+    return firstValueFrom(this.http.get<Customer[]>(this.apiUrl)).then((data) => {
+      if (JSON.stringify(data) !== JSON.stringify(this.customers())) this.customers.set(data);
+    });
   }
 
   getCustomers(): Customer[] {

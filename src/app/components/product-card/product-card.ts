@@ -1,6 +1,7 @@
-import { Component, ElementRef, OnDestroy, OnInit, input } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, inject, input } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { Product } from '../../interfaces/product';
+import { Auth } from '../../services/auth';
 import { CartService } from '../../services/cart';
 import { ProductService } from '../../services/product';
 
@@ -12,6 +13,7 @@ import { ProductService } from '../../services/product';
 })
 export class ProductCard implements OnInit, OnDestroy {
   product = input.required<Product>();
+  canShop = inject(Auth).canShop;
   private observer?: IntersectionObserver;
 
   constructor(

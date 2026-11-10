@@ -64,9 +64,9 @@
       "description": "Đóa Hồng Mãi Yêu được thiết kế tinh tế từ những bông hoa tươi nhập trong ngày, kết hợp phụ kiện sang trọng. Giao hoa nhanh trong 60 phút, miễn phí giao hàng nội thành, cam kết hoa tươi 100%.",
       "price": 650000,
       "discount": 8,
-      "stock": 9,
+      "stock": 8,
       "views": 372,
-      "sold": 53,
+      "sold": 54,
       "favorites": 30,
       "createdAt": "2026-01-04",
       "freeship": true
@@ -94,7 +94,7 @@
       "description": "Giỏ Hoa Chúc Mừng Sinh Nhật Luxury được thiết kế tinh tế từ những bông hoa tươi nhập trong ngày, kết hợp phụ kiện sang trọng. Giao hoa nhanh trong 60 phút, miễn phí giao hàng nội thành, cam kết hoa tươi 100%.",
       "price": 750000,
       "discount": 0,
-      "stock": 24,
+      "stock": 23,
       "views": 362,
       "sold": 80,
       "favorites": 9,
@@ -199,9 +199,9 @@
       "description": "Lẵng Hoa Khai Trương Hồng Phát được thiết kế tinh tế từ những bông hoa tươi nhập trong ngày, kết hợp phụ kiện sang trọng. Giao hoa nhanh trong 60 phút, miễn phí giao hàng nội thành, cam kết hoa tươi 100%.",
       "price": 650000,
       "discount": 0,
-      "stock": 6,
+      "stock": 5,
       "views": 574,
-      "sold": 81,
+      "sold": 82,
       "favorites": 38,
       "createdAt": "2026-02-09",
       "freeship": true
@@ -304,7 +304,7 @@
       "description": "Vòng Hoa Viếng Tiễn Biệt được thiết kế tinh tế từ những bông hoa tươi nhập trong ngày, kết hợp phụ kiện sang trọng. Giao hoa nhanh trong 60 phút, miễn phí giao hàng nội thành, cam kết hoa tươi 100%.",
       "price": 650000,
       "discount": 15,
-      "stock": 28,
+      "stock": 27,
       "views": 642,
       "sold": 15,
       "favorites": 47,
@@ -424,9 +424,9 @@
       "description": "Lan Hồ Điệp Tím Sang Trọng được thiết kế tinh tế từ những bông hoa tươi nhập trong ngày, kết hợp phụ kiện sang trọng. Giao hoa nhanh trong 60 phút, miễn phí giao hàng nội thành, cam kết hoa tươi 100%.",
       "price": 1600000,
       "discount": 10,
-      "stock": 15,
+      "stock": 14,
       "views": 511,
-      "sold": 9,
+      "sold": 10,
       "favorites": 52,
       "createdAt": "2026-04-10",
       "freeship": true
@@ -544,9 +544,9 @@
       "description": "Hồng Đỏ Mãi Yêu Em được thiết kế tinh tế từ những bông hoa tươi nhập trong ngày, kết hợp phụ kiện sang trọng. Giao hoa nhanh trong 60 phút, miễn phí giao hàng nội thành, cam kết hoa tươi 100%.",
       "price": 350000,
       "discount": 5,
-      "stock": 23,
+      "stock": 22,
       "views": 1268,
-      "sold": 79,
+      "sold": 80,
       "favorites": 9,
       "createdAt": "2026-05-12",
       "freeship": true
@@ -574,7 +574,7 @@
       "description": "Hộp Hoa Hồng Tình Yêu được thiết kế tinh tế từ những bông hoa tươi nhập trong ngày, kết hợp phụ kiện sang trọng. Giao hoa nhanh trong 60 phút, miễn phí giao hàng nội thành, cam kết hoa tươi 100%.",
       "price": 1100000,
       "discount": 8,
-      "stock": 6,
+      "stock": 5,
       "views": 546,
       "sold": 22,
       "favorites": 39,
@@ -1024,7 +1024,7 @@
       "description": "Bó Hướng Dương Tri Ân Thầy Cô được thiết kế tinh tế từ những bông hoa tươi nhập trong ngày, kết hợp phụ kiện sang trọng. Giao hoa nhanh trong 60 phút, miễn phí giao hàng nội thành, cam kết hoa tươi 100%.",
       "price": 650000,
       "discount": 0,
-      "stock": 36,
+      "stock": 35,
       "views": 386,
       "sold": 73,
       "favorites": 25,
@@ -1039,7 +1039,7 @@
       "description": "Giỏ Hoa 20/11 Biết Ơn được thiết kế tinh tế từ những bông hoa tươi nhập trong ngày, kết hợp phụ kiện sang trọng. Giao hoa nhanh trong 60 phút, miễn phí giao hàng nội thành, cam kết hoa tươi 100%.",
       "price": 650000,
       "discount": 15,
-      "stock": 9,
+      "stock": 7,
       "views": 675,
       "sold": 50,
       "favorites": 13,
@@ -1192,42 +1192,44 @@
       "id": "3",
       "username": "user1",
       "password": "123456",
-      "role": "staff",
+      "role": "receiver",
       "islocked": false,
       "permissions": [
         "dashboard.view",
-        "product.view",
         "order.view",
-        "employee.view",
-        "customer.view"
+        "order.confirm",
+        "order.pickup",
+        "order.cancel",
+        "order.payment",
+        "customer.view",
+        "consult.view",
+        "consult.update"
       ]
     },
     {
       "id": "4",
       "username": "thutrang",
       "password": "123456",
-      "role": "staff",
+      "role": "florist",
       "islocked": false,
       "permissions": [
         "dashboard.view",
-        "product.view",
         "order.view",
-        "employee.view",
-        "customer.view"
+        "order.prepare",
+        "product.view"
       ]
     },
     {
       "id": "5",
       "username": "quocbao",
       "password": "123456",
-      "role": "staff",
+      "role": "shipper",
       "islocked": false,
       "permissions": [
         "dashboard.view",
-        "product.view",
         "order.view",
-        "employee.view",
-        "customer.view"
+        "order.ship",
+        "order.deliver"
       ]
     }
   ],
@@ -1369,11 +1371,12 @@
       "userId": "cus1",
       "fullname": "Nguyễn Văn An",
       "phone": "0912340010",
+      "email": "acb@gmail.com",
       "address": "20 Nguyễn Huệ, Quận 1, TP.HCM",
-      "note": "Chúc mừng sinh nhật!",
+      "note": "Chúc mừng sinh nhật mẹ!",
       "items": [
         {
-          "id": "c00",
+          "id": "co10",
           "userId": "cus1",
           "productId": "p01",
           "title": "Đóa Hồng Mãi Yêu",
@@ -1385,497 +1388,747 @@
         }
       ],
       "total": 598000,
-      "status": "Chờ xác nhận",
-      "createdAt": "2026-10-01T02:15:00.000Z",
+      "status": "Đã giao",
       "history": [
         {
           "status": "Chờ xác nhận",
-          "time": "2026-10-01T02:15:00.000Z",
-          "by": "Nguyễn Văn An",
-          "note": "Khách đặt hàng"
-        }
-      ]
-    },
-    {
-      "id": "o2",
-      "userId": "cus2",
-      "fullname": "Trần Thị Bích",
-      "phone": "0912340011",
-      "address": "21 Nguyễn Huệ, Quận 1, TP.HCM",
-      "note": "",
-      "items": [
-        {
-          "id": "c10",
-          "userId": "cus2",
-          "productId": "p08",
-          "title": "Hộp Hoa Sinh Nhật Ngọt Ngào",
-          "image": "/image/products/hoa-sinh-nhat-8.jpg",
-          "price": 297500,
-          "discount": 15,
-          "quantity": 2,
-          "active": true
-        },
-        {
-          "id": "c11",
-          "userId": "cus2",
-          "productId": "p21",
-          "title": "Kệ Hoa Tang Lễ Thanh Tịnh",
-          "image": "/image/products/hoa-chia-buon-5.jpg",
-          "price": 650000,
-          "discount": 0,
-          "quantity": 3,
-          "active": true
-        }
-      ],
-      "total": 2545000,
-      "status": "Đã xác nhận",
-      "createdAt": "2026-10-03T03:15:00.000Z",
-      "history": [
-        {
-          "status": "Chờ xác nhận",
-          "time": "2026-10-03T03:15:00.000Z",
-          "by": "Trần Thị Bích",
+          "time": "2026-11-07T12:20:00.000Z",
+          "by": "acb",
           "note": "Khách đặt hàng"
         },
         {
           "status": "Đã xác nhận",
-          "time": "2026-10-03T04:05:00.000Z",
+          "time": "2026-11-07T12:45:00.000Z",
+          "by": "user1",
+          "note": ""
+        },
+        {
+          "status": "Đang chuẩn bị hoa",
+          "time": "2026-11-08T00:30:00.000Z",
+          "by": "thutrang",
+          "note": ""
+        },
+        {
+          "status": "Đang giao",
+          "time": "2026-11-08T02:10:00.000Z",
           "by": "quocbao",
-          "note": "Shop đã gọi điện xác nhận với khách"
+          "note": ""
+        },
+        {
+          "status": "Đã giao",
+          "time": "2026-11-08T03:05:00.000Z",
+          "by": "quocbao",
+          "note": ""
         }
-      ]
+      ],
+      "createdAt": "2026-11-07T12:20:00.000Z",
+      "shippingMethod": "free",
+      "shippingLabel": "Giao hàng tiêu chuẩn (Freeship)",
+      "shippingFee": 0,
+      "stockDeducted": true,
+      "deliveryDate": "2026-11-08",
+      "deliverySlot": "08:00 - 12:00",
+      "paymentMethod": "cod",
+      "paid": true,
+      "paidBy": "quocbao",
+      "paidAt": "2026-11-08T03:05:00.000Z",
+      "assignedFlorist": "4",
+      "assignedShipper": "5"
+    },
+    {
+      "id": "o2",
+      "userId": "cus2",
+      "fullname": "Hoàng Minh Tuấn",
+      "phone": "0901234567",
+      "email": "ocb@gmail.com",
+      "address": "88 Điện Biên Phủ, Quận Bình Thạnh, TP.HCM",
+      "note": "Chúc khai trương hồng phát",
+      "items": [
+        {
+          "id": "co20",
+          "userId": "cus2",
+          "productId": "p10",
+          "title": "Lẵng Hoa Khai Trương Hồng Phát",
+          "image": "/image/products/hoa-khai-truong-2.jpg",
+          "price": 650000,
+          "discount": 0,
+          "quantity": 1,
+          "active": true
+        }
+      ],
+      "total": 650000,
+      "status": "Đã giao",
+      "history": [
+        {
+          "status": "Chờ xác nhận",
+          "time": "2026-11-08T07:30:00.000Z",
+          "by": "ocb",
+          "note": "Khách đặt hàng"
+        },
+        {
+          "status": "Đã xác nhận",
+          "time": "2026-11-08T08:05:00.000Z",
+          "by": "user1",
+          "note": ""
+        },
+        {
+          "status": "Đang chuẩn bị hoa",
+          "time": "2026-11-09T00:00:00.000Z",
+          "by": "thutrang",
+          "note": ""
+        },
+        {
+          "status": "Đang giao",
+          "time": "2026-11-09T01:40:00.000Z",
+          "by": "quocbao",
+          "note": ""
+        },
+        {
+          "status": "Đã giao",
+          "time": "2026-11-09T02:35:00.000Z",
+          "by": "quocbao",
+          "note": ""
+        }
+      ],
+      "createdAt": "2026-11-08T07:30:00.000Z",
+      "shippingMethod": "free",
+      "shippingLabel": "Giao hàng tiêu chuẩn (Freeship)",
+      "shippingFee": 0,
+      "stockDeducted": true,
+      "deliveryDate": "2026-11-09",
+      "deliverySlot": "08:00 - 12:00",
+      "paymentMethod": "bank",
+      "paid": true,
+      "paidBy": "user1",
+      "paidAt": "2026-11-08T08:02:00.000Z",
+      "assignedFlorist": "4",
+      "assignedShipper": "5"
     },
     {
       "id": "o3",
       "userId": "cus3",
       "fullname": "Lê Hoàng Cường",
       "phone": "0912340012",
-      "address": "22 Nguyễn Huệ, Quận 1, TP.HCM",
+      "email": "hcb@gmail.com",
+      "address": "Nhận tại cửa hàng",
       "note": "",
       "items": [
         {
-          "id": "c20",
+          "id": "co30",
           "userId": "cus3",
-          "productId": "p15",
-          "title": "Lẵng Hoa Mừng Khai Trương Rực Rỡ",
-          "image": "/image/products/hoa-khai-truong-7.jpg",
-          "price": 399000,
-          "discount": 5,
-          "quantity": 3,
+          "productId": "p25",
+          "title": "Lan Hồ Điệp Tím Sang Trọng",
+          "image": "/image/products/lan-ho-diep-1.jpg",
+          "price": 1440000,
+          "discount": 10,
+          "quantity": 1,
           "active": true
         }
       ],
-      "total": 1197000,
-      "status": "Đang chuẩn bị hoa",
-      "createdAt": "2026-10-05T04:15:00.000Z",
+      "total": 1440000,
+      "status": "Đã giao",
       "history": [
         {
           "status": "Chờ xác nhận",
-          "time": "2026-10-05T04:15:00.000Z",
-          "by": "Lê Hoàng Cường",
+          "time": "2026-11-09T02:15:00.000Z",
+          "by": "hcb",
           "note": "Khách đặt hàng"
         },
         {
           "status": "Đã xác nhận",
-          "time": "2026-10-05T05:05:00.000Z",
+          "time": "2026-11-09T02:40:00.000Z",
           "by": "user1",
-          "note": "Shop đã gọi điện xác nhận với khách"
+          "note": ""
         },
         {
           "status": "Đang chuẩn bị hoa",
-          "time": "2026-10-05T05:55:00.000Z",
+          "time": "2026-11-09T07:00:00.000Z",
           "by": "thutrang",
-          "note": "Đã chọn hoa tươi, đang cắm hoa"
+          "note": ""
+        },
+        {
+          "status": "Đã giao",
+          "time": "2026-11-09T11:20:00.000Z",
+          "by": "user1",
+          "note": ""
         }
-      ]
+      ],
+      "createdAt": "2026-11-09T02:15:00.000Z",
+      "shippingMethod": "pickup",
+      "shippingLabel": "Nhận tại cửa hàng",
+      "shippingFee": 0,
+      "stockDeducted": true,
+      "deliveryDate": "2026-11-09",
+      "deliverySlot": "17:00 - 21:00",
+      "paymentMethod": "cod",
+      "paid": true,
+      "paidBy": "user1",
+      "paidAt": "2026-11-09T11:20:00.000Z",
+      "assignedFlorist": "4"
     },
     {
       "id": "o4",
       "userId": "cus4",
       "fullname": "Phạm Thị Mai",
       "phone": "0912340013",
+      "email": "mai@gmail.com",
       "address": "23 Nguyễn Huệ, Quận 1, TP.HCM",
-      "note": "Chúc mừng sinh nhật!",
+      "note": "Yêu em nhiều",
       "items": [
         {
-          "id": "c30",
+          "id": "co40",
           "userId": "cus4",
-          "productId": "p22",
-          "title": "Vòng Hoa Tưởng Niệm",
-          "image": "/image/products/hoa-chia-buon-6.jpg",
-          "price": 456000,
+          "productId": "p33",
+          "title": "Hồng Đỏ Mãi Yêu Em",
+          "image": "/image/products/hoa-tinh-yeu-1.jpg",
+          "price": 332500,
           "discount": 5,
           "quantity": 1,
           "active": true
-        },
-        {
-          "id": "c31",
-          "userId": "cus4",
-          "productId": "p35",
-          "title": "Hộp Hoa Hồng Tình Yêu",
-          "image": "/image/products/hoa-tinh-yeu-3.jpg",
-          "price": 1012000,
-          "discount": 8,
-          "quantity": 2,
-          "active": true
         }
       ],
-      "total": 2480000,
-      "status": "Đang giao",
-      "createdAt": "2026-10-07T05:15:00.000Z",
+      "total": 362500,
+      "status": "Đã giao",
       "history": [
         {
           "status": "Chờ xác nhận",
-          "time": "2026-10-07T05:15:00.000Z",
-          "by": "Phạm Thị Mai",
+          "time": "2026-11-10T08:12:00.000Z",
+          "by": "mai",
           "note": "Khách đặt hàng"
         },
         {
           "status": "Đã xác nhận",
-          "time": "2026-10-07T06:05:00.000Z",
-          "by": "thutrang",
-          "note": "Shop đã gọi điện xác nhận với khách"
+          "time": "2026-11-10T08:15:00.000Z",
+          "by": "user1",
+          "note": ""
         },
         {
           "status": "Đang chuẩn bị hoa",
-          "time": "2026-10-07T06:55:00.000Z",
-          "by": "quocbao",
-          "note": "Đã chọn hoa tươi, đang cắm hoa"
+          "time": "2026-11-10T08:20:00.000Z",
+          "by": "thutrang",
+          "note": ""
         },
         {
           "status": "Đang giao",
-          "time": "2026-10-07T07:45:00.000Z",
-          "by": "user1",
-          "note": "Shipper đã lấy hàng và đang giao"
+          "time": "2026-11-10T08:42:00.000Z",
+          "by": "quocbao",
+          "note": ""
+        },
+        {
+          "status": "Đã giao",
+          "time": "2026-11-10T09:10:00.000Z",
+          "by": "quocbao",
+          "note": ""
         }
-      ]
+      ],
+      "createdAt": "2026-11-10T08:12:00.000Z",
+      "shippingMethod": "fast",
+      "shippingLabel": "Giao nhanh 60 phút",
+      "shippingFee": 30000,
+      "stockDeducted": true,
+      "deliveryDate": "2026-11-10",
+      "deliverySlot": "Trong 60 phút",
+      "paymentMethod": "cod",
+      "paid": true,
+      "paidBy": "quocbao",
+      "paidAt": "2026-11-10T09:10:00.000Z",
+      "assignedShipper": "5"
     },
     {
       "id": "o5",
       "userId": "cus5",
-      "fullname": "Võ Quốc Hùng",
-      "phone": "0912340014",
-      "address": "24 Nguyễn Huệ, Quận 1, TP.HCM",
-      "note": "",
+      "fullname": "Gia đình bác Trần Văn Lộc",
+      "phone": "0907654321",
+      "email": "hung@gmail.com",
+      "address": "15 Hòa Bình, Quận Tân Phú, TP.HCM",
+      "note": "Thành kính phân ưu",
       "items": [
         {
-          "id": "c40",
+          "id": "co50",
           "userId": "cus5",
-          "productId": "p29",
-          "title": "Chậu Lan Hồ Điệp 2 Cành",
-          "image": "/image/products/lan-ho-diep-5.jpg",
-          "price": 935000,
+          "productId": "p17",
+          "title": "Vòng Hoa Viếng Tiễn Biệt",
+          "image": "/image/products/hoa-chia-buon-1.jpg",
+          "price": 552500,
           "discount": 15,
-          "quantity": 2,
+          "quantity": 1,
           "active": true
         }
       ],
-      "total": 1870000,
-      "status": "Đã giao",
-      "createdAt": "2026-10-09T06:15:00.000Z",
+      "total": 582500,
+      "status": "Đang giao",
       "history": [
         {
           "status": "Chờ xác nhận",
-          "time": "2026-10-09T06:15:00.000Z",
-          "by": "Võ Quốc Hùng",
+          "time": "2026-11-10T16:40:22.297Z",
+          "by": "hung",
           "note": "Khách đặt hàng"
         },
         {
           "status": "Đã xác nhận",
-          "time": "2026-10-09T07:05:00.000Z",
-          "by": "quocbao",
-          "note": "Shop đã gọi điện xác nhận với khách"
+          "time": "2026-11-10T16:44:22.297Z",
+          "by": "user1",
+          "note": ""
         },
         {
           "status": "Đang chuẩn bị hoa",
-          "time": "2026-10-09T07:55:00.000Z",
-          "by": "user1",
-          "note": "Đã chọn hoa tươi, đang cắm hoa"
+          "time": "2026-11-10T16:50:22.297Z",
+          "by": "thutrang",
+          "note": ""
         },
         {
           "status": "Đang giao",
-          "time": "2026-10-09T08:45:00.000Z",
-          "by": "thutrang",
-          "note": "Shipper đã lấy hàng và đang giao"
-        },
-        {
-          "status": "Đã giao",
-          "time": "2026-10-09T09:35:00.000Z",
+          "time": "2026-11-10T17:18:22.297Z",
           "by": "quocbao",
-          "note": "Khách đã nhận hoa, thanh toán đủ"
+          "note": ""
         }
-      ]
+      ],
+      "createdAt": "2026-11-10T16:40:22.297Z",
+      "shippingMethod": "fast",
+      "shippingLabel": "Giao nhanh 60 phút",
+      "shippingFee": 30000,
+      "stockDeducted": true,
+      "deliveryDate": "2026-11-11",
+      "deliverySlot": "Trong 60 phút",
+      "paymentMethod": "cod",
+      "paid": false,
+      "assignedShipper": "5"
     },
     {
       "id": "o6",
       "userId": "cus6",
       "fullname": "Đặng Ngọc Lan",
       "phone": "0912340015",
+      "email": "lan@gmail.com",
       "address": "25 Nguyễn Huệ, Quận 1, TP.HCM",
-      "note": "",
+      "note": "Sinh nhật vui vẻ nhé!",
       "items": [
         {
-          "id": "c50",
+          "id": "co60",
           "userId": "cus6",
-          "productId": "p36",
-          "title": "Bó 99 Bông Hồng Đỏ",
-          "image": "/image/products/hoa-tinh-yeu-4.jpg",
-          "price": 417600,
-          "discount": 13,
-          "quantity": 3,
-          "active": true
-        },
-        {
-          "id": "c51",
-          "userId": "cus6",
-          "productId": "p49",
-          "title": "Bó Tulip 8/3 Rạng Rỡ",
-          "image": "/image/products/hoa-8-3-1.jpg",
-          "price": 712500,
-          "discount": 5,
+          "productId": "p03",
+          "title": "Giỏ Hoa Chúc Mừng Sinh Nhật Luxury",
+          "image": "/image/products/hoa-sinh-nhat-3.jpg",
+          "price": 750000,
+          "discount": 0,
           "quantity": 1,
           "active": true
         }
       ],
-      "total": 1965300,
-      "status": "Đã giao",
-      "createdAt": "2026-10-11T07:15:00.000Z",
+      "total": 750000,
+      "status": "Đang chuẩn bị hoa",
       "history": [
         {
           "status": "Chờ xác nhận",
-          "time": "2026-10-11T07:15:00.000Z",
-          "by": "Đặng Ngọc Lan",
+          "time": "2026-11-10T08:40:00.000Z",
+          "by": "lan",
           "note": "Khách đặt hàng"
         },
         {
           "status": "Đã xác nhận",
-          "time": "2026-10-11T08:05:00.000Z",
+          "time": "2026-11-10T09:05:00.000Z",
           "by": "user1",
-          "note": "Shop đã gọi điện xác nhận với khách"
+          "note": ""
         },
         {
           "status": "Đang chuẩn bị hoa",
-          "time": "2026-10-11T08:55:00.000Z",
+          "time": "2026-11-10T13:10:00.000Z",
           "by": "thutrang",
-          "note": "Đã chọn hoa tươi, đang cắm hoa"
-        },
-        {
-          "status": "Đang giao",
-          "time": "2026-10-11T09:45:00.000Z",
-          "by": "quocbao",
-          "note": "Shipper đã lấy hàng và đang giao"
-        },
-        {
-          "status": "Đã giao",
-          "time": "2026-10-11T10:35:00.000Z",
-          "by": "user1",
-          "note": "Khách đã nhận hoa, thanh toán đủ"
+          "note": ""
         }
-      ]
+      ],
+      "createdAt": "2026-11-10T08:40:00.000Z",
+      "shippingMethod": "free",
+      "shippingLabel": "Giao hàng tiêu chuẩn (Freeship)",
+      "shippingFee": 0,
+      "stockDeducted": true,
+      "deliveryDate": "2026-11-12",
+      "deliverySlot": "12:00 - 17:00",
+      "paymentMethod": "bank",
+      "paid": true,
+      "paidBy": "user1",
+      "paidAt": "2026-11-10T09:02:00.000Z",
+      "assignedFlorist": "4",
+      "assignedShipper": "5"
     },
     {
       "id": "o7",
-      "userId": "cus1",
-      "fullname": "Nguyễn Văn An",
-      "phone": "0912340010",
-      "address": "20 Nguyễn Huệ, Quận 1, TP.HCM",
-      "note": "Chúc mừng sinh nhật!",
+      "userId": "cus7",
+      "fullname": "Cô Phạm Thị Hạnh",
+      "phone": "0912223344",
+      "email": "nam@gmail.com",
+      "address": "Trường THCS Lê Lợi, Quận 3, TP.HCM",
+      "note": "Tri ân cô nhân ngày Nhà giáo Việt Nam",
       "items": [
         {
-          "id": "c60",
-          "userId": "cus1",
-          "productId": "p43",
-          "title": "Hộp Hoa Valentine Lãng Mạn",
-          "image": "/image/products/hoa-14-2-3.jpg",
-          "price": 807500,
-          "discount": 15,
+          "id": "co70",
+          "userId": "cus7",
+          "productId": "p65",
+          "title": "Bó Hướng Dương Tri Ân Thầy Cô",
+          "image": "/image/products/hoa-20-11-1.jpg",
+          "price": 650000,
+          "discount": 0,
           "quantity": 1,
           "active": true
         }
       ],
-      "total": 807500,
-      "status": "Đã hủy",
-      "createdAt": "2026-10-13T08:15:00.000Z",
+      "total": 650000,
+      "status": "Đã xác nhận",
       "history": [
         {
           "status": "Chờ xác nhận",
-          "time": "2026-10-13T08:15:00.000Z",
-          "by": "Nguyễn Văn An",
-          "note": "Khách đặt hàng"
-        },
-        {
-          "status": "Đã hủy",
-          "time": "2026-10-13T09:55:00.000Z",
-          "by": "user1",
-          "note": "Khách yêu cầu hủy đơn"
-        }
-      ]
-    },
-    {
-      "id": "o8",
-      "userId": "cus2",
-      "fullname": "Trần Thị Bích",
-      "phone": "0912340011",
-      "address": "21 Nguyễn Huệ, Quận 1, TP.HCM",
-      "note": "",
-      "items": [
-        {
-          "id": "c70",
-          "userId": "cus2",
-          "productId": "p50",
-          "title": "Giỏ Hoa 8/3 Dịu Dàng",
-          "image": "/image/products/hoa-8-3-2.jpg",
-          "price": 722500,
-          "discount": 15,
-          "quantity": 2,
-          "active": true
-        },
-        {
-          "id": "c71",
-          "userId": "cus2",
-          "productId": "p63",
-          "title": "Bó Hoa Hồng Pastel 20/10",
-          "image": "/image/products/hoa-20-10-7.jpg",
-          "price": 399000,
-          "discount": 5,
-          "quantity": 3,
-          "active": true
-        }
-      ],
-      "total": 2642000,
-      "status": "Đã giao",
-      "createdAt": "2026-10-15T09:15:00.000Z",
-      "history": [
-        {
-          "status": "Chờ xác nhận",
-          "time": "2026-10-15T09:15:00.000Z",
-          "by": "Trần Thị Bích",
+          "time": "2026-11-10T03:20:00.000Z",
+          "by": "nam",
           "note": "Khách đặt hàng"
         },
         {
           "status": "Đã xác nhận",
-          "time": "2026-10-15T10:05:00.000Z",
-          "by": "quocbao",
-          "note": "Shop đã gọi điện xác nhận với khách"
-        },
-        {
-          "status": "Đang chuẩn bị hoa",
-          "time": "2026-10-15T10:55:00.000Z",
+          "time": "2026-11-10T03:50:00.000Z",
           "by": "user1",
-          "note": "Đã chọn hoa tươi, đang cắm hoa"
-        },
-        {
-          "status": "Đang giao",
-          "time": "2026-10-15T11:45:00.000Z",
-          "by": "thutrang",
-          "note": "Shipper đã lấy hàng và đang giao"
-        },
-        {
-          "status": "Đã giao",
-          "time": "2026-10-15T12:35:00.000Z",
-          "by": "quocbao",
-          "note": "Khách đã nhận hoa, thanh toán đủ"
+          "note": ""
         }
-      ]
+      ],
+      "createdAt": "2026-11-10T03:20:00.000Z",
+      "shippingMethod": "free",
+      "shippingLabel": "Giao hàng tiêu chuẩn (Freeship)",
+      "shippingFee": 0,
+      "stockDeducted": true,
+      "deliveryDate": "2026-11-20",
+      "deliverySlot": "08:00 - 12:00",
+      "paymentMethod": "cod",
+      "paid": false,
+      "assignedFlorist": "4"
+    },
+    {
+      "id": "o8",
+      "userId": "cus1",
+      "fullname": "Nguyễn Văn An",
+      "phone": "0912340010",
+      "email": "acb@gmail.com",
+      "address": "20 Nguyễn Huệ, Quận 1, TP.HCM",
+      "note": "Kính tặng thầy cô",
+      "items": [
+        {
+          "id": "co80",
+          "userId": "cus1",
+          "productId": "p66",
+          "title": "Giỏ Hoa 20/11 Biết Ơn",
+          "image": "/image/products/hoa-20-11-2.jpg",
+          "price": 552500,
+          "discount": 15,
+          "quantity": 2,
+          "active": true
+        }
+      ],
+      "total": 1105000,
+      "status": "Chờ xác nhận",
+      "history": [
+        {
+          "status": "Chờ xác nhận",
+          "time": "2026-11-10T16:00:22.297Z",
+          "by": "acb",
+          "note": "Khách đặt hàng"
+        }
+      ],
+      "createdAt": "2026-11-10T16:00:22.297Z",
+      "shippingMethod": "free",
+      "shippingLabel": "Giao hàng tiêu chuẩn (Freeship)",
+      "shippingFee": 0,
+      "stockDeducted": true,
+      "deliveryDate": "2026-11-20",
+      "deliverySlot": "12:00 - 17:00",
+      "paymentMethod": "bank",
+      "paid": false
     },
     {
       "id": "o9",
+      "userId": "cus2",
+      "fullname": "Trần Thị Bích",
+      "phone": "0912340011",
+      "email": "ocb@gmail.com",
+      "address": "Nhận tại cửa hàng",
+      "note": "",
+      "items": [
+        {
+          "id": "co90",
+          "userId": "cus2",
+          "productId": "p35",
+          "title": "Hộp Hoa Hồng Tình Yêu",
+          "image": "/image/products/hoa-tinh-yeu-3.jpg",
+          "price": 1012000,
+          "discount": 8,
+          "quantity": 1,
+          "active": true
+        }
+      ],
+      "total": 1012000,
+      "status": "Chờ xác nhận",
+      "history": [
+        {
+          "status": "Chờ xác nhận",
+          "time": "2026-11-10T16:55:22.297Z",
+          "by": "ocb",
+          "note": "Khách đặt hàng"
+        }
+      ],
+      "createdAt": "2026-11-10T16:55:22.297Z",
+      "shippingMethod": "pickup",
+      "shippingLabel": "Nhận tại cửa hàng",
+      "shippingFee": 0,
+      "stockDeducted": true,
+      "deliveryDate": "2026-11-12",
+      "deliverySlot": "17:00 - 21:00",
+      "paymentMethod": "cod",
+      "paid": false
+    },
+    {
+      "id": "o10",
       "userId": "cus3",
       "fullname": "Lê Hoàng Cường",
       "phone": "0912340012",
+      "email": "hcb@gmail.com",
       "address": "22 Nguyễn Huệ, Quận 1, TP.HCM",
       "note": "",
       "items": [
         {
-          "id": "c80",
+          "id": "co100",
           "userId": "cus3",
-          "productId": "p57",
-          "title": "Bó Hoa 20/10 Tri Ân",
-          "image": "/image/products/hoa-20-10-1.jpg",
-          "price": 420000,
-          "discount": 0,
-          "quantity": 3,
+          "productId": "p04",
+          "title": "Bó Hoa Sinh Nhật Hồng Pastel",
+          "image": "/image/products/hoa-sinh-nhat-4.jpg",
+          "price": 690000,
+          "discount": 8,
+          "quantity": 1,
           "active": true
         }
       ],
-      "total": 1260000,
-      "status": "Đang giao",
-      "createdAt": "2026-10-17T10:15:00.000Z",
+      "total": 690000,
+      "status": "Đã hủy",
       "history": [
         {
           "status": "Chờ xác nhận",
-          "time": "2026-10-17T10:15:00.000Z",
-          "by": "Lê Hoàng Cường",
+          "time": "2026-11-09T13:30:00.000Z",
+          "by": "hcb",
+          "note": "Khách đặt hàng"
+        },
+        {
+          "status": "Đã hủy",
+          "time": "2026-11-09T14:05:00.000Z",
+          "by": "hcb",
+          "note": "Đổi ý, không muốn mua nữa"
+        }
+      ],
+      "createdAt": "2026-11-09T13:30:00.000Z",
+      "shippingMethod": "free",
+      "shippingLabel": "Giao hàng tiêu chuẩn (Freeship)",
+      "shippingFee": 0,
+      "stockDeducted": true,
+      "deliveryDate": "2026-11-10",
+      "deliverySlot": "12:00 - 17:00",
+      "paymentMethod": "cod",
+      "paid": false
+    },
+    {
+      "id": "o11",
+      "userId": "cus5",
+      "fullname": "Võ Quốc Hùng",
+      "phone": "0912340014",
+      "email": "hung@gmail.com",
+      "address": "24 Nguyễn Huệ, Quận 1, TP.HCM",
+      "note": "",
+      "items": [
+        {
+          "id": "co110",
+          "userId": "cus5",
+          "productId": "p27",
+          "title": "Lan Hồ Điệp Vàng Phú Quý",
+          "image": "/image/products/lan-ho-diep-3.jpg",
+          "price": 902500,
+          "discount": 5,
+          "quantity": 1,
+          "active": true
+        }
+      ],
+      "total": 902500,
+      "status": "Đã hủy",
+      "history": [
+        {
+          "status": "Chờ xác nhận",
+          "time": "2026-11-08T04:00:00.000Z",
+          "by": "hung",
           "note": "Khách đặt hàng"
         },
         {
           "status": "Đã xác nhận",
-          "time": "2026-10-17T11:05:00.000Z",
+          "time": "2026-11-08T04:30:00.000Z",
           "by": "user1",
-          "note": "Shop đã gọi điện xác nhận với khách"
+          "note": ""
         },
         {
-          "status": "Đang chuẩn bị hoa",
-          "time": "2026-10-17T11:55:00.000Z",
-          "by": "thutrang",
-          "note": "Đã chọn hoa tươi, đang cắm hoa"
-        },
-        {
-          "status": "Đang giao",
-          "time": "2026-10-17T12:45:00.000Z",
-          "by": "quocbao",
-          "note": "Shipper đã lấy hàng và đang giao"
-        }
-      ]
-    },
-    {
-      "id": "o10",
-      "userId": "cus4",
-      "fullname": "Phạm Thị Mai",
-      "phone": "0912340013",
-      "address": "23 Nguyễn Huệ, Quận 1, TP.HCM",
-      "note": "Chúc mừng sinh nhật!",
-      "items": [
-        {
-          "id": "c90",
-          "userId": "cus4",
-          "productId": "p64",
-          "title": "Hộp Hoa 20/10 Yêu Thương",
-          "image": "/image/products/hoa-20-10-8.jpg",
-          "price": 598000,
-          "discount": 8,
-          "quantity": 1,
-          "active": true
-        },
-        {
-          "id": "c91",
-          "userId": "cus4",
-          "productId": "p05",
-          "title": "Giỏ Hoa Tone Cam Đất Ấm Áp",
-          "image": "/image/products/hoa-sinh-nhat-5.jpg",
-          "price": 386400,
-          "discount": 8,
-          "quantity": 2,
-          "active": true
+          "status": "Đã hủy",
+          "time": "2026-11-09T02:00:00.000Z",
+          "by": "user1",
+          "note": "Hết mẫu lan khách chọn, đã gọi báo khách"
         }
       ],
-      "total": 1370800,
-      "status": "Chờ xác nhận",
-      "createdAt": "2026-10-19T11:15:00.000Z",
-      "history": [
-        {
-          "status": "Chờ xác nhận",
-          "time": "2026-10-19T11:15:00.000Z",
-          "by": "Phạm Thị Mai",
-          "note": "Khách đặt hàng"
-        }
-      ]
+      "createdAt": "2026-11-08T04:00:00.000Z",
+      "shippingMethod": "free",
+      "shippingLabel": "Giao hàng tiêu chuẩn (Freeship)",
+      "shippingFee": 0,
+      "stockDeducted": true,
+      "deliveryDate": "2026-11-10",
+      "deliverySlot": "08:00 - 12:00",
+      "paymentMethod": "cod",
+      "paid": false
     }
   ],
   "cart": [],
-  "notifications": [],
+  "notifications": [
+    {
+      "id": "ns1",
+      "read": false,
+      "tone": "info",
+      "target": "staff",
+      "perm": "order.confirm",
+      "orderId": "o8",
+      "title": "Đơn mới #o8",
+      "message": "Nguyễn Văn An vừa đặt đơn hàng, cần xác nhận.",
+      "time": "2026-11-10T16:00:22.297Z"
+    },
+    {
+      "id": "ns2",
+      "read": false,
+      "tone": "info",
+      "target": "staff",
+      "perm": "order.confirm",
+      "orderId": "o9",
+      "title": "Đơn mới #o9",
+      "message": "Trần Thị Bích vừa đặt đơn hàng, cần xác nhận.",
+      "time": "2026-11-10T16:55:22.297Z"
+    },
+    {
+      "id": "ns3",
+      "read": false,
+      "tone": "info",
+      "target": "4",
+      "link": "/dashboard/orders",
+      "orderId": "o7",
+      "title": "Đơn #o7 cần xử lý",
+      "message": "Bước tiếp theo: Chuẩn bị hoa",
+      "time": "2026-11-10T03:50:00.000Z"
+    },
+    {
+      "id": "ns4",
+      "read": false,
+      "tone": "info",
+      "target": "5",
+      "link": "/dashboard/orders",
+      "orderId": "o6",
+      "title": "Đơn #o6 cần xử lý",
+      "message": "Bước tiếp theo: Đang giao hàng",
+      "time": "2026-11-10T13:10:00.000Z"
+    },
+    {
+      "id": "ns5",
+      "read": false,
+      "tone": "success",
+      "target": "cus7",
+      "orderId": "o7",
+      "title": "Đơn #o7 đã được duyệt",
+      "message": "Shop đã duyệt đơn hàng #o7 của bạn.",
+      "time": "2026-11-10T03:50:00.000Z"
+    },
+    {
+      "id": "ns6",
+      "read": false,
+      "tone": "info",
+      "target": "cus6",
+      "orderId": "o6",
+      "title": "Đơn #o6 đang chuẩn bị",
+      "message": "Nghệ nhân đang chuẩn bị hoa cho đơn #o6.",
+      "time": "2026-11-10T13:10:00.000Z"
+    },
+    {
+      "id": "ns7",
+      "read": false,
+      "tone": "info",
+      "target": "cus5",
+      "orderId": "o5",
+      "title": "Đơn #o5 đang giao",
+      "message": "Đơn hàng #o5 đang được giao đến bạn.",
+      "time": "2026-11-10T17:18:22.297Z"
+    },
+    {
+      "id": "ns8",
+      "read": true,
+      "tone": "success",
+      "target": "cus1",
+      "orderId": "o1",
+      "title": "Đơn #o1 đã hoàn tất",
+      "message": "Đơn hàng #o1 đã giao thành công. Cảm ơn bạn!",
+      "time": "2026-11-08T03:05:00.000Z"
+    },
+    {
+      "id": "ns9",
+      "read": true,
+      "tone": "danger",
+      "target": "staff",
+      "orderId": "o10",
+      "title": "Khách hủy đơn #o10",
+      "message": "Lê Hoàng Cường đã hủy đơn hàng #o10 · Lý do: Đổi ý, không muốn mua nữa",
+      "time": "2026-11-09T14:05:00.000Z"
+    },
+    {
+      "id": "ns10",
+      "read": false,
+      "tone": "info",
+      "target": "staff",
+      "perm": "consult.view",
+      "link": "/dashboard/consults",
+      "title": "Yêu cầu tư vấn mới",
+      "message": "Nguyễn Thị Mỹ Linh · 0931112233",
+      "time": "2026-11-10T16:20:22.297Z"
+    }
+  ],
   "favorites": [],
-  "consults": [],
+  "consults": [
+    {
+      "id": "ks1",
+      "fullname": "Nguyễn Thị Mỹ Linh",
+      "phone": "0931112233",
+      "note": "Cần kệ hoa khai trương cho spa ngày 15/11, ngân sách khoảng 1,5 triệu.",
+      "createdAt": "2026-11-10T16:20:22.297Z",
+      "contacted": false
+    },
+    {
+      "id": "ks2",
+      "fullname": "Đỗ Quang Huy",
+      "phone": "0932223344",
+      "note": "Tư vấn bó hoa tặng vợ kỷ niệm 5 năm cưới.",
+      "createdAt": "2026-11-10T14:10:00.000Z",
+      "contacted": false
+    },
+    {
+      "id": "ks3",
+      "fullname": "Trương Bảo Ngọc",
+      "phone": "0933334455",
+      "note": "Đặt 10 bó hoa nhỏ tặng giáo viên dịp 20/11.",
+      "createdAt": "2026-11-09T03:25:00.000Z",
+      "contacted": true,
+      "contactedBy": "user1",
+      "contactedAt": "2026-11-09T04:00:00.000Z"
+    },
+    {
+      "id": "ks4",
+      "fullname": "Lý Anh Khoa",
+      "phone": "0934445566",
+      "note": "Hỏi giá vòng hoa viếng giao trong ngày.",
+      "createdAt": "2026-11-08T01:40:00.000Z",
+      "contacted": true,
+      "contactedBy": "user1",
+      "contactedAt": "2026-11-08T02:05:00.000Z"
+    }
+  ],
   "rolePermissions": {},
   "settings": {
     "shopName": "Hoa Tươi DL",

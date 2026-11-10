@@ -7,6 +7,9 @@ export interface SystemSettings {
   lowStockThreshold: number; // tồn kho dưới mức này thì cảnh báo sắp hết hàng
   allowCustomerCancel: boolean; // cho phép khách tự hủy đơn
   flashSaleEnd: string; // giờ kết thúc "Giá sốc hôm nay" mỗi ngày, dạng HH:mm
+  bankName: string; // tài khoản nhận chuyển khoản, hiện ở trang thanh toán
+  bankAccount: string;
+  bankOwner: string;
 }
 
 export const DEFAULT_SETTINGS: SystemSettings = {
@@ -18,4 +21,7 @@ export const DEFAULT_SETTINGS: SystemSettings = {
   lowStockThreshold: 15,
   allowCustomerCancel: true,
   flashSaleEnd: '23:59',
+  bankName: '',
+  bankAccount: '',
+  bankOwner: '',
 };

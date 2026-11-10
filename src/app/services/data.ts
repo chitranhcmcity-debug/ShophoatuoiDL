@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
+import { Auth } from './auth';
 import { CheckoutService } from './checkout';
 import { CustomerService } from './customer';
 import { EmployeeService } from './employee';
@@ -20,6 +21,7 @@ export class DataService {
   private employeeService = inject(EmployeeService);
   private customerService = inject(CustomerService);
   private checkoutService = inject(CheckoutService);
+  private authService = inject(Auth);
 
   /** Chạy 1 lần khi khởi động app: nạp dữ liệu từ json-server (db.json) */
   async loadAll(): Promise<void> {
@@ -34,6 +36,7 @@ export class DataService {
     } catch {
       if (ok) console.error('Không tải được dữ liệu từ API');
     }
+    this.authService.startSessionWatch();
     if (!ok) {
       alert('Không kết nối được máy chủ dữ liệu (port 3000).\nHãy chạy: npm run server (hoặc npm run dev) rồi tải lại trang.');
     }

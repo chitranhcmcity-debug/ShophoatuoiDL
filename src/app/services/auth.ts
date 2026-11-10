@@ -1,15 +1,19 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, computed, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { ROLE_PERMISSIONS } from '../interfaces/permissions';
+import { NON_SHOPPING_ROLES, ROLE_PERMISSIONS } from '../interfaces/permissions';
 import { CurrentUser } from '../interfaces/user';
 import { CustomerService } from './customer';
 import { EmployeeService } from './employee';
 import { PermissionService } from './permission';
 import { StorageService } from './storage';
 
+const SESSION_CHECK_MS = 5000;
+
 @Injectable({ providedIn: 'root' })
 export class Auth {
   user = signal<CurrentUser | null>(null);
+  /** Khách chưa đăng nhập vẫn được xem nút mua; tài khoản chỉ quản trị thì không */
+  canShop = computed(() => !NON_SHOPPING_ROLES.includes(this.user()?.role ?? ''));
 
   constructor(
     private storageService: StorageService,
@@ -45,6 +49,36 @@ export class Auth {
     this.storageService.set('currentUser', currentUser);
     this.user.set(currentUser);
     return true;
+  }
+
+  /** Theo dõi tài khoản đang đăng nhập: bị khóa, bị xóa hoặc đổi vai trò thì có hiệu lực ngay */
+  startSessionWatch(): void {
+    this.validateSession();
+    setInterval(() => {
+      Promise.all([this.employeeService.reload(), this.customerService.reload()])
+        .then(() => this.validateSession())
+        .catch(() => {}); // mất kết nối tạm thời: giữ nguyên phiên
+    }, SESSION_CHECK_MS);
+  }
+
+  private validateSession(): void {
+    const current = this.user();
+    const users = this.employeeService.getUsers();
+    const customers = this.customerService.getCustomers();
+    if (!current || (!users.length && !customers.length)) return;
+    const account = current.role === 'customer' ? customers.find((c) => c.id === current.id) : users.find((u) => u.id === current.id);
+    if (!account || account.islocked) {
+      alert(account ? 'Tài khoản của bạn đã bị khóa.' : 'Tài khoản của bạn không còn tồn tại.');
+      this.logout();
+      return;
+    }
+    if (account.role !== current.role) {
+      const updated = { ...current, role: account.role };
+      this.storageService.set('currentUser', updated);
+      this.user.set(updated);
+      alert('Vai trò của bạn vừa được thay đổi.');
+      this.router.navigate(['/dashboard']);
+    }
   }
 
   logout(): void {

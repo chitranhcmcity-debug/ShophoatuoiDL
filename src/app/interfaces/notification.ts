@@ -6,6 +6,7 @@ export interface AppNotification {
   target: string;
   orderId?: string;
   link?: string; // trang mở ra khi bấm vào thông báo
+  perm?: string; // thông báo cho nhân viên: chỉ ai có quyền này mới thấy (mặc định order.view)
   title: string;
   message: string;
   tone: 'success' | 'danger' | 'info';

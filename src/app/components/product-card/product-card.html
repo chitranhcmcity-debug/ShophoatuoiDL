@@ -22,7 +22,9 @@
     <div class="mt-auto">
       <small class="text-muted"><i class="bi bi-eye"></i> Lượt xem: {{ product().views }}</small>
       <div class="d-flex gap-1 mt-2">
-        <button class="btn btn-hoa btn-sm flex-grow-1" type="button" (click)="buyNow()">Mua Ngay</button>
+        @if (canShop()) {
+        <button class="btn btn-hoa btn-sm flex-grow-1" type="button" [disabled]="product().stock <= 0" (click)="buyNow()">{{ product().stock > 0 ? 'Mua Ngay' : 'Hết hàng' }}</button>
+        }
         <button class="btn btn-outline-hoa btn-sm" type="button" (click)="favorite()" [class.active]="productService.isFavorite(product().id)">
           <i class="bi" [class]="productService.isFavorite(product().id) ? 'bi-heart-fill' : 'bi-heart'"></i> {{ productService.favoriteCount(product().id) }}
         </button>

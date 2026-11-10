@@ -1,6 +1,7 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { Auth } from '../services/auth';
+import { CheckoutService } from '../services/checkout';
 
 /** Bảo vệ /dashboard: chỉ nhân viên nội bộ (có quyền dashboard.view) được vào, khách hàng thì không */
 export const authGuard: CanActivateFn = () => {
@@ -29,26 +30,29 @@ export const permissionGuard =
     return false;
   };
 
-/** Bảo vệ giỏ hàng, thanh toán, tài khoản: phải đăng nhập */
-export const loginGuard: CanActivateFn = () => {
+/** Hóa đơn: chủ đơn hàng hoặc người có quyền order.invoice */
+export const invoiceGuard: CanActivateFn = (route) => {
   const authService = inject(Auth);
   const router = inject(Router);
   if (!authService.isLoggedIn()) {
     router.navigate(['/signin']);
     return false;
   }
-  return true;
+  const order = inject(CheckoutService).orders().find((o) => o.id === route.paramMap.get('id'));
+  if (order && (order.userId === authService.user()?.id || authService.hasPermission('order.invoice'))) return true;
+  router.navigate([authService.hasPermission('dashboard.view') ? '/dashboard' : '']);
+  return false;
 };
 
-/** Trang tài khoản chỉ dành cho khách hàng; nhân viên dùng trang quản trị */
-export const customerGuard: CanActivateFn = () => {
+/** Bảo vệ giỏ hàng, thanh toán, tài khoản: phải đăng nhập và là tài khoản được mua hàng */
+export const shopperGuard: CanActivateFn = () => {
   const authService = inject(Auth);
   const router = inject(Router);
   if (!authService.isLoggedIn()) {
     router.navigate(['/signin']);
     return false;
   }
-  if (authService.getCurrentUserRole() !== 'customer') {
+  if (!authService.canShop()) {
     router.navigate(['/dashboard']);
     return false;
   }

@@ -29,7 +29,7 @@ export class Overview {
   customerCount = computed(() => this.customerService.customers().length);
   revenue = computed(() =>
     this.orders()
-      .filter((o) => o.status !== 'Đã hủy')
+      .filter((o) => o.status === 'Đã giao')
       .reduce((s, o) => s + o.total, 0)
   );
   lowStock = computed(() => this.products().filter((p) => p.stock < this.settings().lowStockThreshold).sort((a, b) => a.stock - b.stock));

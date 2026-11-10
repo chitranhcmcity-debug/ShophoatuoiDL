@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable, computed, signal } from '@angular/core';
 import { Observable, firstValueFrom } from 'rxjs';
 import { Category, Product } from '../interfaces/product';
@@ -80,6 +80,24 @@ export class ProductService {
     this.http.delete<void>(`${this.apiUrl}/${id}`).subscribe(() => {
       this.products.update((list) => list.filter((x) => x.id !== id));
     });
+  }
+  /** Đọc sản phẩm mới nhất từ server; null nếu sản phẩm đã bị xóa */
+  async fetchLatest(id: string): Promise<Product | null> {
+    try {
+      return await firstValueFrom(this.http.get<Product>(`${this.apiUrl}/${id}`));
+    } catch (e) {
+      if (e instanceof HttpErrorResponse && e.status === 404) return null;
+      throw e;
+    }
+  }
+  /** Cộng / trừ tồn kho và số đã bán dựa trên số liệu mới nhất; bỏ qua nếu sản phẩm đã bị xóa */
+  async adjustStock(id: string, stockDelta: number, soldDelta = 0): Promise<void> {
+    const p = await this.fetchLatest(id);
+    if (!p) return;
+    const updated = await firstValueFrom(
+      this.http.patch<Product>(`${this.apiUrl}/${id}`, { stock: Math.max(0, p.stock + stockDelta), sold: Math.max(0, p.sold + soldDelta) })
+    );
+    this.products.update((list) => list.map((x) => (x.id === id ? updated : x)));
   }
   increaseView(id: string): void {
     const p = this.getProductById(id);

@@ -25,7 +25,8 @@
       @if (authService.user(); as u) {
       @if (u.role !== 'customer') {
       <a routerLink="/dashboard" class="nav-link-sm"><i class="bi bi-speedometer2"></i> Quản trị</a>
-      } @else {
+      }
+      @if (authService.canShop()) {
       <a routerLink="/account" class="nav-link-sm"><i class="bi bi-person-circle"></i> Tài khoản</a>
       }
       <app-notification-bell></app-notification-bell>
@@ -34,10 +35,12 @@
       <a routerLink="/signin" class="nav-link-sm"><i class="bi bi-person"></i> Đăng nhập</a>
       <a routerLink="/signup" class="nav-link-sm">Đăng ký</a>
       }
+      @if (authService.canShop()) {
       <a routerLink="/cart" class="nav-link-sm position-relative cart-link">
         <i class="bi bi-cart3 fs-4"></i>
         <span class="cart-badge">{{ cartService.count() }}</span>
       </a>
+      }
     </div>
   </div>
 
@@ -59,7 +62,9 @@
       <a routerLink="/san-pham/hoa-sinh-nhat" routerLinkActive="active" class="menu-item">Hoa Sinh Nhật</a>
       <a routerLink="/san-pham/lan-ho-diep" routerLinkActive="active" class="menu-item">Lan Hồ Điệp</a>
       <a routerLink="/san-pham/hoa-tinh-yeu" routerLinkActive="active" class="menu-item">Hoa Tình Yêu</a>
+      @if (authService.canShop()) {
       <a routerLink="/checkout" class="menu-item">Thanh toán</a>
+      }
     </div>
   </nav>
 </header>

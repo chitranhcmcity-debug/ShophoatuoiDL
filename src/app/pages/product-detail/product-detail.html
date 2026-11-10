@@ -31,6 +31,7 @@
       <p class="mb-3">Tình trạng: @if (p.stock > 0) { <b class="text-success">Còn {{ p.stock }} sản phẩm</b> } @else { <b class="text-danger">Hết hàng</b> }</p>
       <p style="text-align: justify">{{ p.description }}</p>
 
+      @if (canShop()) {
       <div class="input-group quantity mb-3">
         <button class="btn btn-sm rounded-circle bg-warning border" type="button" (click)="decreaseQuantity()"><i class="bi bi-dash"></i></button>
         <input type="text" [value]="quantity()" readonly class="form-control form-control-sm text-center border-0" />
@@ -40,6 +41,7 @@
         <i class="bi bi-bag me-2"></i> Thêm vào giỏ
       </button>
       <button class="btn btn-hoa rounded-pill px-4 py-2" type="button" [disabled]="p.stock === 0" (click)="buyNow()">Mua ngay</button>
+      }
     </div>
   </div>
 

@@ -1,0 +1,102 @@
+.sheet {
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 32px;
+  background: #fff;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  color: #222;
+}
+.sheet p {
+  margin: 0 0 2px;
+}
+.sheet-head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid var(--hoa-primary);
+}
+.sheet-head h1 {
+  margin: 0 0 4px;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--hoa-primary-dark);
+}
+.sheet-head h2 {
+  margin: 0 0 4px;
+  font-size: 22px;
+  font-weight: 700;
+}
+.cancelled {
+  margin-top: 16px !important;
+  padding: 8px;
+  border: 2px solid #c92a2a;
+  border-radius: 6px;
+  color: #c92a2a;
+  font-weight: 700;
+  text-align: center;
+}
+.parties {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin: 20px 0;
+}
+.parties h3 {
+  margin: 0 0 4px;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #666;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+th,
+td {
+  padding: 8px;
+  border-bottom: 1px solid #e5e5e5;
+}
+th {
+  background: var(--hoa-soft);
+  font-size: 13px;
+}
+.num {
+  text-align: right;
+  white-space: nowrap;
+}
+tfoot td {
+  border-bottom: 0;
+  padding: 4px 8px;
+}
+.grand td {
+  padding-top: 8px;
+  border-top: 2px solid #222;
+  font-size: 18px;
+  font-weight: 700;
+}
+.payment {
+  margin-top: 16px !important;
+}
+footer {
+  margin-top: 28px;
+  padding-top: 12px;
+  border-top: 1px solid #e5e5e5;
+  color: #666;
+  font-size: 13px;
+  text-align: center;
+}
+@media print {
+  .sheet {
+    max-width: none;
+    padding: 0;
+    border: 0;
+  }
+  th {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}

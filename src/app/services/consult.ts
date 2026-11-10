@@ -31,6 +31,7 @@ export class ConsultService {
     this.notificationService.push({
       target: STAFF_TARGET,
       link: '/dashboard/consults',
+      perm: 'consult.view',
       tone: 'info',
       title: 'Yêu cầu tư vấn mới',
       message: `${item.fullname} · ${item.phone}`,

@@ -17,7 +17,9 @@ npm run dev      # http://localhost:4200
 |---|---|---|---|
 | Chủ shop | chushop | chushop123 | Toàn quyền, duy nhất được thêm/sửa/xóa sản phẩm và cấu hình giá |
 | Quản trị web | admin | admin123 | Quản lý nhân viên, khách hàng, đơn hàng, dữ liệu; chỉ XEM sản phẩm |
-| Nhân viên | user1 / thutrang / quocbao | 123456 | Chỉ XEM, không thêm/sửa/xóa |
+| Nhân viên nhận hàng | user1 | 123456 | Xác nhận đơn, hủy đơn, xác nhận chuyển khoản, xác nhận khách nhận tại cửa hàng |
+| Nhân viên cắm hoa | thutrang | 123456 | Xác nhận bước chuẩn bị hoa |
+| Nhân viên giao hoa | quocbao | 123456 | Xác nhận đi giao và đã giao |
 | Khách hàng | acb / ocb / hcb | 123456 | Mua hàng, quản lý tài khoản; không vào được trang quản trị |
 
 Quyền định nghĩa trong `src/app/interfaces/permissions.ts` (dạng `product.update`, `order.view`...). Route `/dashboard/*` được chặn bằng `authGuard` + `permissionGuard`, nút thao tác ẩn theo `hasPermission`.

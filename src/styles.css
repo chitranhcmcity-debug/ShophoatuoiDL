@@ -81,6 +81,19 @@ a {
   border-radius: 0.375rem;
 }
 
+/* Khi in (hóa đơn) chỉ giữ nội dung trang */
+@media print {
+  app-header,
+  app-footer,
+  app-ai-chat,
+  .no-print {
+    display: none !important;
+  }
+  body {
+    background: #fff;
+  }
+}
+
 /* Hiệu ứng rơi từ từ khi cuộn trang (directive appReveal) */
 .scroll-reveal:not(.is-visible) {
   opacity: 0;

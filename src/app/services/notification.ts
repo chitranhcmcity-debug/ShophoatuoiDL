@@ -14,9 +14,9 @@ export class NotificationService {
   mine = computed(() => {
     const user = this.authService.user();
     if (!user) return [];
-    const isStaff = user.role !== 'customer' && this.authService.hasPermission('order.view');
+    const forStaff = (n: AppNotification) => user.role !== 'customer' && this.authService.hasPermission(n.perm ?? 'order.view');
     return this.all()
-      .filter((n) => (n.target === STAFF_TARGET ? isStaff : n.target === user.id))
+      .filter((n) => (n.target === STAFF_TARGET ? forStaff(n) : n.target === user.id))
       .sort((a, b) => b.time.localeCompare(a.time));
   });
   unreadCount = computed(() => this.mine().filter((n) => !n.read).length);

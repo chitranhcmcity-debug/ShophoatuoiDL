@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Component, computed, input } from '@angular/core';
-import { ORDER_CANCELLED, ORDER_FLOW, Order } from '../../interfaces/order';
+import { ORDER_CANCELLED, Order, flowOf } from '../../interfaces/order';
 
 type StepState = 'done' | 'current' | 'pending' | 'cancelled';
 
@@ -16,17 +16,18 @@ export class OrderTracking {
   /** Danh sách các bước hiển thị + trạng thái từng bước */
   steps = computed(() => {
     const o = this.order();
+    const flow = flowOf(o);
     const history = o.history ?? [];
     const timeOf = (status: string) => history.find((h) => h.status === status);
     const cancelled = o.status === ORDER_CANCELLED.status;
 
     // bước cuối cùng đã đạt được trong quy trình
-    let reached = ORDER_FLOW.findIndex((s) => s.status === o.status);
+    let reached = flow.findIndex((s) => s.status === o.status);
     if (cancelled) {
-      reached = Math.max(-1, ...ORDER_FLOW.map((s, i) => (timeOf(s.status) ? i : -1)));
+      reached = Math.max(-1, ...flow.map((s, i) => (timeOf(s.status) ? i : -1)));
     }
 
-    const list = ORDER_FLOW.map((s, i) => {
+    const list = flow.map((s, i) => {
       let state: StepState = 'pending';
       if (i < reached || (i === reached && (cancelled || o.status === 'Đã giao'))) state = 'done';
       else if (i === reached) state = 'current';
@@ -45,8 +46,9 @@ export class OrderTracking {
   progress = computed(() => {
     const o = this.order();
     if (o.status === ORDER_CANCELLED.status) return 100;
-    const idx = ORDER_FLOW.findIndex((s) => s.status === o.status);
-    return Math.round(((idx + 1) / ORDER_FLOW.length) * 100);
+    const flow = flowOf(o);
+    const idx = flow.findIndex((s) => s.status === o.status);
+    return Math.round(((idx + 1) / flow.length) * 100);
   });
 
   isCancelled = computed(() => this.order().status === ORDER_CANCELLED.status);

@@ -1,13 +1,13 @@
 @if (!chat.open()) {
 <button class="ai-fab" type="button" (click)="chat.open.set(true)" title="Tư vấn chọn hoa">
-  <i class="bi bi-chat-heart-fill"></i>
+  <img class="ai-logo" src="/image/AI_chat.svg" alt="" />
   <span class="ai-fab-label">Tư vấn AI</span>
 </button>
 } @else {
 <section class="ai-panel" aria-label="Tư vấn chọn hoa bằng AI">
   <header class="ai-head">
     <div>
-      <div class="fw-semibold"><i class="bi bi-flower1"></i> Trợ lý chọn hoa</div>
+      <div class="fw-semibold"><img class="ai-logo" src="/image/AI_chat.svg" alt="" /> Trợ lý chọn hoa</div>
       <small>Trả lời bằng AI, có thể chưa chính xác</small>
     </div>
     <div class="d-flex gap-1">

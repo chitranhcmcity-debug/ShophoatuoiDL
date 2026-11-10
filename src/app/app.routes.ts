@@ -1,5 +1,7 @@
 import { Routes } from '@angular/router';
-import { authGuard, customerGuard, loginGuard, permissionGuard } from './guards/auth.guard';
+import { authGuard, invoiceGuard, permissionGuard, shopperGuard } from './guards/auth.guard';
+import { Invoice } from './pages/invoice/invoice';
+import { Reports } from './dashboard/reports/reports';
 import { Cart } from './pages/cart/cart';
 import { Checkout } from './pages/checkout/checkout';
 import { Home } from './pages/home/home';
@@ -23,9 +25,10 @@ export const routes: Routes = [
   { path: 'san-pham', component: ProductList, title: 'Sản phẩm' },
   { path: 'san-pham/:slug', component: ProductList, title: 'Danh mục hoa' },
   { path: 'product/:id', component: ProductDetail, title: 'Chi tiết sản phẩm' },
-  { path: 'cart', component: Cart, title: 'Giỏ hàng', canActivate: [loginGuard] },
-  { path: 'checkout', component: Checkout, title: 'Thanh toán', canActivate: [loginGuard] },
-  { path: 'account', component: Account, title: 'Tài khoản', canActivate: [customerGuard] },
+  { path: 'cart', component: Cart, title: 'Giỏ hàng', canActivate: [shopperGuard] },
+  { path: 'checkout', component: Checkout, title: 'Thanh toán', canActivate: [shopperGuard] },
+  { path: 'account', component: Account, title: 'Tài khoản', canActivate: [shopperGuard] },
+  { path: 'invoice/:id', component: Invoice, title: 'Hóa đơn', canActivate: [invoiceGuard] },
   { path: 'signin', component: Signin, title: 'Đăng nhập' },
   { path: 'signup', component: Signup, title: 'Đăng ký' },
   {
@@ -40,6 +43,7 @@ export const routes: Routes = [
       { path: 'employees', component: Employees, title: 'Quản lý nhân viên', canActivate: [permissionGuard('employee.view')] },
       { path: 'customers', component: Customers, title: 'Quản lý khách hàng', canActivate: [permissionGuard('customer.view')] },
       { path: 'consults', component: Consults, title: 'Yêu cầu tư vấn', canActivate: [permissionGuard('consult.view')] },
+      { path: 'reports', component: Reports, title: 'Báo cáo doanh thu', canActivate: [permissionGuard('report.view')] },
       { path: 'permissions', component: Permissions, title: 'Phân quyền', canActivate: [permissionGuard('permission.view')] },
       { path: 'settings', component: Settings, title: 'Cấu hình hệ thống', canActivate: [permissionGuard('system.manage')] },
     ],

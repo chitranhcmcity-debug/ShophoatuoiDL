@@ -1,32 +1,47 @@
 import { DatePipe } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { Pagination } from '../../components/pagination/pagination';
 import { OrderTracking } from '../../components/order-tracking/order-tracking';
-import { ORDER_CANCELLED, ORDER_FLOW, ORDER_STATUSES, Order, toneOfStatus } from '../../interfaces/order';
+import { LOCKED_ROLES } from '../../interfaces/permissions';
+import { ORDER_CANCELLED, ORDER_STATUSES, Order, assigneeOf, nextStepOf, paymentLabel, toneOfStatus } from '../../interfaces/order';
 import { Auth } from '../../services/auth';
 import { CheckoutService } from '../../services/checkout';
+import { EmployeeService } from '../../services/employee';
 import { PermissionService } from '../../services/permission';
+import { OrderAssignment } from './order-assignment/order-assignment';
+
+const MY_WORK = 'mine';
+const STEP_PERMISSIONS = ['order.confirm', 'order.prepare', 'order.ship', 'order.deliver', 'order.pickup'];
 
 @Component({
   selector: 'app-orders',
-  imports: [DatePipe, OrderTracking, Pagination],
+  imports: [DatePipe, RouterLink, OrderTracking, OrderAssignment, Pagination],
   templateUrl: './orders.html',
   styleUrl: './orders.css',
 })
 export class Orders {
   private checkoutService = inject(CheckoutService);
   private permissionService = inject(PermissionService);
+  private employeeService = inject(EmployeeService);
   authService = inject(Auth);
 
   orders = this.checkoutService.orders;
   statuses = ORDER_STATUSES;
   toneOf = toneOfStatus;
+  paymentLabel = paymentLabel;
+
+  /** Quản lí, Quản trị web xem toàn bộ; nhân viên xử lý đơn có thêm bộ lọc việc của mình */
+  private isSupervisor = computed(() => LOCKED_ROLES.includes(this.authService.user()?.role ?? ''));
+  showMyWork = computed(() => !this.isSupervisor() && STEP_PERMISSIONS.some((p) => this.authService.hasPermission(p)));
+  myWork = computed(() => this.orders().filter((o) => this.canAdvance(o)));
 
   filter = signal<string>('all');
   expanded = signal<string | null>(null);
 
   filtered = computed(() => {
     const f = this.filter();
+    if (f === MY_WORK) return [...this.myWork()].reverse();
     const list = [...this.orders()].reverse(); // đơn mới nhất lên đầu
     return f === 'all' ? list : list.filter((o) => o.status === f);
   });
@@ -55,19 +70,22 @@ export class Orders {
 
   /** Bước kế tiếp trong quy trình (null nếu đã giao xong hoặc đã hủy) */
   nextStep(o: Order) {
-    const i = ORDER_FLOW.findIndex((s) => s.status === o.status);
-    return i >= 0 && i < ORDER_FLOW.length - 1 ? ORDER_FLOW[i + 1] : null;
+    return nextStepOf(o);
   }
 
   /** Người đang đăng nhập có được xác nhận bước kế tiếp không */
   canAdvance(o: Order): boolean {
     const perm = this.nextStep(o)?.perm;
-    return !!perm && this.authService.hasPermission(perm);
+    if (!perm || !this.authService.hasPermission(perm)) return false;
+    const assignee = assigneeOf(o, perm);
+    return !assignee || assignee === this.authService.user()?.id || this.isSupervisor();
   }
 
   /** Bước kế tiếp do ai phụ trách */
   waitingFor(o: Order): string {
     const perm = this.nextStep(o)?.perm;
+    const assignee = perm ? assigneeOf(o, perm) : null;
+    if (assignee) return this.employeeService.displayName(assignee);
     const roles = perm ? this.permissionService.rolesWith(perm) : [];
     return roles.length ? roles.join(', ') : 'Quản lí hoặc Quản trị web';
   }
@@ -86,6 +104,18 @@ export class Orders {
     const reason = prompt('Nhập lý do hủy đơn hàng:', 'Khách yêu cầu hủy');
     if (reason === null) return;
     this.checkoutService.updateStatus(o.id, ORDER_CANCELLED.status, reason.trim() || 'Hủy đơn');
+  }
+
+  canInvoice(o: Order): boolean {
+    return o.status !== ORDER_CANCELLED.status && this.authService.hasPermission('order.invoice');
+  }
+
+  canMarkPaid(o: Order): boolean {
+    return o.paymentMethod === 'bank' && !o.paid && o.status !== ORDER_CANCELLED.status && this.authService.hasPermission('order.payment');
+  }
+
+  markPaid(o: Order) {
+    if (this.canMarkPaid(o)) this.checkoutService.markPaid(o.id);
   }
 
   delete(id: string) {

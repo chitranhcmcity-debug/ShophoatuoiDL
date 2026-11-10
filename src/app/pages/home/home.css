@@ -264,7 +264,7 @@
 .to-top {
   position: fixed;
   right: 20px;
-  bottom: calc(90px + env(safe-area-inset-bottom, 0px)); /* nằm trên nút Tư vấn AI */
+  bottom: calc(126px + env(safe-area-inset-bottom, 0px)); /* nằm trên nút Tư vấn AI */
   z-index: 1030;
   width: 46px;
   height: 46px;

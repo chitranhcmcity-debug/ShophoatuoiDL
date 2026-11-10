@@ -98,7 +98,13 @@
             <b>Mã đơn: {{ o.id }}</b>
             <span [class]="'st tone-' + toneOf(o.status)">{{ o.status }}</span>
           </div>
-          <small class="text-muted">{{ o.createdAt | date : 'dd/MM/yyyy HH:mm' }} · Giao đến: {{ o.address }}</small>
+          <small class="text-muted">{{ o.createdAt | date : 'dd/MM/yyyy HH:mm' }} · Giao đến: {{ o.address }}@if (o.shippingLabel) { · {{ o.shippingLabel }} }</small>
+          @if (o.deliveryDate) {
+          <small class="d-block text-muted"><i class="bi bi-calendar-event"></i> Nhận hoa: {{ o.deliveryDate | date : 'dd/MM/yyyy' }} · {{ o.deliverySlot }}</small>
+          }
+          @if (o.paymentMethod) {
+          <small class="d-block text-muted"><i class="bi bi-wallet2"></i> {{ paymentLabel(o.paymentMethod) }} · <b>{{ o.paid ? 'Đã thanh toán' : 'Chưa thanh toán' }}</b></small>
+          }
           <ul class="list-unstyled mt-2 mb-2">
             @for (i of o.items; track i.id) {
             <li class="d-flex align-items-center gap-2 mb-1">
@@ -115,6 +121,9 @@
             </button>
               @if (canCancel(o)) {
               <button class="btn btn-outline-danger btn-sm" type="button" (click)="cancelOrder(o)"><i class="bi bi-x-octagon"></i> Hủy đơn</button>
+              }
+              @if (o.status !== 'Đã hủy') {
+              <a class="btn btn-outline-secondary btn-sm" [routerLink]="['/invoice', o.id]"><i class="bi bi-receipt"></i> Hóa đơn</a>
               }
             </div>
             <b class="text-danger">Tổng: {{ o.total.toLocaleString('vi-VN') }}đ</b>

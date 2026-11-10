@@ -1,6 +1,7 @@
-import { Component, OnInit, computed, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ProductCard } from '../../components/product-card/product-card';
+import { Auth } from '../../services/auth';
 import { CartService } from '../../services/cart';
 import { ProductService } from '../../services/product';
 
@@ -24,6 +25,7 @@ export class ProductDetail implements OnInit {
       : [];
   });
   quantity = signal(1);
+  canShop = inject(Auth).canShop;
 
   constructor(
     public productService: ProductService,

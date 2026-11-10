@@ -23,6 +23,7 @@ export class Layout {
     { path: '/dashboard/employees', label: 'Nhân viên', icon: 'bi-person-vcard-fill', tone: 'sapphire', exact: false, perm: 'employee.view' },
     { path: '/dashboard/customers', label: 'Khách hàng', icon: 'bi-people-fill', tone: 'emerald', exact: false, perm: 'customer.view' },
     { path: '/dashboard/consults', label: 'Tư vấn', icon: 'bi-chat-heart-fill', tone: 'rose', exact: false, perm: 'consult.view' },
+    { path: '/dashboard/reports', label: 'Báo cáo', icon: 'bi-graph-up-arrow', tone: 'emerald', exact: false, perm: 'report.view' },
     { path: '/dashboard/permissions', label: 'Phân quyền', icon: 'bi-shield-lock-fill', tone: 'sapphire', exact: false, perm: 'permission.view' },
     { path: '/dashboard/settings', label: 'Cấu hình', icon: 'bi-gear-fill', tone: 'gold', exact: false, perm: 'system.manage' },
   ];

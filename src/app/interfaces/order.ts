@@ -30,6 +30,43 @@ export interface Order {
   status: string;
   history: OrderHistory[];
   createdAt: string;
+  email?: string;
+  shippingMethod?: string; // free | fast | pickup
+  shippingLabel?: string;
+  shippingFee?: number;
+  stockDeducted?: boolean; // đơn đã trừ tồn kho, khi hủy thì cộng lại
+  deliveryDate?: string; // YYYY-MM-DD
+  deliverySlot?: string;
+  paymentMethod?: string; // cod | bank
+  paid?: boolean;
+  paidBy?: string;
+  paidAt?: string; // ISO
+  assignedFlorist?: string | null; // id nhân viên cắm hoa được phân công
+  assignedShipper?: string | null; // id nhân viên giao hoa được phân công
+}
+
+export type AssigneeField = 'assignedFlorist' | 'assignedShipper';
+
+export const PAYMENT_METHODS = [
+  { key: 'cod', label: 'Thanh toán khi nhận hàng (COD)' },
+  { key: 'bank', label: 'Chuyển khoản ngân hàng' },
+];
+
+export const paymentLabel = (key?: string) => PAYMENT_METHODS.find((m) => m.key === key)?.label ?? '';
+
+export const DELIVERY_SLOTS = [
+  { label: '08:00 - 12:00', endHour: 12 },
+  { label: '12:00 - 17:00', endHour: 17 },
+  { label: '17:00 - 21:00', endHour: 21 },
+];
+
+export const FAST_DELIVERY_SLOT = 'Trong 60 phút';
+
+/** Người được phân công làm bước cần quyền này (nếu có) */
+export function assigneeOf(o: Order, permission: string): string | null | undefined {
+  if (permission === 'order.prepare') return o.assignedFlorist;
+  if (permission === 'order.ship' || permission === 'order.deliver') return o.assignedShipper;
+  return undefined;
 }
 
 export interface OrderStep {
@@ -59,5 +96,20 @@ export const ORDER_CANCELLED: OrderStep = {
 };
 
 export const ORDER_STATUSES: OrderStep[] = [...ORDER_FLOW, ORDER_CANCELLED];
+
+/** Quy trình của một đơn: nhận tại cửa hàng thì bỏ bước giao hàng */
+export function flowOf(o: Pick<Order, 'shippingMethod'>): OrderStep[] {
+  if (o.shippingMethod !== 'pickup') return ORDER_FLOW;
+  return ORDER_FLOW.filter((s) => s.status !== 'Đang giao').map((s) =>
+    s.status === 'Đã giao' ? { ...s, title: 'Khách đã nhận hoa', desc: 'Khách đã nhận hoa tại cửa hàng', perm: 'order.pickup' } : s
+  );
+}
+
+/** Bước kế tiếp của đơn (null nếu đã xong hoặc đã hủy) */
+export function nextStepOf(o: Pick<Order, 'shippingMethod' | 'status'>): OrderStep | null {
+  const flow = flowOf(o);
+  const i = flow.findIndex((s) => s.status === o.status);
+  return i >= 0 && i < flow.length - 1 ? flow[i + 1] : null;
+}
 
 export const toneOfStatus = (status: string) => ORDER_STATUSES.find((s) => s.status === status)?.tone ?? 'plum';

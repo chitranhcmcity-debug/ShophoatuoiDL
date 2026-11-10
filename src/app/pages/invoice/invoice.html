@@ -1,0 +1,81 @@
+@if (order(); as o) {
+<div class="container py-4">
+  <div class="d-flex gap-2 mb-3 no-print">
+    <button type="button" class="btn btn-outline-hoa" (click)="back()"><i class="bi bi-arrow-left"></i> Quay lại</button>
+    <button type="button" class="btn btn-hoa" (click)="print()"><i class="bi bi-printer"></i> In / Lưu PDF</button>
+  </div>
+
+  <article class="sheet">
+    <header class="sheet-head">
+      <div>
+        <h1>{{ shop().shopName }}</h1>
+        <p>{{ shop().address }}</p>
+        <p>{{ shop().hotline }} · {{ shop().email }}</p>
+      </div>
+      <div class="text-end">
+        <h2>HÓA ĐƠN</h2>
+        <p>Số: <b>HD-{{ o.id }}</b></p>
+        <p>Ngày đặt: {{ o.createdAt | date : 'dd/MM/yyyy HH:mm' }}</p>
+      </div>
+    </header>
+
+    @if (isCancelled()) {
+    <p class="cancelled">ĐƠN HÀNG ĐÃ HỦY</p>
+    }
+
+    <section class="parties">
+      <div>
+        <h3>Người đặt</h3>
+        <p>{{ buyer() || o.fullname }}</p>
+      </div>
+      <div>
+        <h3>Người nhận</h3>
+        <p>{{ o.fullname }} · {{ o.phone }}</p>
+        <p>{{ o.address }}</p>
+      </div>
+      <div>
+        <h3>Giao hàng</h3>
+        @if (o.shippingLabel) {
+        <p>{{ o.shippingLabel }}</p>
+        }
+        @if (o.deliveryDate) {
+        <p>{{ o.deliveryDate | date : 'dd/MM/yyyy' }} · {{ o.deliverySlot }}</p>
+        }
+      </div>
+    </section>
+
+    <table>
+      <thead>
+        <tr><th>STT</th><th>Sản phẩm</th><th class="num">SL</th><th class="num">Đơn giá</th><th class="num">Thành tiền</th></tr>
+      </thead>
+      <tbody>
+        @for (item of o.items; track item.id; let i = $index) {
+        <tr>
+          <td>{{ i + 1 }}</td>
+          <td>{{ item.title }}</td>
+          <td class="num">{{ item.quantity }}</td>
+          <td class="num">{{ money(item.price) }}</td>
+          <td class="num">{{ money(item.price * item.quantity) }}</td>
+        </tr>
+        }
+      </tbody>
+      <tfoot>
+        <tr><td colspan="4" class="num">Tạm tính</td><td class="num">{{ money(subtotal()) }}</td></tr>
+        <tr><td colspan="4" class="num">Phí giao hàng</td><td class="num">{{ money(shippingFee()) }}</td></tr>
+        <tr class="grand"><td colspan="4" class="num">Tổng cộng</td><td class="num">{{ money(o.total) }}</td></tr>
+      </tfoot>
+    </table>
+
+    @if (o.paymentMethod) {
+    <p class="payment">
+      Thanh toán: {{ paymentLabel(o.paymentMethod) }} · <b>{{ o.paid ? 'Đã thanh toán' : 'Chưa thanh toán' }}</b>
+    </p>
+    }
+    @if (o.note) {
+    <p class="payment">Lời nhắn: {{ o.note }}</p>
+    }
+
+    <footer>Cảm ơn quý khách đã tin tưởng {{ shop().shopName }}. Hóa đơn bán hàng của cửa hàng, không thay thế hóa đơn giá trị gia tăng.</footer>
+  </article>
+</div>
+}

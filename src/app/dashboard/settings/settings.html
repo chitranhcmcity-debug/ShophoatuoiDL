@@ -42,6 +42,18 @@
         <label class="form-label mb-1 small">Giờ kết thúc "Giá sốc hôm nay" (lặp lại mỗi ngày)</label>
         <input type="time" class="form-control" name="flashSaleEnd" [(ngModel)]="form.flashSaleEnd" />
       </div>
+      <div class="mb-2">
+        <label class="form-label mb-1 small">Ngân hàng nhận chuyển khoản</label>
+        <input class="form-control" name="bankName" [(ngModel)]="form.bankName" />
+      </div>
+      <div class="mb-2">
+        <label class="form-label mb-1 small">Số tài khoản</label>
+        <input class="form-control" name="bankAccount" [(ngModel)]="form.bankAccount" />
+      </div>
+      <div class="mb-3">
+        <label class="form-label mb-1 small">Chủ tài khoản</label>
+        <input class="form-control" name="bankOwner" [(ngModel)]="form.bankOwner" />
+      </div>
       <div class="form-check form-switch">
         <input class="form-check-input" type="checkbox" role="switch" id="allowCancel" name="allowCustomerCancel" [(ngModel)]="form.allowCustomerCancel" />
         <label class="form-check-label" for="allowCancel">Cho phép khách tự hủy đơn (khi chưa chuẩn bị hoa)</label>

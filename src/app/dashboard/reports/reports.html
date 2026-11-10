@@ -1,0 +1,116 @@
+<h2 class="h4 mb-3">Báo cáo doanh thu</h2>
+
+<div class="d-flex flex-wrap align-items-end gap-2 mb-3">
+  @for (p of presets; track p.label) {
+  <button type="button" class="btn btn-sm" [class.btn-primary]="isActive(p.from())" [class.btn-outline-secondary]="!isActive(p.from())" (click)="applyPreset(p.from())">{{ p.label }}</button>
+  }
+  <label class="small">Từ ngày
+    <input type="date" class="form-control form-control-sm" name="from" [value]="from()" (change)="from.set($any($event.target).value)" />
+  </label>
+  <label class="small">Đến ngày
+    <input type="date" class="form-control form-control-sm" name="to" [value]="to()" (change)="to.set($any($event.target).value)" />
+  </label>
+  <button type="button" class="btn btn-sm btn-primary ms-auto" [disabled]="invalid()" (click)="exportCsv()"><i class="bi bi-download"></i> Xuất CSV</button>
+</div>
+
+@if (invalid()) {
+<div class="alert alert-warning py-2">Vui lòng chọn khoảng ngày hợp lệ: ngày bắt đầu không được sau ngày kết thúc.</div>
+} @else {
+<div class="row g-3 mb-3">
+  @for (s of stats(); track s.label) {
+  <div class="col-sm-6 col-xl-3">
+    <div class="dash-card p-3 h-100">
+      <small class="text-muted">{{ s.label }}</small>
+      <div class="stat-value">{{ s.value }}</div>
+      <small class="text-muted">{{ s.note }}</small>
+    </div>
+  </div>
+  }
+</div>
+
+<div class="dash-card p-3 mb-3">
+  <div class="d-flex flex-wrap justify-content-between gap-2 mb-2">
+    <h5 class="mb-0">Doanh thu theo ngày</h5>
+    <small class="text-muted readout">
+      @if (hovered(); as d) {
+      <b>{{ d.date | date : 'dd/MM/yyyy' }}</b> · {{ money(d.revenue) }} · {{ d.orders }} đơn
+      } @else {
+      Rê chuột hoặc chạm vào cột để xem chi tiết
+      }
+    </small>
+  </div>
+  @if (chart(); as c) {
+  <div class="chart-scroll">
+    <div class="plot" [style.min-width.px]="c.bars.length * 16 + 52">
+      @for (t of c.ticks; track t.percent) {
+      <div class="grid" [style.bottom.%]="t.percent"><span>{{ t.label }}</span></div>
+      }
+      <div class="bars">
+        @for (b of c.bars; track b.day.date) {
+        <div class="slot" tabindex="0" [attr.aria-label]="b.day.date + ': ' + money(b.day.revenue)" (mouseenter)="hovered.set(b.day)" (mouseleave)="hovered.set(null)" (focus)="hovered.set(b.day)" (blur)="hovered.set(null)">
+          @if (b.day.revenue > 0) {
+          <div class="bar" [style.height.%]="b.percent">
+            @if (b.peakLabel) {
+            <span class="peak">{{ b.peakLabel }}</span>
+            }
+          </div>
+          }
+          @if (b.showDate) {
+          <span class="date">{{ b.day.date | date : 'dd/MM' }}</span>
+          }
+        </div>
+        }
+      </div>
+    </div>
+  </div>
+  <details class="mt-2">
+    <summary class="small">Xem dạng bảng</summary>
+    <div class="table-responsive mt-2">
+      <table class="table table-sm align-middle">
+        <thead><tr><th>Ngày</th><th class="text-end">Số đơn</th><th class="text-end">Doanh thu</th></tr></thead>
+        <tbody>
+          @for (d of report().days; track d.date) {
+          <tr><td>{{ d.date | date : 'dd/MM/yyyy' }}</td><td class="text-end">{{ d.orders }}</td><td class="text-end">{{ money(d.revenue) }}</td></tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </details>
+  } @else {
+  <p class="text-muted mb-0">Khoảng này chưa đủ dữ liệu để vẽ biểu đồ.</p>
+  }
+</div>
+
+<div class="row g-3">
+  <div class="col-lg-7">
+    <div class="dash-card p-3 h-100">
+      <h5>Sản phẩm doanh thu cao nhất</h5>
+      <div class="table-responsive">
+        <table class="table table-sm align-middle mb-0">
+          <thead><tr><th>Sản phẩm</th><th class="text-end">SL</th><th class="text-end">Doanh thu</th></tr></thead>
+          <tbody>
+            @for (p of topProducts(); track p.name) {
+            <tr><td>{{ p.name }}</td><td class="text-end">{{ p.quantity }}</td><td class="text-end">{{ money(p.revenue) }}</td></tr>
+            } @empty {
+            <tr><td colspan="3" class="text-center text-muted py-3">Chưa có đơn đã giao.</td></tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-5">
+    <div class="dash-card p-3 h-100">
+      <h5>Theo danh mục</h5>
+      @for (c of report().categories; track c.name) {
+      <div class="mb-2">
+        <div class="d-flex justify-content-between small"><span>{{ c.name }}</span><b>{{ money(c.revenue) }}</b></div>
+        <div class="meter"><div [style.width.%]="(c.revenue / maxCategory()) * 100"></div></div>
+      </div>
+      } @empty {
+      <p class="text-muted mb-0">Chưa có đơn đã giao.</p>
+      }
+    </div>
+  </div>
+</div>
+}
