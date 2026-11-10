@@ -1,0 +1,25 @@
+<div class="container-fluid auth-bg">
+  <form (ngSubmit)="onSignin()">
+    <div class="auth-card">
+      <a routerLink="/" class="d-block text-center text-decoration-none fs-3 mb-2">🌹 Hoa Tươi <b class="text-success">DL</b></a>
+      <h2 class="fw-bold mb-2 text-center">Đăng nhập</h2>
+      <p class="text-muted mb-3 text-center">Vui lòng nhập tên đăng nhập và mật khẩu của bạn!</p>
+      <div class="mb-3">
+        <label class="form-label">Tên đăng nhập</label>
+        <input class="form-control" [(ngModel)]="username" name="username" placeholder="Nhập tên đăng nhập" type="text" autocomplete="username" />
+      </div>
+      <div class="mb-3 position-relative">
+        <label class="form-label">Mật khẩu</label>
+        <input class="form-control" style="padding-right: 30px" [type]="showPassword ? 'text' : 'password'" [(ngModel)]="password" name="password" placeholder="Mật khẩu" autocomplete="current-password" />
+        <span class="eye" (click)="passwordVisibility()">
+          <i [class]="showPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+        </span>
+      </div>
+      <button type="submit" class="btn btn-hoa w-100">Đăng nhập</button>
+      @if (error) {
+      <p class="text-danger mt-2 mb-0">{{ error }}</p>
+      }
+      <p class="text-center text-muted mt-3 mb-1">Bạn chưa có tài khoản? <a routerLink="/signup">Đăng ký</a></p>
+    </div>
+  </form>
+</div>

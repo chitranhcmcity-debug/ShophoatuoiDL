@@ -1,0 +1,29 @@
+.auth-bg {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #ffe3ec, #f3e8ff);
+  padding: 24px 0;
+}
+.auth-card {
+  background: #fff;
+  border-radius: 1rem;
+  padding: 2rem;
+  width: 100%;
+  max-width: 460px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+}
+.eye {
+  position: absolute;
+  right: 15px;
+  top: 70%;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+.demo-box {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 13px;
+}

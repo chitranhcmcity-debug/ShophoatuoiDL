@@ -1,0 +1,103 @@
+.bell-wrap {
+  position: relative;
+  display: inline-block;
+}
+.bell-btn {
+  position: relative;
+  background: none;
+  border: 0;
+  padding: 0 4px;
+  color: var(--hoa-primary);
+  line-height: 1;
+}
+.bell-badge {
+  position: absolute;
+  top: -6px;
+  right: -8px;
+  background: #e03131;
+  color: #fff;
+  border-radius: 10px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.bell-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1049;
+}
+.bell-panel {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: -60px;
+  width: 340px;
+  max-width: 92vw;
+  background: #fff;
+  color: #333;
+  border-radius: 8px;
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.22);
+  z-index: 1050;
+  overflow: hidden;
+}
+.bell-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  border-bottom: 1px solid #eee;
+  font-size: 14px;
+}
+.bell-head a {
+  font-size: 12px;
+  text-decoration: none;
+  color: var(--hoa-primary);
+}
+.bell-list {
+  max-height: 360px;
+  overflow-y: auto;
+}
+.bell-item {
+  display: flex;
+  gap: 10px;
+  padding: 10px 14px;
+  border-bottom: 1px solid #f1f1f1;
+  text-decoration: none;
+  color: inherit;
+  font-size: 13px;
+}
+.bell-item:hover {
+  background: var(--hoa-soft, #fff5f7);
+}
+.bell-item.unread {
+  background: #fff8e6;
+}
+.bell-item p {
+  margin: 2px 0;
+  color: #555;
+}
+.bell-item small {
+  color: #999;
+}
+.ico {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+.ico.success {
+  color: #2f9e44;
+}
+.ico.danger {
+  color: #e03131;
+}
+.ico.info {
+  color: #1c7ed6;
+}
+.bell-empty {
+  padding: 24px;
+  text-align: center;
+  color: #999;
+  font-size: 13px;
+}

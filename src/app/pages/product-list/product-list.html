@@ -1,0 +1,50 @@
+<div class="container mt-3">
+  <nav class="breadcrumb-bar">
+    <a routerLink="/">Trang chủ</a> /
+    <a routerLink="/san-pham">Sản phẩm</a>
+    @if (currentCategory(); as c) { / <span>{{ c.name }}</span> }
+    @if (keyword()) { / <span>Tìm kiếm: "{{ keyword() }}"</span> }
+  </nav>
+
+  <div class="row g-3">
+    <!-- Sidebar danh mục -->
+    <div class="col-lg-3">
+      <div class="side-box">
+        <h6 class="side-title">DANH MỤC SẢN PHẨM</h6>
+        <a routerLink="/san-pham" class="side-item" [class.active]="!selectedSlug()">
+          <span>Tất cả hoa</span><span>({{ productCount() }})</span>
+        </a>
+        @for (c of categories; track c.id) {
+        <a [routerLink]="['/san-pham', c.slug]" class="side-item" [class.active]="c.slug === selectedSlug()">
+          <span>{{ c.icon }} {{ c.name }}</span><span>({{ countByCategory(c.slug) }})</span>
+        </a>
+        }
+      </div>
+    </div>
+
+    <!-- Danh sách -->
+    <div class="col-lg-9">
+      <h4 class="section-title mb-3">{{ currentCategory()?.name ?? 'Tất cả sản phẩm' }}</h4>
+
+      <div class="sort-bar">
+        <span>Sắp xếp theo:</span>
+        @for (s of sorts; track s.key) {
+        <button type="button" class="sort-btn" [class.active]="sortBy() === s.key" (click)="changeSort(s.key)">{{ s.label }}</button>
+        }
+        <span class="ms-auto text-muted small">{{ filtered().length }} sản phẩm</span>
+      </div>
+
+      @if (pagedProducts().length === 0) {
+      <div class="alert alert-warning mt-3">Không tìm thấy sản phẩm phù hợp.</div>
+      }
+      <div class="row row-cols-2 row-cols-md-3 row-cols-xl-4 g-3">
+        @for (p of pagedProducts(); track p.id) {
+        <div class="col"><app-product-card [product]="p"></app-product-card></div>
+        }
+      </div>
+
+      <!-- Phân trang -->
+      <app-pagination [total]="filtered().length" [sizes]="[8, 12, 24]" [(page)]="currentPage" [(pageSize)]="pageSize"></app-pagination>
+    </div>
+  </div>
+</div>

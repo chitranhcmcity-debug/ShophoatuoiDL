@@ -1,0 +1,57 @@
+<div class="container mt-3">
+  @if (product(); as p) {
+  <nav class="breadcrumb-bar">
+    <a routerLink="/">Trang chủ</a> / <a routerLink="/san-pham">Sản phẩm</a> /
+    <a [routerLink]="['/san-pham', p.category]">{{ category()?.name }}</a> / <span>{{ p.title }}</span>
+  </nav>
+
+  <div class="row g-4">
+    <div class="col-lg-5">
+      <div class="frame p-2">
+        <img [src]="p.image" class="img-fluid rounded w-100" [alt]="p.title" />
+      </div>
+    </div>
+    <div class="col-lg-7">
+      <h4 class="fw-bold">{{ p.title }}</h4>
+      <p class="mb-2">Danh mục: <a [routerLink]="['/san-pham', p.category]">{{ category()?.name }}</a></p>
+      <h4 class="price mb-1">
+        {{ productService.discountPrice(p.price, p.discount).toLocaleString('vi-VN') }}đ
+        @if (p.discount > 0) {
+        <span class="discount-badge">-{{ p.discount }}%</span>
+        }
+      </h4>
+      @if (p.discount > 0) {
+      <div class="old-price mb-2">{{ p.price.toLocaleString('vi-VN') }}đ</div>
+      }
+      <div class="text-warning mb-2">
+        <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-half"></i>
+        <small class="text-muted ms-2">Đã bán {{ p.sold }} · Lượt xem {{ p.views }}</small>
+      </div>
+      <p class="mb-1"><i class="bi bi-truck text-success"></i> Freeship nội thành - Giao trong 60 phút</p>
+      <p class="mb-3">Tình trạng: @if (p.stock > 0) { <b class="text-success">Còn {{ p.stock }} sản phẩm</b> } @else { <b class="text-danger">Hết hàng</b> }</p>
+      <p style="text-align: justify">{{ p.description }}</p>
+
+      <div class="input-group quantity mb-3">
+        <button class="btn btn-sm rounded-circle bg-warning border" type="button" (click)="decreaseQuantity()"><i class="bi bi-dash"></i></button>
+        <input type="text" [value]="quantity()" readonly class="form-control form-control-sm text-center border-0" />
+        <button class="btn btn-sm rounded-circle bg-warning border" type="button" (click)="increaseQuantity()"><i class="bi bi-plus"></i></button>
+      </div>
+      <button class="btn btn-outline-hoa rounded-pill px-4 py-2 me-2" type="button" [disabled]="p.stock === 0" (click)="addToCart()">
+        <i class="bi bi-bag me-2"></i> Thêm vào giỏ
+      </button>
+      <button class="btn btn-hoa rounded-pill px-4 py-2" type="button" [disabled]="p.stock === 0" (click)="buyNow()">Mua ngay</button>
+    </div>
+  </div>
+
+  @if (related().length > 0) {
+  <h4 class="section-title mt-5 mb-3">Sản phẩm cùng danh mục</h4>
+  <div class="row row-cols-2 row-cols-lg-4 g-3">
+    @for (r of related(); track r.id) {
+    <div class="col"><app-product-card [product]="r"></app-product-card></div>
+    }
+  </div>
+  }
+  } @else {
+  <div class="alert alert-warning mt-4">Không tìm thấy sản phẩm.</div>
+  }
+</div>

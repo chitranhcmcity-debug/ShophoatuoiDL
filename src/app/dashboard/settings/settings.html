@@ -1,0 +1,52 @@
+<h2 class="h4 mb-4">Cấu hình hệ thống</h2>
+
+@if (message()) {
+<div class="alert alert-info py-2"><i class="bi bi-check-circle"></i> {{ message() }}</div>
+}
+
+<form (ngSubmit)="save()" class="row g-4">
+  <div class="col-lg-6">
+    <div class="dash-card p-3 h-100">
+      <h5 class="mb-3"><i class="bi bi-shop"></i> Thông tin cửa hàng</h5>
+      <div class="mb-2">
+        <label class="form-label mb-1 small">Tên cửa hàng</label>
+        <input class="form-control" name="shopName" [(ngModel)]="form.shopName" />
+      </div>
+      <div class="mb-2">
+        <label class="form-label mb-1 small">Hotline</label>
+        <input class="form-control" name="hotline" [(ngModel)]="form.hotline" />
+      </div>
+      <div class="mb-2">
+        <label class="form-label mb-1 small">Email</label>
+        <input class="form-control" name="email" [(ngModel)]="form.email" />
+      </div>
+      <div>
+        <label class="form-label mb-1 small">Địa chỉ</label>
+        <input class="form-control" name="address" [(ngModel)]="form.address" />
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-6">
+    <div class="dash-card p-3 h-100">
+      <h5 class="mb-3"><i class="bi bi-gear"></i> Vận hành</h5>
+      <div class="mb-2">
+        <label class="form-label mb-1 small">Phí giao nhanh 60 phút (VNĐ)</label>
+        <input type="number" min="0" class="form-control" name="fastShippingFee" [(ngModel)]="form.fastShippingFee" />
+      </div>
+      <div class="mb-3">
+        <label class="form-label mb-1 small">Cảnh báo sắp hết hàng khi tồn kho dưới</label>
+        <input type="number" min="0" class="form-control" name="lowStockThreshold" [(ngModel)]="form.lowStockThreshold" />
+      </div>
+      <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" role="switch" id="allowCancel" name="allowCustomerCancel" [(ngModel)]="form.allowCustomerCancel" />
+        <label class="form-check-label" for="allowCancel">Cho phép khách tự hủy đơn (khi chưa chuẩn bị hoa)</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12">
+    <button type="submit" class="btn btn-primary"><i class="bi bi-save"></i> Lưu cấu hình</button>
+    <button type="button" class="btn btn-secondary ms-2" (click)="reset()"><i class="bi bi-arrow-counterclockwise"></i> Về mặc định</button>
+  </div>
+</form>

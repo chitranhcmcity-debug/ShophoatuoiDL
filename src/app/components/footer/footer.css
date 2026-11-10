@@ -1,0 +1,38 @@
+footer {
+  background: #a61e4d;
+  color: #fff;
+  margin-top: 50px;
+  padding-top: 10px;
+}
+footer h4 {
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+footer p,
+footer li {
+  font-size: 14px;
+  line-height: 1.7;
+}
+footer ul {
+  list-style: none;
+  padding: 0;
+}
+footer ul li {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+  padding: 6px 4px;
+  transition: transform 0.3s;
+}
+footer ul li:hover {
+  transform: translateX(5px);
+}
+footer a {
+  color: #fff;
+  text-decoration: none;
+}
+.copyright {
+  background: #8c1a41;
+  color: #fff;
+  text-align: center;
+  padding: 10px;
+  margin: 0;
+}

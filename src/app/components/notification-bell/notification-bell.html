@@ -1,0 +1,34 @@
+<div class="bell-wrap">
+  <button class="bell-btn" type="button" title="Thông báo" (click)="toggle()">
+    <i class="bi bi-bell-fill fs-5"></i>
+    @if (notificationService.unreadCount() > 0) {
+    <span class="bell-badge">{{ notificationService.unreadCount() > 99 ? '99+' : notificationService.unreadCount() }}</span>
+    }
+  </button>
+
+  @if (open()) {
+  <div class="bell-backdrop" (click)="close()"></div>
+  <div class="bell-panel">
+    <div class="bell-head">
+      <b>Thông báo</b>
+      @if (notificationService.unreadCount() > 0) {
+      <a href="javascript:void(0)" (click)="notificationService.markAllRead()">Đánh dấu đã đọc</a>
+      }
+    </div>
+    <div class="bell-list">
+      @for (n of notificationService.mine(); track n.id) {
+      <a href="javascript:void(0)" class="bell-item" [class.unread]="!n.read" (click)="view(n)">
+        <i class="bi" [class]="'ico ' + n.tone + ' ' + icons[n.tone]"></i>
+        <div>
+          <b>{{ n.title }}</b>
+          <p>{{ n.message }}</p>
+          <small>{{ n.time | date: 'HH:mm dd/MM/yyyy' }}</small>
+        </div>
+      </a>
+      } @empty {
+      <div class="bell-empty">Chưa có thông báo nào</div>
+      }
+    </div>
+  </div>
+  }
+</div>

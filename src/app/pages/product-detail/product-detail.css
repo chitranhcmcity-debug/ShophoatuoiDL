@@ -1,0 +1,9 @@
+.breadcrumb-bar {
+  font-size: 14px;
+  margin-bottom: 12px;
+  color: #666;
+}
+.breadcrumb-bar a {
+  text-decoration: none;
+  color: var(--hoa-primary);
+}

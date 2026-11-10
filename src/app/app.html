@@ -1,0 +1,9 @@
+@if (!isDashboardPage()) {
+<app-header></app-header>
+}
+<main class="main-content">
+  <router-outlet></router-outlet>
+</main>
+@if (!isDashboardPage() && !isAuthPage()) {
+<app-footer></app-footer>
+}

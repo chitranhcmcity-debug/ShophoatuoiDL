@@ -1,0 +1,35 @@
+<div class="pager">
+  <div class="summary">
+    Hiển thị <b>{{ from() }}–{{ to() }}</b> trên tổng <b>{{ total() }}</b>
+    <span class="size">
+      · Mỗi trang
+      <select [value]="pageSize()" (change)="changeSize($event)">
+        @for (s of sizes(); track s) {
+        <option [value]="s" [selected]="s === pageSize()">{{ s }}</option>
+        }
+      </select>
+    </span>
+  </div>
+
+  <nav>
+    <ul class="pages">
+      <li>
+        <button type="button" class="pg" [disabled]="page() === 1" (click)="go(1)" title="Trang đầu"><i class="bi bi-chevron-double-left"></i></button>
+      </li>
+      <li>
+        <button type="button" class="pg" [disabled]="page() === 1" (click)="go(page() - 1)" title="Trang trước"><i class="bi bi-chevron-left"></i></button>
+      </li>
+      @for (p of pages(); track $index) {
+      <li>
+        <button type="button" class="pg" [class.active]="p === page()" [disabled]="p === '...'" (click)="go(p)">{{ p }}</button>
+      </li>
+      }
+      <li>
+        <button type="button" class="pg" [disabled]="page() === totalPages()" (click)="go(page() + 1)" title="Trang sau"><i class="bi bi-chevron-right"></i></button>
+      </li>
+      <li>
+        <button type="button" class="pg" [disabled]="page() === totalPages()" (click)="go(totalPages())" title="Trang cuối"><i class="bi bi-chevron-double-right"></i></button>
+      </li>
+    </ul>
+  </nav>
+</div>

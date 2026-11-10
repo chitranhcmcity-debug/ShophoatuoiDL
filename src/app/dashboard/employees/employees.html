@@ -1,0 +1,88 @@
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+  <h2 class="h4 mb-0">Quản lý nhân viên ({{ users().length }})</h2>
+  @if (authService.hasPermission('employee.create')) {
+  <button (click)="handleAdd()" [disabled]="editingId() !== null || newUser() !== null" class="btn btn-primary btn-sm">
+    <i class="bi bi-plus-lg"></i> Thêm mới
+  </button>
+  }
+</div>
+@if (!authService.hasPermission('employee.create')) {
+<div class="alert alert-info py-2 mb-3"><i class="bi bi-info-circle"></i> Bạn chỉ có quyền xem danh sách nhân viên.</div>
+}
+<div class="table-responsive-md">
+  <table class="table table-striped table-hover table-bordered align-middle">
+    <thead>
+      <tr><th>Mã</th><th>Ảnh</th><th>Tên đăng nhập</th><th>Vai trò</th><th>Họ và tên</th><th>Email</th><th>Điện thoại</th><th>Địa chỉ</th><th style="width: 150px">Thao tác</th></tr>
+    </thead>
+    <tbody>
+      @if (newUser(); as nu) {
+      <tr>
+        <td>{{ nu.id }}</td>
+        <td>
+          <input type="file" accept="image/*" #fileNew (change)="handleImageChange($event, true)" style="display: none" />
+          <img [src]="newEmployee()!.image" alt="Ảnh xem trước" width="40" style="cursor: pointer" (click)="fileNew.click()" />
+        </td>
+        <td><input type="text" name="n-username" [(ngModel)]="nu.username" class="form-control" /></td>
+        <td>
+          <select name="n-role" [(ngModel)]="nu.role" class="form-select">
+            @for (r of roleOptions(); track r) {
+            <option [value]="r">{{ roleLabels[r] }}</option>
+            }
+          </select>
+        </td>
+        <td><input type="text" name="n-fullname" [(ngModel)]="newEmployee()!.fullname" class="form-control" /></td>
+        <td><input type="email" name="n-email" [(ngModel)]="newEmployee()!.email" class="form-control" /></td>
+        <td><input type="text" name="n-phone" [(ngModel)]="newEmployee()!.phone" class="form-control" /></td>
+        <td><input type="text" name="n-address" [(ngModel)]="newEmployee()!.address" class="form-control" /></td>
+        <td>
+          <button (click)="handleSave()" class="btn btn-sm btn-info px-1 py-1">Lưu</button>
+          <button (click)="handleCancel()" class="btn btn-sm btn-secondary px-1 py-1">Hủy</button>
+        </td>
+      </tr>
+      }
+      @for (user of users(); track user.id) {
+      <tr>
+        <td>{{ user.id }}</td>
+        @if (editingId() === user.id) {
+        <td>
+          <input type="file" accept="image/*" #fileEdit (change)="handleImageChange($event)" style="display: none" />
+          <img [src]="draftEmployee()!.image" alt="Ảnh đại diện" width="40" (click)="fileEdit.click()" style="cursor: pointer" />
+        </td>
+        <td><input type="text" name="e-username" [(ngModel)]="draftUser()!.username" class="form-control" /></td>
+        <td>
+          <select name="e-role" [(ngModel)]="draftUser()!.role" class="form-select" [disabled]="user.id === authService.user()?.id">
+            @for (r of roleOptions(); track r) {
+            <option [value]="r">{{ roleLabels[r] }}</option>
+            }
+          </select>
+        </td>
+        <td><input type="text" name="e-fullname" [(ngModel)]="draftEmployee()!.fullname" class="form-control" /></td>
+        <td><input type="text" name="e-email" [(ngModel)]="draftEmployee()!.email" class="form-control" /></td>
+        <td><input type="text" name="e-phone" [(ngModel)]="draftEmployee()!.phone" class="form-control" /></td>
+        <td><input type="text" name="e-address" [(ngModel)]="draftEmployee()!.address" class="form-control" /></td>
+        <td>
+          <button (click)="handleSave()" class="btn btn-sm btn-info px-1 py-1">Lưu</button>
+          <button (click)="handleCancel()" class="btn btn-sm btn-secondary px-1 py-1">Hủy</button>
+        </td>
+        } @else {
+        <td><img [src]="getEmployee(user.id!)?.image || '/image/avatar.svg'" alt="Ảnh đại diện" width="40" /></td>
+        <td>{{ user.username }}</td>
+        <td><span class="badge" [class]="roleBadge(user.role)">{{ roleLabels[user.role] }}</span></td>
+        <td>{{ getEmployee(user.id!)?.fullname }}</td>
+        <td>{{ getEmployee(user.id!)?.email }}</td>
+        <td>{{ getEmployee(user.id!)?.phone }}</td>
+        <td>{{ getEmployee(user.id!)?.address }}</td>
+        <td>
+          @if (authService.hasPermission('employee.update')) {
+          <button (click)="handleEdit(user.id!)" [disabled]="newUser() !== null || editingId() !== null" class="btn btn-warning btn-sm px-1 py-1">Sửa</button>
+          }
+          @if (authService.hasPermission('employee.delete')) {
+          <button (click)="handleDelete(user.id!)" [disabled]="newUser() !== null || editingId() !== null" class="btn btn-danger btn-sm px-1 py-1">Xóa</button>
+          }
+        </td>
+        }
+      </tr>
+      }
+    </tbody>
+  </table>
+</div>

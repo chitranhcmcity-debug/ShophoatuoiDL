@@ -1,0 +1,132 @@
+<div class="container py-4">
+  <div class="row g-3">
+    <!-- Menu tài khoản -->
+    <div class="col-lg-4 col-xl-3">
+      <div class="side-box">
+        <div class="text-center p-3">
+          <b>{{ authService.user()?.username }}</b><br />
+          <span>{{ fullname() }}</span><br />
+          <small>{{ email() }}</small>
+        </div>
+        <a routerLink="/account" class="side-item" [class.active]="tab() === 'info'"><i class="bi bi-person"></i> Thông tin tài khoản</a>
+        <a routerLink="/account" [queryParams]="{ tab: 'password' }" class="side-item" [class.active]="tab() === 'password'"><i class="bi bi-unlock"></i> Đổi mật khẩu</a>
+        <a routerLink="/account" [queryParams]="{ tab: 'orders' }" class="side-item" [class.active]="tab() === 'orders'"><i class="bi bi-cart3"></i> Đơn hàng</a>
+        <a href="javascript:void(0)" class="side-item" (click)="authService.logout()"><i class="bi bi-box-arrow-right"></i> Đăng xuất</a>
+      </div>
+    </div>
+
+    <div class="col-lg-8 col-xl-9">
+      <div class="content-box">
+        @if (message()) {
+        <div class="alert alert-success py-2">{{ message() }}</div>
+        }
+
+        @switch (tab()) {
+        @case ('info') {
+        <h4 class="mb-3">THÔNG TIN TÀI KHOẢN</h4>
+        <form [formGroup]="infoForm" (ngSubmit)="updateInfo()" class="form-narrow">
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label fw-bold">Họ</label>
+              <input class="form-control" formControlName="ho" />
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label fw-bold">Tên</label>
+              <input class="form-control" formControlName="ten" [class.is-invalid]="isInvalid(infoForm, 'ten')" />
+              <div class="invalid-feedback">Vui lòng nhập tên</div>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-bold">Email liên hệ</label>
+            <input class="form-control" formControlName="email" [class.is-invalid]="isInvalid(infoForm, 'email')" />
+            <div class="invalid-feedback">Email không hợp lệ</div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-bold">Số điện thoại</label>
+            <input class="form-control" formControlName="phone" [class.is-invalid]="isInvalid(infoForm, 'phone')" />
+            <div class="invalid-feedback">Số điện thoại gồm 10 chữ số, bắt đầu bằng 0</div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-bold">Ngày sinh</label>
+            <input type="date" class="form-control" formControlName="birthday" />
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-bold">Địa chỉ</label>
+            <input class="form-control" formControlName="address" [class.is-invalid]="isInvalid(infoForm, 'address')" />
+            <div class="invalid-feedback">Vui lòng nhập địa chỉ</div>
+          </div>
+          <button class="btn btn-hoa px-4" type="submit">CẬP NHẬT</button>
+        </form>
+        }
+
+        @case ('password') {
+        <h4 class="mb-3">ĐỔI MẬT KHẨU</h4>
+        <form [formGroup]="passwordForm" (ngSubmit)="changePassword()" class="form-narrow">
+          <div class="mb-3">
+            <label class="form-label fw-bold">Mật khẩu hiện tại</label>
+            <input type="password" class="form-control" formControlName="current" autocomplete="current-password" [class.is-invalid]="isInvalid(passwordForm, 'current')" />
+            <div class="invalid-feedback">Vui lòng nhập mật khẩu hiện tại</div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-bold">Mật khẩu mới</label>
+            <input type="password" class="form-control" formControlName="password" autocomplete="new-password" [class.is-invalid]="isInvalid(passwordForm, 'password')" />
+            <div class="invalid-feedback">Mật khẩu phải có ít nhất 6 ký tự</div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-bold">Xác nhận mật khẩu mới</label>
+            <input type="password" class="form-control" formControlName="confirm" autocomplete="new-password" [class.is-invalid]="isInvalid(passwordForm, 'confirm')" />
+            <div class="invalid-feedback">Vui lòng xác nhận mật khẩu</div>
+          </div>
+          @if (passwordError()) {
+          <div class="text-danger mb-2">{{ passwordError() }}</div>
+          }
+          <button class="btn btn-hoa px-4" type="submit">ĐỔI MẬT KHẨU</button>
+        </form>
+        }
+
+        @case ('orders') {
+        <h4 class="mb-3">ĐƠN HÀNG CỦA TÔI</h4>
+        @if (orders().length === 0) {
+        <div class="text-center py-4">
+          <p class="fs-5">Bạn chưa có đơn hàng nào.</p>
+          <a routerLink="/san-pham" class="btn btn-hoa">Mua hoa ngay</a>
+        </div>
+        }
+        @for (o of orders().slice().reverse(); track o.id) {
+        <div class="frame p-3 mb-3">
+          <div class="d-flex justify-content-between flex-wrap">
+            <b>Mã đơn: {{ o.id }}</b>
+            <span [class]="'st tone-' + toneOf(o.status)">{{ o.status }}</span>
+          </div>
+          <small class="text-muted">{{ o.createdAt | date : 'dd/MM/yyyy HH:mm' }} · Giao đến: {{ o.address }}</small>
+          <ul class="list-unstyled mt-2 mb-2">
+            @for (i of o.items; track i.id) {
+            <li class="d-flex align-items-center gap-2 mb-1">
+              <img [src]="i.image" width="40" height="40" class="rounded" style="object-fit: cover" alt="" />
+              <span class="flex-grow-1">{{ i.title }} × {{ i.quantity }}</span>
+              <span>{{ (i.price * i.quantity).toLocaleString('vi-VN') }}đ</span>
+            </li>
+            }
+          </ul>
+          <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <div class="d-flex gap-2">
+              <button class="btn btn-outline-hoa btn-sm" type="button" (click)="toggleTracking(o.id)">
+              <i class="bi bi-geo-alt-fill"></i> {{ trackingId() === o.id ? 'Ẩn theo dõi' : 'Theo dõi đơn hàng' }}
+            </button>
+              @if (canCancel(o)) {
+              <button class="btn btn-outline-danger btn-sm" type="button" (click)="cancelOrder(o)"><i class="bi bi-x-octagon"></i> Hủy đơn</button>
+              }
+            </div>
+            <b class="text-danger">Tổng: {{ o.total.toLocaleString('vi-VN') }}đ</b>
+          </div>
+          @if (trackingId() === o.id) {
+          <div class="track-wrap mt-3"><app-order-tracking [order]="o"></app-order-tracking></div>
+          }
+        </div>
+        }
+        }
+        }
+      </div>
+    </div>
+  </div>
+</div>

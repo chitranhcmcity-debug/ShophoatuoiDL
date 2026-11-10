@@ -1,0 +1,76 @@
+<div class="dash">
+  <!-- ===== Sidebar ===== -->
+  <aside class="d-sidebar">
+    <div class="brand">
+      <span class="brand-mark">🌹</span>
+      <div>
+        <b>Hoa Tươi DL</b>
+        <small>Trang quản trị</small>
+      </div>
+    </div>
+
+    <nav class="menu">
+      <span class="menu-label">Quản lý</span>
+      @for (m of visibleMenus(); track m.path) {
+      <a [class]="'menu-item tone-' + m.tone" [routerLink]="m.path" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: m.exact }">
+        <span class="ico"><i class="bi" [class]="m.icon"></i></span>
+        <span>{{ m.label }}</span>
+      </a>
+      }
+      <span class="menu-label mt-3">Khác</span>
+      <a class="menu-item tone-gold" routerLink="/">
+        <span class="ico"><i class="bi bi-shop"></i></span>
+        <span>Về trang shop</span>
+      </a>
+    </nav>
+
+    <div class="user-card">
+      <div class="avatar">{{ initial() }}</div>
+      <div class="info">
+        <b>{{ authService.user()?.username }}</b>
+        <span class="role">{{ roleLabel() }}</span>
+      </div>
+      <button class="logout" type="button" title="Đăng xuất" (click)="authService.logout()">
+        <i class="bi bi-box-arrow-right"></i>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ===== Nội dung ===== -->
+  <main class="d-main">
+    <header class="topbar">
+      <div>
+        <h1 class="page-title">Hoa Tươi DL <span>· Quản trị</span></h1>
+        <small class="text-muted"><i class="bi bi-calendar3"></i> {{ today.toLocaleDateString('vi-VN', { weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric' }) }}</small>
+      </div>
+      <div class="d-flex align-items-center gap-2 flex-wrap">
+        <app-notification-bell></app-notification-bell>
+        @if (authService.hasPermission('system.manage')) {
+        <select class="form-select form-select-sm tool-select" #sel (change)="download(sel.value); sel.value = ''">
+          <option value="">⬇ Xuất file JSON...</option>
+          @for (f of files; track f) {
+          <option [value]="f">{{ f }}.json</option>
+          }
+        </select>
+        <button class="btn btn-sm btn-outline-warning" type="button" (click)="resetData()">
+          <i class="bi bi-arrow-counterclockwise"></i> Khôi phục dữ liệu gốc
+        </button>
+        }
+      </div>
+    </header>
+
+    <!-- Menu rút gọn cho màn hình nhỏ -->
+    <div class="mobile-menu">
+      @for (m of visibleMenus(); track m.path) {
+      <a [class]="'chip tone-' + m.tone" [routerLink]="m.path" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: m.exact }">
+        <i class="bi" [class]="m.icon"></i> {{ m.label }}
+      </a>
+      }
+      <a class="chip tone-gold" routerLink="/"><i class="bi bi-shop"></i> Shop</a>
+    </div>
+
+    <section class="content">
+      <router-outlet></router-outlet>
+    </section>
+  </main>
+</div>

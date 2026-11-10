@@ -1,0 +1,74 @@
+.breadcrumb-bar {
+  font-size: 14px;
+  margin-bottom: 12px;
+  color: #666;
+}
+.breadcrumb-bar a {
+  text-decoration: none;
+  color: var(--hoa-primary);
+}
+.side-box {
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.side-title {
+  background: var(--hoa-primary);
+  color: #fff;
+  margin: 0;
+  padding: 10px 14px;
+}
+.side-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 9px 14px;
+  text-decoration: none;
+  border-bottom: 1px solid #f1f1f1;
+  font-size: 14px;
+}
+.side-item:hover,
+.side-item.active {
+  background: var(--hoa-soft);
+  color: var(--hoa-primary);
+  font-weight: 600;
+}
+.sort-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  background: #fff;
+  border: 1px solid #eee;
+  padding: 8px 12px;
+  border-radius: 6px;
+  margin-bottom: 16px;
+  font-size: 14px;
+}
+.sort-btn {
+  border: 1px solid #ddd;
+  background: #fff;
+  border-radius: 4px;
+  padding: 3px 12px;
+}
+.sort-btn.active,
+.sort-btn:hover {
+  background: var(--hoa-primary);
+  border-color: var(--hoa-primary);
+  color: #fff;
+}
+.page-item.active .page-link {
+  background: var(--hoa-primary);
+  border-color: var(--hoa-primary);
+}
+.page-link {
+  color: var(--hoa-primary);
+}
+
+/* Thành phần phân trang dùng chung đổi sang màu hồng của trang bán hàng */
+app-pagination {
+  --d-plum: var(--hoa-primary);
+  --d-plum-dark: var(--hoa-primary-dark);
+  --d-plum-soft: var(--hoa-soft);
+  --d-gold: var(--hoa-primary-dark);
+}

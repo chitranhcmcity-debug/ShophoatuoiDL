@@ -1,0 +1,122 @@
+<h2 class="h4 mb-4">Tổng quan</h2>
+
+<!-- Thẻ thống kê: mỗi thẻ 1 tông màu, viền dày + dải màu phía trên -->
+<div class="row g-4 mb-4">
+  <div class="col-sm-6 col-xl-3">
+    <div class="stat tone-emerald">
+      <span class="stat-ico"><i class="bi bi-cash-coin"></i></span>
+      <div>
+        <small>Doanh thu</small>
+        <strong>{{ revenue().toLocaleString('vi-VN') }}đ</strong>
+        <em>Không tính đơn đã hủy</em>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-xl-3">
+    <div class="stat tone-sapphire">
+      <span class="stat-ico"><i class="bi bi-receipt-cutoff"></i></span>
+      <div>
+        <small>Đơn hàng</small>
+        <strong>{{ orders().length }}</strong>
+        <em>{{ activeOrders() }} đơn đang xử lý</em>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-xl-3">
+    <div class="stat tone-rose">
+      <span class="stat-ico"><i class="bi bi-person-hearts"></i></span>
+      <div>
+        <small>Khách hàng</small>
+        <strong>{{ customerCount() }}</strong>
+        <em>{{ products().length }} mẫu hoa đang bán</em>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-xl-3">
+    <div class="stat tone-amber">
+      <span class="stat-ico"><i class="bi bi-box-seam-fill"></i></span>
+      <div>
+        <small>Sắp hết hàng</small>
+        <strong>{{ lowStock().length }} mẫu</strong>
+        <em>Tồn kho dưới {{ settings().lowStockThreshold }}</em>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4 mb-4">
+  <!-- Đơn hàng theo trạng thái -->
+  <div class="col-lg-5">
+    <div class="panel tone-plum">
+      <h5 class="panel-title"><i class="bi bi-pie-chart-fill"></i> Đơn hàng theo trạng thái</h5>
+      @for (s of statusCounts(); track s.name) {
+      <div class="bar-row" [class]="'bar-row tone-' + s.tone">
+        <span class="bar-label"><i class="bi" [class]="s.icon"></i> {{ s.name }}</span>
+        <div class="bar-track"><div class="bar-fill" [style.width.%]="(s.count / maxStatus()) * 100"></div></div>
+        <b>{{ s.count }}</b>
+      </div>
+      }
+    </div>
+  </div>
+
+  <!-- Top bán chạy -->
+  <div class="col-lg-7">
+    <div class="panel tone-gold">
+      <h5 class="panel-title"><i class="bi bi-trophy-fill"></i> Top bán chạy</h5>
+      @for (p of topSold(); track p.id; let i = $index) {
+      <div class="rank-row">
+        <span class="rank">{{ i + 1 }}</span>
+        <img [src]="p.image" alt="" />
+        <div class="flex-grow-1">
+          <div class="rank-name">{{ p.title }}</div>
+          <div class="bar-track thin"><div class="bar-fill plum" [style.width.%]="(p.sold / maxSold()) * 100"></div></div>
+        </div>
+        <b>{{ p.sold }}</b>
+      </div>
+      }
+    </div>
+  </div>
+</div>
+
+<div class="row g-4">
+  <!-- Đơn hàng gần đây -->
+  <div class="col-lg-7">
+    <div class="panel tone-sapphire">
+      <h5 class="panel-title"><i class="bi bi-clock-history"></i> Đơn hàng gần đây</h5>
+      <div class="table-responsive border-0 shadow-none p-0">
+        <table class="table align-middle">
+          <thead><tr><th>Mã</th><th>Khách hàng</th><th>Ngày đặt</th><th>Tổng</th><th>Trạng thái</th></tr></thead>
+          <tbody>
+            @for (o of recentOrders(); track o.id) {
+            <tr>
+              <td><b>{{ o.id }}</b></td>
+              <td>{{ o.fullname }}</td>
+              <td>{{ o.createdAt | date : 'dd/MM/yyyy' }}</td>
+              <td class="fw-bold">{{ o.total.toLocaleString('vi-VN') }}đ</td>
+              <td><span [class]="'st tone-' + toneOf(o.status)">{{ o.status }}</span></td>
+            </tr>
+            } @empty {
+            <tr><td colspan="5" class="text-center text-muted py-3">Chưa có đơn hàng.</td></tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tồn kho thấp -->
+  <div class="col-lg-5">
+    <div class="panel tone-amber">
+      <h5 class="panel-title"><i class="bi bi-exclamation-triangle-fill"></i> Tồn kho thấp</h5>
+      @for (p of lowStock().slice(0, 6); track p.id) {
+      <div class="stock-row">
+        <img [src]="p.image" alt="" />
+        <span class="flex-grow-1">{{ p.title }}</span>
+        <span class="st tone-amber">{{ p.stock }}</span>
+      </div>
+      } @empty {
+      <p class="text-muted mb-0">Tất cả sản phẩm đều đủ hàng.</p>
+      }
+    </div>
+  </div>
+</div>

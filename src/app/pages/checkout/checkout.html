@@ -1,0 +1,93 @@
+<div class="container py-4">
+  <h3 class="section-title mb-3">Chi tiết thanh toán</h3>
+  @if (userCarts().length === 0) {
+  <div class="text-center py-5 frame">
+    <p class="fs-5">Chưa có sản phẩm nào được chọn để thanh toán.</p>
+    <a routerLink="/cart" class="btn btn-hoa">Về giỏ hàng</a>
+  </div>
+  } @else {
+  <form [formGroup]="formData" (ngSubmit)="handleSubmit()">
+    <div class="row g-4">
+      <div class="col-lg-5">
+        <div class="frame p-3">
+          <div class="mb-3">
+            <label class="form-label">Họ và Tên <sup class="text-danger">*</sup></label>
+            <input type="text" class="form-control" formControlName="fullname" />
+            @if (formData.get('fullname')?.touched && formData.get('fullname')?.invalid) {
+            <small class="text-danger">Họ và tên không được để trống.</small>
+            }
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Điện thoại <sup class="text-danger">*</sup></label>
+            <input type="text" class="form-control" formControlName="phone" />
+            @if (formData.get('phone')?.touched && formData.get('phone')?.errors; as errors) {
+            @if (errors['required']) { <small class="text-danger">Số điện thoại không được để trống.</small> }
+            @if (errors['pattern']) { <small class="text-danger">Số điện thoại gồm 10 chữ số, bắt đầu bằng 0.</small> }
+            }
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Email <sup class="text-danger">*</sup></label>
+            <input type="email" class="form-control" formControlName="email" />
+            @if (formData.get('email')?.touched && formData.get('email')?.errors; as errors) {
+            @if (errors['required']) { <small class="text-danger">Email không được để trống.</small> }
+            @if (errors['email']) { <small class="text-danger">Email không hợp lệ.</small> }
+            }
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Địa chỉ giao hoa <sup class="text-danger">*</sup></label>
+            <input type="text" class="form-control" formControlName="address" />
+            @if (formData.get('address')?.touched && formData.get('address')?.invalid) {
+            <small class="text-danger">Địa chỉ không được để trống.</small>
+            }
+          </div>
+          <div>
+            <label class="form-label">Lời nhắn trên thiệp</label>
+            <textarea class="form-control" rows="3" formControlName="note"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-7">
+        <div class="table-responsive frame">
+          <table class="table align-middle mb-0">
+            <thead>
+              <tr><th>Sản phẩm</th><th>Tên</th><th>Giá</th><th>SL</th><th>Tổng</th></tr>
+            </thead>
+            <tbody>
+              @for (item of userCarts(); track item.id) {
+              <tr>
+                <td><img [src]="item.image" class="rounded" style="width: 50px; height: 50px; object-fit: cover" alt="" /></td>
+                <td>{{ item.title }}</td>
+                <td>{{ item.price.toLocaleString('vi-VN') }}đ</td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ (item.price * item.quantity).toLocaleString('vi-VN') }}đ</td>
+              </tr>
+              }
+              <tr>
+                <td colspan="4" class="text-end">Tạm tính</td>
+                <td>{{ subtotal().toLocaleString('vi-VN') }}đ</td>
+              </tr>
+              <tr>
+                <td colspan="2">Vận chuyển</td>
+                <td colspan="3">
+                  @for (o of shippingOptions; track o.key) {
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="shipping" [id]="'ship-' + o.key" [value]="o.key" [checked]="shipping === o.key" (change)="shipping = o.key" />
+                    <label class="form-check-label" [for]="'ship-' + o.key">{{ o.label }}</label>
+                  </div>
+                  }
+                </td>
+              </tr>
+              <tr>
+                <td colspan="4" class="text-end fw-bold">TỔNG CỘNG</td>
+                <td class="fw-bold text-danger">{{ total().toLocaleString('vi-VN') }}đ</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <button type="submit" class="btn btn-hoa w-100 py-3 mt-3 text-uppercase">Đặt hàng</button>
+      </div>
+    </div>
+  </form>
+  }
+</div>

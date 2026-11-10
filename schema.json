@@ -1,0 +1,215 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "hoa-tuoi-dl-db",
+  "title": "Hoa Tươi DL - db.json",
+  "description": "Cấu trúc dữ liệu của json-server (db.json) cho website Hoa Tươi DL",
+  "type": "object",
+  "required": ["categories", "products", "users", "employees", "customers", "orders", "cart", "notifications", "favorites", "consults", "settings"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "categories": { "type": "array", "items": { "$ref": "#/definitions/category" } },
+    "products": { "type": "array", "items": { "$ref": "#/definitions/product" } },
+    "users": { "type": "array", "items": { "$ref": "#/definitions/user" } },
+    "employees": { "type": "array", "items": { "$ref": "#/definitions/employee" } },
+    "customers": { "type": "array", "items": { "$ref": "#/definitions/customer" } },
+    "orders": { "type": "array", "items": { "$ref": "#/definitions/order" } },
+    "cart": { "type": "array", "items": { "$ref": "#/definitions/cartItem" } },
+    "notifications": { "type": "array", "items": { "$ref": "#/definitions/notification" } },
+    "favorites": { "type": "array", "items": { "$ref": "#/definitions/favorite" } },
+    "consults": { "type": "array", "items": { "$ref": "#/definitions/consult" } },
+    "settings": { "$ref": "#/definitions/settings" }
+  },
+  "definitions": {
+    "isoDateTime": { "type": "string", "format": "date-time" },
+    "phone": { "type": "string", "pattern": "^0\\d{9}$" },
+    "permission": {
+      "type": "string",
+      "enum": [
+        "dashboard.view",
+        "system.manage",
+        "customer.password",
+        "product.view", "product.create", "product.update", "product.delete",
+        "order.view", "order.create", "order.update", "order.delete",
+        "employee.view", "employee.create", "employee.update", "employee.delete",
+        "customer.view", "customer.create", "customer.update", "customer.delete"
+      ]
+    },
+    "orderStatus": {
+      "type": "string",
+      "enum": ["Chờ xác nhận", "Đã xác nhận", "Đang chuẩn bị hoa", "Đang giao", "Đã giao", "Đã hủy"]
+    },
+    "category": {
+      "type": "object",
+      "required": ["id", "name", "slug", "icon"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string", "minLength": 1 },
+        "slug": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
+        "icon": { "type": "string" }
+      }
+    },
+    "product": {
+      "type": "object",
+      "required": ["id", "title", "image", "category", "description", "price", "discount", "stock", "views", "sold", "favorites", "createdAt", "freeship"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string", "minLength": 1 },
+        "image": { "type": "string" },
+        "category": { "type": "string", "description": "slug của danh mục" },
+        "description": { "type": "string" },
+        "price": { "type": "integer", "minimum": 0 },
+        "discount": { "type": "number", "minimum": 0, "maximum": 100, "description": "phần trăm giảm giá" },
+        "stock": { "type": "integer", "minimum": 0 },
+        "views": { "type": "integer", "minimum": 0 },
+        "sold": { "type": "integer", "minimum": 0 },
+        "favorites": { "type": "integer", "minimum": 0 },
+        "createdAt": { "type": "string", "format": "date" },
+        "freeship": { "type": "boolean" }
+      }
+    },
+    "user": {
+      "type": "object",
+      "description": "Tài khoản nội bộ (đăng nhập trang quản trị)",
+      "required": ["id", "username", "password", "role", "islocked", "permissions"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string" },
+        "username": { "type": "string", "minLength": 1 },
+        "password": { "type": "string", "minLength": 1 },
+        "role": { "type": "string", "enum": ["admin", "manager", "staff"] },
+        "islocked": { "type": "boolean" },
+        "permissions": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/definitions/permission" } }
+      }
+    },
+    "employee": {
+      "type": "object",
+      "description": "Hồ sơ nhân viên, id trùng với users.id",
+      "required": ["id", "image", "fullname", "email", "phone", "address"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string" },
+        "image": { "type": "string" },
+        "fullname": { "type": "string", "minLength": 1 },
+        "email": { "type": "string", "format": "email" },
+        "phone": { "$ref": "#/definitions/phone" },
+        "address": { "type": "string" }
+      }
+    },
+    "customer": {
+      "type": "object",
+      "required": ["id", "username", "password", "fullname", "email", "phone", "address", "role", "islocked"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string" },
+        "username": { "type": "string", "minLength": 1 },
+        "password": { "type": "string", "minLength": 1 },
+        "fullname": { "type": "string", "minLength": 1 },
+        "email": { "type": "string", "format": "email" },
+        "phone": { "$ref": "#/definitions/phone" },
+        "address": { "type": "string" },
+        "role": { "type": "string", "enum": ["customer"] },
+        "islocked": { "type": "boolean" }
+      }
+    },
+    "cartItem": {
+      "type": "object",
+      "required": ["id", "userId", "productId", "title", "image", "price", "discount", "quantity", "active"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "productId": { "type": "string" },
+        "title": { "type": "string" },
+        "image": { "type": "string" },
+        "price": { "type": "integer", "minimum": 0, "description": "giá đã giảm" },
+        "discount": { "type": "number", "minimum": 0, "maximum": 100 },
+        "quantity": { "type": "integer", "minimum": 1 },
+        "active": { "type": "boolean", "description": "được chọn để thanh toán" }
+      }
+    },
+    "orderHistory": {
+      "type": "object",
+      "required": ["status", "time", "by"],
+      "additionalProperties": false,
+      "properties": {
+        "status": { "$ref": "#/definitions/orderStatus" },
+        "time": { "$ref": "#/definitions/isoDateTime" },
+        "by": { "type": "string", "description": "người thao tác" },
+        "note": { "type": "string" }
+      }
+    },
+    "order": {
+      "type": "object",
+      "required": ["id", "userId", "fullname", "phone", "address", "note", "items", "total", "status", "history", "createdAt"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "fullname": { "type": "string", "minLength": 1 },
+        "phone": { "$ref": "#/definitions/phone" },
+        "address": { "type": "string", "minLength": 1 },
+        "note": { "type": "string" },
+        "items": { "type": "array", "minItems": 1, "items": { "$ref": "#/definitions/cartItem" } },
+        "total": { "type": "integer", "minimum": 0 },
+        "status": { "$ref": "#/definitions/orderStatus" },
+        "history": { "type": "array", "minItems": 1, "items": { "$ref": "#/definitions/orderHistory" } },
+        "createdAt": { "$ref": "#/definitions/isoDateTime" }
+      }
+    },
+    "notification": {
+      "type": "object",
+      "required": ["id", "target", "orderId", "title", "message", "tone", "time", "read"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string" },
+        "target": { "type": "string", "description": "'staff' hoặc id khách hàng" },
+        "orderId": { "type": "string" },
+        "title": { "type": "string" },
+        "message": { "type": "string" },
+        "tone": { "type": "string", "enum": ["success", "danger", "info"] },
+        "time": { "$ref": "#/definitions/isoDateTime" },
+        "read": { "type": "boolean" }
+      }
+    },
+    "favorite": {
+      "type": "object",
+      "description": "Danh sách sản phẩm yêu thích của một người dùng",
+      "required": ["id", "productIds"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "description": "id người dùng" },
+        "productIds": { "type": "array", "uniqueItems": true, "items": { "type": "string" } }
+      }
+    },
+    "consult": {
+      "type": "object",
+      "description": "Yêu cầu tư vấn gửi từ trang chủ",
+      "required": ["id", "fullname", "phone", "createdAt"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string" },
+        "fullname": { "type": "string", "minLength": 3 },
+        "phone": { "$ref": "#/definitions/phone" },
+        "note": { "type": ["string", "null"] },
+        "createdAt": { "$ref": "#/definitions/isoDateTime" }
+      }
+    },
+    "settings": {
+      "type": "object",
+      "required": ["shopName", "hotline", "email", "address", "fastShippingFee", "lowStockThreshold", "allowCustomerCancel"],
+      "additionalProperties": false,
+      "properties": {
+        "shopName": { "type": "string" },
+        "hotline": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "address": { "type": "string" },
+        "fastShippingFee": { "type": "integer", "minimum": 0 },
+        "lowStockThreshold": { "type": "integer", "minimum": 0 },
+        "allowCustomerCancel": { "type": "boolean" }
+      }
+    }
+  }
+}

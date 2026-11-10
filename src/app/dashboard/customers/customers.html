@@ -1,0 +1,72 @@
+<h2 class="h4 mb-4">Quản lý khách hàng</h2>
+<div class="table-responsive">
+  <table class="table table-bordered align-middle">
+    <thead>
+      <tr><th>Mã</th><th>Tên đăng nhập</th>@if (canSeePassword()) {<th>Mật khẩu</th>}<th>Họ và tên</th><th>Điện thoại</th><th>Email</th><th>Địa chỉ</th><th>Khóa</th><th style="width: 150px">Thao tác</th></tr>
+    </thead>
+    <tbody>
+      @for (c of customers(); track c.id) {
+      <tr>
+        <td class="text-center">{{ c.id }}</td>
+        @if (editingId() === c.id) {
+        <td><input type="text" class="form-control" name="e-username" [(ngModel)]="draft()!.username" /></td>
+        @if (canSeePassword()) {
+        <td class="position-relative">
+          <input [type]="showPasswords()[c.id!] ? 'text' : 'password'" class="form-control" name="e-password" [(ngModel)]="draft()!.password" autocomplete="new-password" style="padding-right: 30px" />
+          <span (click)="togglePasswordVisibility(c.id!)" class="eye"><i [class]="showPasswords()[c.id!] ? 'bi bi-eye-slash' : 'bi bi-eye'"></i></span>
+        </td>
+        }
+        <td><input type="text" class="form-control" name="e-fullname" [(ngModel)]="draft()!.fullname" /></td>
+        <td><input type="text" class="form-control" name="e-phone" [(ngModel)]="draft()!.phone" /></td>
+        <td><input type="text" class="form-control" name="e-email" [(ngModel)]="draft()!.email" /></td>
+        <td><input type="text" class="form-control" name="e-address" [(ngModel)]="draft()!.address" /></td>
+        <td class="text-center"><input type="checkbox" class="form-check-input" name="e-islocked" [(ngModel)]="draft()!.islocked" /></td>
+        <td class="text-center">
+          <button (click)="updateCustomer()" class="btn btn-sm btn-info text-white px-2 py-0">Lưu</button>
+          <button (click)="cancelEdit()" class="btn btn-secondary btn-sm px-2 py-0 ms-1">Hủy</button>
+        </td>
+        } @else {
+        <td>{{ c.username }}</td>
+        @if (canSeePassword()) {
+        <td>
+          {{ showPasswords()[c.id!] ? c.password : '••••••' }}
+          <span (click)="togglePasswordVisibility(c.id!)" style="cursor: pointer"><i [class]="showPasswords()[c.id!] ? 'bi bi-eye-slash' : 'bi bi-eye'"></i></span>
+        </td>
+        }
+        <td>{{ c.fullname }}</td>
+        <td>{{ c.phone }}</td>
+        <td>{{ c.email }}</td>
+        <td>{{ c.address }}</td>
+        <td class="text-center"><input type="checkbox" class="form-check-input" [checked]="c.islocked" disabled /></td>
+        <td class="text-center">
+          @if (authService.hasPermission('customer.update')) {
+          <button (click)="editCustomer(c.id!)" class="btn btn-warning btn-sm text-white px-2 py-0">Sửa</button>
+          }
+          @if (authService.hasPermission('customer.delete')) {
+          <button (click)="deleteCustomer(c.id!)" class="btn btn-danger btn-sm px-2 py-0 ms-1">Xóa</button>
+          }
+        </td>
+        }
+      </tr>
+      }
+      @if (authService.hasPermission('customer.create')) {
+      <tr>
+        <td class="text-center">Mới</td>
+        <td><input type="text" class="form-control" name="n-username" [(ngModel)]="newCustomer.username" /></td>
+        @if (canSeePassword()) {
+        <td><input type="password" class="form-control" name="n-password" [(ngModel)]="newCustomer.password" autocomplete="new-password" /></td>
+        }
+        <td><input type="text" class="form-control" name="n-fullname" [(ngModel)]="newCustomer.fullname" /></td>
+        <td><input type="text" class="form-control" name="n-phone" [(ngModel)]="newCustomer.phone" /></td>
+        <td><input type="text" class="form-control" name="n-email" [(ngModel)]="newCustomer.email" /></td>
+        <td><input type="text" class="form-control" name="n-address" [(ngModel)]="newCustomer.address" /></td>
+        <td class="text-center"><input type="checkbox" class="form-check-input" name="n-islocked" [(ngModel)]="newCustomer.islocked" /></td>
+        <td class="text-center"><button (click)="addCustomer()" class="btn btn-sm btn-primary px-2 py-0">Thêm</button></td>
+      </tr>
+      }
+    </tbody>
+  </table>
+</div>
+<style>
+  .eye { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; }
+</style>

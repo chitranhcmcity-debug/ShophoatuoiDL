@@ -1,0 +1,148 @@
+/* ===== Thẻ thống kê ===== */
+.stat {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  height: 100%;
+  padding: 18px;
+  background: #fff;
+  border: 1.5px solid var(--d-line);
+  border-top: 4px solid var(--tone);
+  border-radius: 22px;
+  box-shadow: 0 4px 18px rgba(166, 30, 77, 0.08);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.stat:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 26px rgba(166, 30, 77, 0.14);
+}
+.stat-ico {
+  width: 62px;
+  height: 62px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  font-size: 30px;
+  color: var(--tone);
+  background: var(--tone-soft);
+  border-radius: 20px;
+}
+.stat small {
+  display: block;
+  color: var(--d-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  font-size: 12px;
+}
+.stat strong {
+  display: block;
+  font-size: 26px;
+  line-height: 1.15;
+  color: var(--d-ink);
+}
+.stat em {
+  font-style: normal;
+  font-size: 13px;
+  color: var(--tone);
+  font-weight: 600;
+}
+
+/* ===== Panel ===== */
+.panel {
+  height: 100%;
+  padding: 20px;
+  background: #fff;
+  border: 1.5px solid var(--d-line);
+  border-radius: 22px;
+  box-shadow: 0 4px 18px rgba(166, 30, 77, 0.08);
+}
+.panel-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+  font-size: 17px;
+}
+.panel-title i {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  color: var(--tone);
+  background: var(--tone-soft);
+  border-radius: 12px;
+}
+
+/* ===== Thanh tiến độ ===== */
+.bar-row {
+  display: grid;
+  grid-template-columns: 160px 1fr 36px;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.bar-label {
+  font-weight: 600;
+  white-space: nowrap;
+}
+.bar-label i {
+  color: var(--tone);
+}
+.bar-track {
+  height: 12px;
+  background: var(--d-plum-soft);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.bar-track.thin {
+  height: 8px;
+}
+.bar-fill {
+  height: 100%;
+  background: var(--tone);
+  border-radius: 999px;
+  min-width: 4px;
+  transition: width 0.6s ease;
+}
+.bar-fill.plum {
+  background: linear-gradient(90deg, var(--d-plum), var(--d-rose));
+}
+
+/* ===== Danh sách xếp hạng / tồn kho ===== */
+.rank-row,
+.stock-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1.5px solid #fbe3ec;
+}
+.rank-row:last-child,
+.stock-row:last-child {
+  border-bottom: 0;
+}
+.rank-row img,
+.stock-row img {
+  width: 44px;
+  height: 44px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+.rank {
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  color: #fff;
+  background: var(--d-gold);
+  border-radius: 50%;
+  box-shadow: 0 2px 6px rgba(47, 158, 68, 0.3);
+}
+.rank-name {
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 4px;
+}

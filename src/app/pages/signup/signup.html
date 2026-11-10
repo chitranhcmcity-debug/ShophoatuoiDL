@@ -1,0 +1,42 @@
+<div class="container-fluid auth-bg">
+  <form [formGroup]="signUpForm" (ngSubmit)="onSubmit()">
+    <div class="auth-card">
+      <a routerLink="/" class="d-block text-center text-decoration-none fs-3 mb-2">🌹 Hoa Tươi <b class="text-success">DL</b></a>
+      <h2 class="fw-bold mb-2 text-center">Đăng ký</h2>
+      <p class="text-muted mb-3 text-center">Tạo một tài khoản mới</p>
+
+      <div class="mb-3">
+        <label class="form-label">Tên đăng nhập</label>
+        <input type="text" formControlName="username" class="form-control"
+          [class.is-invalid]="(signUpForm.controls.username.touched || submitted) && (signUpForm.controls.username.invalid || errorMessages.username)"
+          placeholder="Nhập tên đăng nhập" autocomplete="off" />
+        <div class="invalid-feedback">{{ errorMessages.username || 'Vui lòng nhập tên đăng nhập' }}</div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Mật khẩu</label>
+        <input type="password" formControlName="password" class="form-control"
+          [class.is-invalid]="(signUpForm.controls.password.touched || submitted) && signUpForm.controls.password.invalid"
+          placeholder="Nhập mật khẩu" autocomplete="new-password" />
+        <div class="invalid-feedback">Mật khẩu phải có ít nhất 6 ký tự</div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Xác nhận mật khẩu</label>
+        <input type="password" formControlName="confirmPassword" class="form-control"
+          [class.is-invalid]="(signUpForm.controls.confirmPassword.touched || submitted) && (signUpForm.controls.confirmPassword.invalid || errorMessages.confirmPassword)"
+          placeholder="Nhập lại mật khẩu" autocomplete="new-password" />
+        <div class="invalid-feedback">{{ errorMessages.confirmPassword || 'Vui lòng xác nhận mật khẩu' }}</div>
+      </div>
+
+      <div class="form-check mb-3">
+        <input type="checkbox" class="form-check-input" id="accept" formControlName="accept"
+          [class.is-invalid]="submitted && signUpForm.controls.accept.invalid" />
+        <label class="form-check-label" for="accept">Tôi chấp nhận các điều khoản</label>
+      </div>
+
+      <button class="btn btn-hoa w-100" type="submit">Đăng ký</button>
+      <p class="text-center text-muted mt-3 mb-0">Đã có tài khoản? <a routerLink="/signin">Đăng nhập</a></p>
+    </div>
+  </form>
+</div>

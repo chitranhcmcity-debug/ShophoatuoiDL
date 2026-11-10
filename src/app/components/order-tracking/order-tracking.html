@@ -1,0 +1,36 @@
+<div class="tracking">
+  <div class="progress-head">
+    <span class="fw-bold">Tiến độ đơn hàng</span>
+    <span class="pct" [class.cancelled]="isCancelled()">{{ isCancelled() ? 'Đã hủy' : progress() + '%' }}</span>
+  </div>
+  <div class="progress-track">
+    <div class="progress-fill" [class.cancelled]="isCancelled()" [style.width.%]="progress()"></div>
+  </div>
+
+  <ol class="timeline">
+    @for (s of steps(); track s.status; let last = $last) {
+    <li [class]="'step tone-' + s.tone + ' ' + s.state" [class.last]="last">
+      <span class="dot"><i class="bi" [class]="s.icon"></i></span>
+      <div class="body">
+        <div class="title">
+          {{ s.title }}
+          @if (s.state === 'current') {
+          <span class="now">Hiện tại</span>
+          }
+        </div>
+        @if (s.entry) {
+        <div class="time"><i class="bi bi-clock"></i> {{ s.entry.time | date : 'HH:mm - dd/MM/yyyy' }}@if (s.entry.by) { · bởi {{ s.entry.by }} }</div>
+        @if (s.entry.note) {
+        <div class="note">“{{ s.entry.note }}”</div>
+        }
+        } @else {
+        <div class="time">{{ s.state === 'pending' ? 'Chưa thực hiện' : s.desc }}</div>
+        }
+        @if (s.state === 'current' || s.state === 'cancelled') {
+        <div class="desc">{{ s.desc }}</div>
+        }
+      </div>
+    </li>
+    }
+  </ol>
+</div>

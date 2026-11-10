@@ -1,0 +1,32 @@
+<div class="card h-100 product-card">
+  <div class="img-wrap">
+    <a [routerLink]="['/product', product().id]">
+      <img class="card-img-top" [src]="product().image" [alt]="product().title" />
+    </a>
+    @if (product().freeship) {
+    <span class="badge-ship">FREESHIP</span>
+    }
+    @if (product().discount > 0) {
+    <span class="badge-sale">Sale -{{ product().discount }}%</span>
+    }
+  </div>
+  <div class="card-body d-flex flex-column">
+    <a [routerLink]="['/product', product().id]" class="product-title">{{ product().title }}</a>
+    <div class="mt-1">
+      <span class="price">{{ productService.discountPrice(product().price, product().discount).toLocaleString('vi-VN') }}đ</span>
+      @if (product().discount > 0) {
+      <span class="old-price ms-2">{{ product().price.toLocaleString('vi-VN') }}đ</span>
+      }
+    </div>
+    <p class="desc">{{ product().description }}</p>
+    <div class="mt-auto">
+      <small class="text-muted"><i class="bi bi-eye"></i> Lượt xem: {{ product().views }}</small>
+      <div class="d-flex gap-1 mt-2">
+        <button class="btn btn-hoa btn-sm flex-grow-1" type="button" (click)="buyNow()">Mua Ngay</button>
+        <button class="btn btn-outline-hoa btn-sm" type="button" (click)="favorite()" [class.active]="productService.isFavorite(product().id)">
+          <i class="bi" [class]="productService.isFavorite(product().id) ? 'bi-heart-fill' : 'bi-heart'"></i> {{ productService.favoriteCount(product().id) }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

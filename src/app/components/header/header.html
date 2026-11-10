@@ -1,0 +1,65 @@
+<div class="top-bar">
+  <div class="container d-flex justify-content-between flex-wrap py-1">
+    <span><i class="bi bi-telephone-fill"></i> Hotline đặt hoa: {{ settings().hotline }} &nbsp;|&nbsp; Giao hoa nhanh 60 phút</span>
+    <span>
+      @if (authService.user(); as u) {
+      Xin chào <b>{{ u.username }}</b>
+      } @else { Xin chào quý khách }
+    </span>
+  </div>
+</div>
+
+<header class="bg-white shadow-sm sticky-top">
+  <div class="container py-2 d-flex align-items-center gap-3 flex-wrap">
+    <a routerLink="/" class="logo text-decoration-none" (click)="closeCategories()">
+      <span class="logo-icon">🌹</span>
+      <span class="logo-text">Hoa Tươi <b>DL</b></span>
+    </a>
+
+    <form class="d-flex flex-grow-1 search-form" (ngSubmit)="onSearch()">
+      <input class="form-control" type="text" name="searching" [(ngModel)]="searching" placeholder="Tìm hoa sinh nhật, khai trương..." />
+      <button class="btn btn-hoa ms-1" type="submit"><i class="bi bi-search"></i></button>
+    </form>
+
+    <div class="d-flex align-items-center gap-3 ms-auto">
+      @if (authService.user(); as u) {
+      @if (u.role !== 'customer') {
+      <a routerLink="/dashboard" class="nav-link-sm"><i class="bi bi-speedometer2"></i> Quản trị</a>
+      } @else {
+      <a routerLink="/account" class="nav-link-sm"><i class="bi bi-person-circle"></i> Tài khoản</a>
+      }
+      <app-notification-bell></app-notification-bell>
+      <a href="javascript:void(0)" class="nav-link-sm" (click)="authService.logout()"><i class="bi bi-box-arrow-right"></i> Đăng xuất</a>
+      } @else {
+      <a routerLink="/signin" class="nav-link-sm"><i class="bi bi-person"></i> Đăng nhập</a>
+      <a routerLink="/signup" class="nav-link-sm">Đăng ký</a>
+      }
+      <a routerLink="/cart" class="nav-link-sm position-relative cart-link">
+        <i class="bi bi-cart3 fs-4"></i>
+        <span class="cart-badge">{{ cartService.count() }}</span>
+      </a>
+    </div>
+  </div>
+
+  <nav class="menu-bar">
+    <div class="container d-flex align-items-center flex-wrap position-relative">
+      <button class="btn-category" type="button" (click)="toggleCategories()">
+        <i class="bi bi-list"></i> DANH MỤC HOA
+      </button>
+      @if (showCategories()) {
+      <div class="category-dropdown">
+        @for (c of categories; track c.id) {
+        <a [routerLink]="['/san-pham', c.slug]" (click)="closeCategories()">{{ c.icon }} {{ c.name }}</a>
+        }
+      </div>
+      }
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="menu-item">Trang chủ</a>
+      <a routerLink="/san-pham/hoa-khai-truong" routerLinkActive="active" class="menu-item">Hoa Khai Trương</a>
+      <a routerLink="/san-pham/hoa-chia-buon" routerLinkActive="active" class="menu-item">Hoa Chia Buồn</a>
+      <a routerLink="/san-pham/hoa-sinh-nhat" routerLinkActive="active" class="menu-item">Hoa Sinh Nhật</a>
+      <a routerLink="/san-pham/lan-ho-diep" routerLinkActive="active" class="menu-item">Lan Hồ Điệp</a>
+      <a routerLink="/san-pham/hoa-tinh-yeu" routerLinkActive="active" class="menu-item">Hoa Tình Yêu</a>
+      <a routerLink="/checkout" class="menu-item">Thanh toán</a>
+    </div>
+  </nav>
+</header>

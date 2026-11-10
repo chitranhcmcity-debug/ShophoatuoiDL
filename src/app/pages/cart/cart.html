@@ -1,0 +1,59 @@
+<div class="container py-4">
+  <h3 class="section-title mb-3">Giỏ hàng của bạn</h3>
+  @if (carts().length === 0) {
+  <div class="text-center py-5 frame">
+    <p class="fs-5">Giỏ hàng đang trống</p>
+    <a routerLink="/san-pham" class="btn btn-hoa">Tiếp tục mua hoa</a>
+  </div>
+  } @else {
+  <div class="table-responsive frame">
+    <table class="table align-middle mb-0">
+      <thead>
+        <tr>
+          <th><input type="checkbox" [checked]="allSelected()" (change)="onSelectAllChange($event)" /></th>
+          <th>Sản phẩm</th>
+          <th>Tên</th>
+          <th>Giá</th>
+          <th>Số lượng</th>
+          <th>Tổng</th>
+          <th>Xử lý</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (item of carts(); track item.id) {
+        <tr>
+          <td><input type="checkbox" [checked]="item.active" (change)="toggleBuy(item)" /></td>
+          <td><img [src]="item.image" class="cart-img rounded" alt="" /></td>
+          <td><a [routerLink]="['/product', item.productId]" class="text-decoration-none">{{ item.title }}</a></td>
+          <td>{{ item.price.toLocaleString('vi-VN') }}đ</td>
+          <td>
+            <div class="input-group quantity">
+              <button class="btn btn-sm rounded-circle bg-light border" type="button" (click)="decreaseQuantity(item)"><i class="bi bi-dash"></i></button>
+              <input type="text" [value]="item.quantity" readonly class="form-control form-control-sm text-center border-0" />
+              <button class="btn btn-sm rounded-circle bg-light border" type="button" (click)="increaseQuantity(item)"><i class="bi bi-plus"></i></button>
+            </div>
+          </td>
+          <td class="fw-bold text-danger">{{ (item.price * item.quantity).toLocaleString('vi-VN') }}đ</td>
+          <td>
+            <button class="btn btn-md rounded-circle bg-light border" type="button" (click)="removeItem(item)"><i class="bi bi-x-circle text-danger"></i></button>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <div class="row justify-content-end mt-4">
+    <div class="col-md-6 col-lg-4">
+      <div class="frame p-3">
+        <h5>Tổng thanh toán</h5>
+        <div class="d-flex justify-content-between"><span>Tạm tính ({{ selectedCount() }} sản phẩm):</span><b>{{ totalPrice().toLocaleString('vi-VN') }}đ</b></div>
+        <div class="d-flex justify-content-between"><span>Phí vận chuyển:</span><b class="text-success">Miễn phí</b></div>
+        <hr />
+        <div class="d-flex justify-content-between fs-5"><span>Tổng cộng</span><b class="text-danger">{{ (totalPrice() + shipping).toLocaleString('vi-VN') }}đ</b></div>
+        <a routerLink="/checkout" class="btn btn-hoa w-100 mt-3" [class.disabled]="selectedCount() === 0">THANH TOÁN</a>
+      </div>
+    </div>
+  </div>
+  }
+</div>
