@@ -2,8 +2,10 @@ import { Component, OnInit, computed, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { CheckoutService } from '../../services/checkout';
+import { PAYMENT_METHOD_LABELS, PaymentMethod } from '../../interfaces/order';
 import { CustomerService } from '../../services/customer';
 import { EmployeeService } from '../../services/employee';
+import { PaymentService } from '../../services/payment';
 import { SettingsService } from '../../services/settings';
 
 @Component({
@@ -17,6 +19,11 @@ export class Checkout implements OnInit {
   private customerService = inject(CustomerService);
   private employeeService = inject(EmployeeService);
   private router = inject(Router);
+  private paymentService = inject(PaymentService);
+
+  paymentMethod: PaymentMethod = 'cod';
+  paymentOptions = (Object.keys(PAYMENT_METHOD_LABELS) as PaymentMethod[]).map((key) => ({ key, label: PAYMENT_METHOD_LABELS[key] }));
+  submitting = false;
 
   currentUser = this.checkoutService.currentUser;
   private settings = inject(SettingsService).settings;
@@ -69,20 +76,34 @@ export class Checkout implements OnInit {
       this.formData.markAllAsTouched();
       return;
     }
+    if (this.submitting) return;
+    this.submitting = true;
     try {
       this.updateUserInfo();
       const v = this.formData.value;
-      const ok = await this.checkoutService.checkout(
+      const order = await this.checkoutService.checkout(
         { fullname: v.fullname!, phone: v.phone!, address: v.address!, note: v.note ?? '' },
-        this.shippingFee()
+        this.shippingFee(),
+        this.paymentMethod
       );
-      if (ok) {
+      if (!order) return;
+      if (this.paymentMethod === 'payos') {
+        try {
+          // Chuyển sang trang thanh toán của payOS (quét QR), xong payOS đưa khách về /payment-result
+          await this.paymentService.payWithPayos(order.id);
+          return;
+        } catch (err) {
+          alert(`Đã tạo đơn ${order.id} nhưng chưa mở được trang thanh toán.\n${this.paymentService.errorMessage(err)}\nBạn có thể thanh toán lại trong mục Đơn hàng.`);
+        }
+      } else {
         alert('Đặt hàng thành công! Cảm ơn bạn đã mua hoa tại Hoa Tươi DL.');
-        this.router.navigate(['/account'], { queryParams: { tab: 'orders' } });
       }
+      this.router.navigate(['/account'], { queryParams: { tab: 'orders' } });
     } catch (error) {
       console.error('Lỗi thanh toán:', error);
       alert('Đã xảy ra lỗi trong quá trình thanh toán. Vui lòng thử lại.');
+    } finally {
+      this.submitting = false;
     }
   }
 

@@ -1,35 +1,18 @@
 /**
- * Server tư vấn hoa bằng AI cho Hoa Tươi DL.
- *
- * Vì sao cần server riêng? API key của AI KHÔNG được để trong code Angular
- * (ai mở F12 cũng lấy được). Server này giữ key trong file .env, nhận câu hỏi
- * từ trang web, gửi kèm danh sách sản phẩm của shop cho AI rồi trả lời lại.
- *
- * Chạy:  npm run ai      (cổng 3001)
- * Cấu hình trong file .env (copy từ .env.example).
- * Không cần cài thêm thư viện: chỉ dùng Node.js (>= 18) có sẵn fetch.
+ * Tư vấn hoa bằng AI: nhận câu hỏi của khách, gửi kèm danh sách sản phẩm của shop cho AI
+ * (Gemini hoặc Claude), trả về câu trả lời và mã các sản phẩm AI gợi ý.
+ * API key nằm trong .env, KHÔNG nằm trong code Angular.
  */
-import { createServer } from 'node:http';
-import { readFileSync, existsSync } from 'node:fs';
-import { dirname, join } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { ROOT, send, readBody } from './util.mjs';
 
-const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-
-// ---------- Đọc file .env (không cần thư viện dotenv) ----------
-const envFile = join(ROOT, '.env');
-if (existsSync(envFile)) {
-  for (const line of readFileSync(envFile, 'utf8').split(/\r?\n/)) {
-    const m = line.match(/^\s*([A-Z0-9_]+)\s*=\s*(.*?)\s*$/);
-    if (m && !(m[1] in process.env)) process.env[m[1]] = m[2].replace(/^["']|["']$/g, '');
-  }
-}
-
-const PORT = Number(process.env.AI_PORT || 3001);
 const PROVIDER = (process.env.AI_PROVIDER || 'gemini').toLowerCase(); // gemini | claude
 const MODEL =
   process.env.AI_MODEL || (PROVIDER === 'claude' ? 'claude-haiku-5-5' : 'gemini-flash-latest');
 const API_KEY = PROVIDER === 'claude' ? process.env.ANTHROPIC_API_KEY : process.env.GEMINI_API_KEY;
+
+export const aiInfo = () => ({ provider: PROVIDER, model: MODEL, hasKey: !!API_KEY });
 
 // ---------- Dữ liệu shop: đọc trực tiếp db.json (json-server cũng ghi vào file này) ----------
 function loadShop() {
@@ -120,42 +103,8 @@ function tooMany(ip) {
   return list.length > 20;
 }
 
-// ---------- HTTP server ----------
-function send(res, status, body) {
-  res.writeHead(status, {
-    'Content-Type': 'application/json; charset=utf-8',
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Headers': 'Content-Type',
-    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-  });
-  res.end(body === undefined ? '' : JSON.stringify(body));
-}
 
-function readBody(req) {
-  return new Promise((resolve, reject) => {
-    let raw = '';
-    req.on('data', (c) => {
-      raw += c;
-      if (raw.length > 50_000) reject(new Error('Nội dung quá dài'));
-    });
-    req.on('end', () => {
-      try {
-        resolve(JSON.parse(raw || '{}'));
-      } catch {
-        reject(new Error('JSON không hợp lệ'));
-      }
-    });
-  });
-}
-
-createServer(async (req, res) => {
-  if (req.method === 'OPTIONS') return send(res, 204);
-
-  if (req.method === 'GET' && req.url === '/api/health') {
-    return send(res, 200, { ok: true, provider: PROVIDER, model: MODEL, hasKey: !!API_KEY });
-  }
-
-  if (req.method === 'POST' && req.url === '/api/chat') {
+export async function handleChat(req, res) {
     if (!API_KEY) {
       return send(res, 500, {
         error: `Chưa có API key. Mở file .env và điền ${PROVIDER === 'claude' ? 'ANTHROPIC_API_KEY' : 'GEMINI_API_KEY'}.`,
@@ -187,9 +136,3 @@ createServer(async (req, res) => {
       return send(res, 502, { error: 'AI đang bận hoặc gặp lỗi, bạn thử lại sau nhé.' });
     }
   }
-
-  send(res, 404, { error: 'Not found' });
-}).listen(PORT, () => {
-  console.log(`AI tư vấn hoa chạy tại http://localhost:${PORT}  (provider: ${PROVIDER}, model: ${MODEL})`);
-  if (!API_KEY) console.warn('⚠ Chưa có API key trong file .env, chat sẽ báo lỗi.');
-});

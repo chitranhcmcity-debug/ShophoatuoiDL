@@ -34,6 +34,7 @@
     <div class="cell">
       <small>Tổng tiền</small>
       <b class="money">{{ o.total.toLocaleString('vi-VN') }}đ</b>
+      <span class="badge mt-1" [class]="paymentBadge(o).cls">{{ paymentBadge(o).text }}</span>
     </div>
     <div class="cell">
       <span class="st">{{ o.status }}</span>

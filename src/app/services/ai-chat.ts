@@ -1,10 +1,10 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable, inject, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
+import { BACKEND_URL } from './storage';
 
 /** Địa chỉ server AI (server/ai-server.mjs) */
-export const AI_URL =
-  typeof location !== 'undefined' ? `http://${location.hostname}:3001/api/chat` : 'http://localhost:3001/api/chat';
+export const AI_URL = `${BACKEND_URL}/api/chat`;
 
 export interface ChatMessage {
   role: 'user' | 'assistant';
@@ -47,7 +47,7 @@ export class AiChatService {
       const e = err as HttpErrorResponse;
       const msg =
         e.status === 0
-          ? 'Không kết nối được server AI (cổng 3001). Hãy chạy: npm run ai'
+          ? 'Không kết nối được server AI (cổng 3001). Hãy chạy: npm run backend'
           : e.error?.error || 'Có lỗi xảy ra, bạn thử lại nhé.';
       this.push({ role: 'assistant', content: msg, error: true });
     } finally {

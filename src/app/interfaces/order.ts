@@ -30,6 +30,30 @@ export interface Order {
   status: string;
   history: OrderHistory[];
   createdAt: string;
+  /** Phương thức thanh toán: cod = trả tiền khi nhận hàng, payos = chuyển khoản QR qua payOS */
+  paymentMethod?: PaymentMethod;
+  paymentStatus?: string;
+  paidAt?: string;
+  payosOrderCode?: number;
+  payosLinkId?: string;
+}
+
+export type PaymentMethod = 'cod' | 'payos';
+
+/** Trạng thái thanh toán (khớp với server/payos.mjs) */
+export const PAYMENT = { UNPAID: 'Chưa thanh toán', PAID: 'Đã thanh toán', CANCELLED: 'Hủy thanh toán' } as const;
+
+export const PAYMENT_METHOD_LABELS: Record<PaymentMethod, string> = {
+  cod: 'Tiền mặt khi nhận hàng (COD)',
+  payos: 'Chuyển khoản QR (payOS)',
+};
+
+/** Nhãn + màu hiển thị trạng thái thanh toán của 1 đơn */
+export function paymentBadge(o: Order): { text: string; cls: string } {
+  if (o.paymentMethod !== 'payos') return { text: 'COD', cls: 'bg-secondary' };
+  if (o.paymentStatus === PAYMENT.PAID) return { text: 'Đã thanh toán', cls: 'bg-success' };
+  if (o.paymentStatus === PAYMENT.CANCELLED) return { text: 'Hủy thanh toán', cls: 'bg-danger' };
+  return { text: 'Chờ thanh toán', cls: 'bg-warning text-dark' };
 }
 
 export interface OrderStep {

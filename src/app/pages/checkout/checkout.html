@@ -79,13 +79,33 @@
                 </td>
               </tr>
               <tr>
+                <td colspan="2">Thanh toán</td>
+                <td colspan="3">
+                  @for (p of paymentOptions; track p.key) {
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="payment" [id]="'pay-' + p.key" [value]="p.key" [checked]="paymentMethod === p.key" (change)="paymentMethod = p.key" />
+                    <label class="form-check-label" [for]="'pay-' + p.key">
+                      {{ p.label }}
+                      @if (p.key === 'payos') { <i class="bi bi-qr-code-scan text-primary"></i> }
+                    </label>
+                  </div>
+                  }
+                  @if (paymentMethod === 'payos') {
+                  <small class="text-muted d-block mt-1">Sau khi đặt hàng, bạn sẽ được chuyển sang trang payOS để quét mã QR bằng app ngân hàng. Đơn được xác nhận thanh toán tự động.</small>
+                  }
+                </td>
+              </tr>
+              <tr>
                 <td colspan="4" class="text-end fw-bold">TỔNG CỘNG</td>
                 <td class="fw-bold text-danger">{{ total().toLocaleString('vi-VN') }}đ</td>
               </tr>
             </tbody>
           </table>
         </div>
-        <button type="submit" class="btn btn-hoa w-100 py-3 mt-3 text-uppercase">Đặt hàng</button>
+        <button type="submit" class="btn btn-hoa w-100 py-3 mt-3 text-uppercase" [disabled]="submitting">
+          @if (submitting) { <span class="spinner-border spinner-border-sm me-2"></span> }
+          {{ paymentMethod === 'payos' ? 'Đặt hàng và thanh toán' : 'Đặt hàng' }}
+        </button>
       </div>
     </div>
   </form>

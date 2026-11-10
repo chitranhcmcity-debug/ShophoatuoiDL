@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, computed, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { STAFF_TARGET } from '../interfaces/notification';
-import { Order } from '../interfaces/order';
+import { Order, PAYMENT, PaymentMethod } from '../interfaces/order';
 import { NotificationService } from './notification';
 import { SettingsService } from './settings';
 import { Auth } from './auth';
@@ -38,7 +38,7 @@ export class CheckoutService {
     setInterval(() => this.loadOrders().catch(() => {}), 3000);
   }
 
-  private loadOrders(): Promise<void> {
+  loadOrders(): Promise<void> {
     return firstValueFrom(this.http.get<Order[]>(this.apiUrl)).then((data) => {
       if (JSON.stringify(data) !== JSON.stringify(this.orders())) this.orders.set(data);
     });
@@ -65,16 +65,20 @@ export class CheckoutService {
     return carts.reduce((t, i) => t + i.price * i.quantity, 0);
   }
 
-  async checkout(info: { fullname: string; phone: string; address: string; note: string }, shipping: number): Promise<boolean> {
+  async checkout(
+    info: { fullname: string; phone: string; address: string; note: string },
+    shipping: number,
+    paymentMethod: PaymentMethod = 'cod'
+  ): Promise<Order | null> {
     const user = this.currentUser();
     if (!user) {
       alert('Vui lòng đăng nhập để thanh toán!');
-      return false;
+      return null;
     }
     const items = this.getActiveUserCarts();
     if (items.length === 0) {
       alert('Chưa có sản phẩm nào được chọn để thanh toán!');
-      return false;
+      return null;
     }
     // lấy danh sách đơn mới nhất từ server để mã đơn không trùng với máy khác vừa đặt
     await this.loadOrders();
@@ -87,16 +91,19 @@ export class CheckoutService {
       status: 'Chờ xác nhận',
       history: [{ status: 'Chờ xác nhận', time: new Date().toISOString(), by: user.username, note: 'Khách đặt hàng' }],
       createdAt: new Date().toISOString(),
+      paymentMethod,
+      ...(paymentMethod === 'payos' ? { paymentStatus: PAYMENT.UNPAID } : {}),
     };
+    let created: Order;
     try {
-      const created = await firstValueFrom(this.http.post<Order>(this.apiUrl, order));
+      created = await firstValueFrom(this.http.post<Order>(this.apiUrl, order));
       this.orders.update((l) => [...l, created]);
     } catch {
       alert('Không đặt được hàng, vui lòng thử lại.');
-      return false;
+      return null;
     }
     this.cartService.removeActive();
-    return true;
+    return created;
   }
 
   /** Chuyển trạng thái và ghi lại lịch sử (thời điểm, người thao tác) */

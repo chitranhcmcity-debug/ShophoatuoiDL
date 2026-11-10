@@ -2,6 +2,9 @@ import { isPlatformBrowser } from '@angular/common';
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 
 /** Địa chỉ json-server (chạy bằng `npm run server`, đọc ghi file db.json) */
+/** Địa chỉ backend Node (AI tư vấn + thanh toán payOS), chạy bằng `npm run backend` */
+export const BACKEND_URL = typeof location !== 'undefined' ? `http://${location.hostname}:3001` : 'http://localhost:3001';
+
 export const API_URL = typeof location !== 'undefined' ? `http://${location.hostname}:3000` : 'http://localhost:3000';
 
 /** Các key lưu trên server qua StorageService (mỗi key là 1 bảng trong db.json). products, users, employees, customers, orders đã có service riêng gọi HttpClient. Key khác (currentUser...) lưu ở localStorage của trình duyệt */

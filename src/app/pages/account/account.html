@@ -96,7 +96,10 @@
         <div class="frame p-3 mb-3">
           <div class="d-flex justify-content-between flex-wrap">
             <b>Mã đơn: {{ o.id }}</b>
-            <span [class]="'st tone-' + toneOf(o.status)">{{ o.status }}</span>
+            <span class="d-flex gap-2 align-items-center">
+              <span class="badge" [class]="paymentBadge(o).cls">{{ paymentBadge(o).text }}</span>
+              <span [class]="'st tone-' + toneOf(o.status)">{{ o.status }}</span>
+            </span>
           </div>
           <small class="text-muted">{{ o.createdAt | date : 'dd/MM/yyyy HH:mm' }} · Giao đến: {{ o.address }}</small>
           <ul class="list-unstyled mt-2 mb-2">
@@ -113,6 +116,11 @@
               <button class="btn btn-outline-hoa btn-sm" type="button" (click)="toggleTracking(o.id)">
               <i class="bi bi-geo-alt-fill"></i> {{ trackingId() === o.id ? 'Ẩn theo dõi' : 'Theo dõi đơn hàng' }}
             </button>
+              @if (canPay(o)) {
+              <button class="btn btn-hoa btn-sm" type="button" (click)="payAgain(o)" [disabled]="payingId() === o.id">
+                <i class="bi bi-qr-code-scan"></i> Thanh toán
+              </button>
+              }
               @if (canCancel(o)) {
               <button class="btn btn-outline-danger btn-sm" type="button" (click)="cancelOrder(o)"><i class="bi bi-x-octagon"></i> Hủy đơn</button>
               }

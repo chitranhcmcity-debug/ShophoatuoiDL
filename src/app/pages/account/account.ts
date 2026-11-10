@@ -3,11 +3,12 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { OrderTracking } from '../../components/order-tracking/order-tracking';
-import { Order, toneOfStatus } from '../../interfaces/order';
+import { Order, PAYMENT, paymentBadge, toneOfStatus } from '../../interfaces/order';
 import { Auth } from '../../services/auth';
 import { CheckoutService } from '../../services/checkout';
 import { CustomerService } from '../../services/customer';
 import { EmployeeService } from '../../services/employee';
+import { PaymentService } from '../../services/payment';
 
 type Tab = 'info' | 'password' | 'orders';
 
@@ -24,6 +25,24 @@ export class Account implements OnInit {
   private route = inject(ActivatedRoute);
   private checkoutService = inject(CheckoutService);
   orders = this.checkoutService.userOrders;
+  private paymentService = inject(PaymentService);
+  paymentBadge = paymentBadge;
+  payingId = signal('');
+
+  /** Đơn chọn payOS mà chưa trả tiền (và chưa bị hủy) thì cho thanh toán lại */
+  canPay(o: Order): boolean {
+    return o.paymentMethod === 'payos' && o.paymentStatus !== PAYMENT.PAID && o.status !== 'Đã hủy';
+  }
+
+  async payAgain(o: Order): Promise<void> {
+    this.payingId.set(o.id);
+    try {
+      await this.paymentService.payWithPayos(o.id);
+    } catch (err) {
+      alert(this.paymentService.errorMessage(err));
+      this.payingId.set('');
+    }
+  }
   canCancel = (o: Order) => this.checkoutService.canCustomerCancel(o);
 
   cancelOrder(o: Order) {

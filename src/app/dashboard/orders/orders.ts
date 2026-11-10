@@ -2,7 +2,7 @@ import { DatePipe } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
 import { Pagination } from '../../components/pagination/pagination';
 import { OrderTracking } from '../../components/order-tracking/order-tracking';
-import { ORDER_CANCELLED, ORDER_FLOW, ORDER_STATUSES, Order, toneOfStatus } from '../../interfaces/order';
+import { ORDER_CANCELLED, ORDER_FLOW, ORDER_STATUSES, Order, paymentBadge, toneOfStatus } from '../../interfaces/order';
 import { Auth } from '../../services/auth';
 import { CheckoutService } from '../../services/checkout';
 
@@ -19,6 +19,7 @@ export class Orders {
   orders = this.checkoutService.orders;
   statuses = ORDER_STATUSES;
   toneOf = toneOfStatus;
+  paymentBadge = paymentBadge;
 
   filter = signal<string>('all');
   expanded = signal<string | null>(null);
