@@ -50,9 +50,10 @@ export const ALL_PERMISSIONS: string[] = [
 
 export const ROLE_PERMISSIONS: Record<string, string[]> = {
   manager: ALL_PERMISSIONS.filter((p) => !['employee.create', 'employee.update', 'employee.delete', 'employee.password', 'permission.manage'].includes(p)),
-  admin: ALL_PERMISSIONS.filter((p) => !p.startsWith('product.') || p === 'product.view'),
+  // Quản trị web chỉ xem sản phẩm và yêu cầu tư vấn; xử lý tư vấn là việc của Quản lí và Nhân viên nhận hàng
+  admin: ALL_PERMISSIONS.filter((p) => (!p.startsWith('product.') || p === 'product.view') && !['consult.update', 'consult.delete'].includes(p)),
   staff: ALL_PERMISSIONS.filter((p) => p.endsWith('.view') && !['permission.view', 'report.view'].includes(p)), // không có customer.password
-  receiver: ['dashboard.view', 'order.view', 'order.confirm', 'order.pickup', 'order.cancel', 'order.payment', 'order.invoice', 'customer.view', 'consult.view', 'consult.update'],
+  receiver: ['dashboard.view', 'order.view', 'order.confirm', 'order.pickup', 'order.cancel', 'order.payment', 'order.invoice', 'customer.view', 'consult.view', 'consult.update', 'consult.delete'],
   florist: ['dashboard.view', 'order.view', 'order.prepare', 'product.view'],
   shipper: ['dashboard.view', 'order.view', 'order.ship', 'order.deliver'],
   customer: [],
@@ -99,6 +100,7 @@ export const PERMISSION_GROUPS: { title: string; items: { key: string; label: st
     items: [
       { key: 'consult.view', label: 'Xem yêu cầu tư vấn' },
       { key: 'consult.update', label: 'Đánh dấu đã liên hệ' },
+      { key: 'consult.delete', label: 'Xóa yêu cầu tư vấn' },
     ],
   },
 ];
@@ -117,4 +119,5 @@ export const PERMISSION_REQUIRES: Record<string, string> = {
   'order.payment': 'order.view',
   'order.invoice': 'order.view',
   'consult.update': 'consult.view',
+  'consult.delete': 'consult.view',
 };
